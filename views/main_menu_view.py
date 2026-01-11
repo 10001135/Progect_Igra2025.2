@@ -23,7 +23,7 @@ class MainMenuView(arcade.View):
         self.textures = Textures.textures_in_menu
 
         self.first_plan = arcade.Sprite(self.textures['first_plan'], SCALE)
-        self.first_plan.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        self.first_plan.position = (SCREEN_WIDTH // 2, 230 * SCALE)
         self.name = arcade.Sprite(self.textures['name'], SCALE)
         self.name.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 6 * 5)
 
@@ -35,36 +35,36 @@ class MainMenuView(arcade.View):
         self.back_ground = arcade.SpriteList()
         self.back_ground.append(self.bg)
 
-        self.mount_far = BgPart(self.textures['mountain_far'], SCALE * 5, 110 * SCALE)
+        self.mount_far = BgPart(self.textures['mountain_far'], SCALE * 5, 50 * SCALE)
         self.mount_far.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 * 1.25)
-        self.mount_far_2 = BgPart(self.textures['mountain_far'], SCALE * 5, 110 * SCALE)
+        self.mount_far_2 = BgPart(self.textures['mountain_far'], SCALE * 5, 50 * SCALE)
         self.mount_far_2.left = SCREEN_WIDTH
         self.mount_far_2.center_y = SCREEN_HEIGHT // 2 * 1.25
         self.mountain_far = arcade.SpriteList()
         self.mountain_far.append(self.mount_far)
         self.mountain_far.append(self.mount_far_2)
 
-        self.mounts_far = BgPart(self.textures['mountains_far'], SCALE * 5, 120 * SCALE)
+        self.mounts_far = BgPart(self.textures['mountains_far'], SCALE * 5, 80 * SCALE)
         self.mounts_far.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 * 1.25)
-        self.mounts_far_2 = BgPart(self.textures['mountains_far'], SCALE * 5, 120 * SCALE)
+        self.mounts_far_2 = BgPart(self.textures['mountains_far'], SCALE * 5, 80 * SCALE)
         self.mounts_far_2.left = SCREEN_WIDTH
         self.mounts_far_2.center_y = SCREEN_HEIGHT // 2 * 1.25
         self.mountains_far = arcade.SpriteList()
         self.mountains_far.append(self.mounts_far)
         self.mountains_far.append(self.mounts_far_2)
 
-        self.mount_trees = BgPart(self.textures['trees_near_mount'], SCALE * 5, 130 * SCALE)
+        self.mount_trees = BgPart(self.textures['trees_near_mount'], SCALE * 5, 100 * SCALE)
         self.mount_trees.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 * 1.25)
-        self.mount_trees_2 = BgPart(self.textures['trees_near_mount'], SCALE * 5, 130 * SCALE)
+        self.mount_trees_2 = BgPart(self.textures['trees_near_mount'], SCALE * 5, 100 * SCALE)
         self.mount_trees_2.left = SCREEN_WIDTH
         self.mount_trees_2.center_y = SCREEN_HEIGHT // 2 * 1.25
         self.mountain_trees = arcade.SpriteList()
         self.mountain_trees.append(self.mount_trees)
         self.mountain_trees.append(self.mount_trees_2)
 
-        self.foreground_trees = BgPart(self.textures['foreground_trees'], SCALE * 5, 140 * SCALE)
+        self.foreground_trees = BgPart(self.textures['foreground_trees'], SCALE * 5, 120 * SCALE)
         self.foreground_trees.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 * 1.25)
-        self.foreground_trees_2 = BgPart(self.textures['foreground_trees'], SCALE * 5, 140 * SCALE)
+        self.foreground_trees_2 = BgPart(self.textures['foreground_trees'], SCALE * 5, 120 * SCALE)
         self.foreground_trees_2.left = SCREEN_WIDTH
         self.foreground_trees_2.center_y = SCREEN_HEIGHT // 2 * 1.25
         self.foreground_trees_list = arcade.SpriteList()
@@ -74,6 +74,15 @@ class MainMenuView(arcade.View):
         self.pics = arcade.SpriteList()
         self.pics.append(self.first_plan)
         self.pics.append(self.name)
+
+        self.fog = BgPart(self.textures['fog'], SCALE * 7.2, 70 * SCALE)
+        self.fog.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 * 1.5)
+        self.fog_2 = BgPart(self.textures['fog'], SCALE * 7.2, 70 * SCALE)
+        self.fog_2.left = self.fog.right
+        self.fog_2.center_y = SCREEN_HEIGHT // 2 * 1.5
+        self.fog_list = arcade.SpriteList()
+        self.fog_list.append(self.fog)
+        self.fog_list.append(self.fog_2)
 
         self.manager = UIManager()
         self.manager.enable()
@@ -127,6 +136,16 @@ class MainMenuView(arcade.View):
             self.new_4.center_y = SCREEN_HEIGHT // 2 * 1.25
             self.foreground_trees_list.append(self.new_4)
 
+        for i in self.fog_list:
+            i.update(delta_time)
+            if i.right <= 0:
+                i.remove_from_sprite_lists()
+        if len(self.fog_list) == 1:
+            self.new_5 = BgPart(self.textures['fog'], SCALE * 7.2, 70 * SCALE)
+            self.new_5.left = self.fog_list[0].right
+            self.new_5.center_y = SCREEN_HEIGHT // 2 * 1.5
+            self.fog_list.append(self.new_5)
+
     def setup_widgets(self):
         texture_normal = self.textures['buttons']['style1']['normal']
         texture_hovered = self.textures['buttons']['style1']['hovered']
@@ -157,10 +176,11 @@ class MainMenuView(arcade.View):
 
     def on_draw(self):
         self.clear()
-        self.back_ground.draw()
-        self.mountain_far.draw()
-        self.mountains_far.draw()
-        self.mountain_trees.draw()
-        self.foreground_trees_list.draw()
+        self.back_ground.draw(pixelated=True)
+        self.mountain_far.draw(pixelated=True)
+        self.mountains_far.draw(pixelated=True)
+        self.mountain_trees.draw(pixelated=True)
+        self.foreground_trees_list.draw(pixelated=True)
+        self.fog_list.draw()
         self.pics.draw(pixelated=True)
         self.manager.draw(pixelated=True)
