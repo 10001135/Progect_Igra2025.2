@@ -42,7 +42,7 @@ class GameView_common(arcade.View):
                     self.emitter_trace[hero].append(make_trace(hero))
 
             tile_map_size = (self.tile_map.width * self.tile_map.tile_width * 3 * SCALE,
-                                  self.tile_map.height * self.tile_map.tile_height * 3 * SCALE)
+                             self.tile_map.height * self.tile_map.tile_height * 3 * SCALE)
             if ((hero.center_y < 0 - (hero.height // 2)) or
                     (hero.center_x < 0 - (hero.width // 2)) or
                     (hero.center_x > tile_map_size[0] + (hero.width // 2))):

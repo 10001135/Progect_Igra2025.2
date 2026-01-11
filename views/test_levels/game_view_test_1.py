@@ -40,4 +40,3 @@ class GameView_test_1(GameView_common):
         super().on_update(delta_time)
         if self.hero.collides_with_list(self.enter_list):
             self.window.show_view(GameView_test_2())
-
