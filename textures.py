@@ -41,7 +41,8 @@ class Textures:
     @staticmethod
     def texture_hero_1():
         hero = {'to_us': arcade.load_texture('assets/textures/Hero/Engineer.png'), 'walk': [],
-                'in_air': arcade.load_texture('assets/textures/Hero/Engineer_Walk_4.png')}
+                'in_air': arcade.load_texture('assets/textures/Hero/Engineer_Walk_4.png'),
+                'climb': arcade.load_texture('assets/textures/Hero/Engineer_climb.png')}
         for i in range(1, 5):
             hero['walk'].append(arcade.load_texture(f"assets/textures/Hero/Engineer_Walk_{i}.png"))
         Textures.hero = {'Hero': hero}

@@ -5,9 +5,10 @@ from textures import Textures
 
 
 class Hero(arcade.Sprite):
-    def __init__(self):
+    def __init__(self, tile_map=None):
         super().__init__()
 
+        self.tile_map = tile_map
         self.scale = 4 * SCALE
         self.speed = MOVE_SPEED
         self.jump_speed = JUMP_SPEED
@@ -25,6 +26,8 @@ class Hero(arcade.Sprite):
         self.dash_time = 0
         self.dash_light = (True, False)
         self.light_time = 0
+
+        self.climb = False
 
         self.jump_pressed = False
 
@@ -124,7 +127,7 @@ class Hero(arcade.Sprite):
 
         self.change_x = move
 
-        grounded = self.engine.can_jump(y_distance=6)
+        grounded = self.engine.can_jump(y_distance=6) or self.climb
         if grounded:
             self.time_since_ground = 0
             self.jumps_left = MAX_JUMPS
@@ -139,6 +142,11 @@ class Hero(arcade.Sprite):
         if want_jump:
             can_coyote = (self.time_since_ground <= COYOTE_TIME)
             if grounded or can_coyote:
+                if self.climb:
+                    if self.face_direction:
+                        self.change_x = -self.speed * 2
+                    else:
+                        self.change_x = self.speed
                 self.engine.jump(self.jump_speed)
                 self.jump_buffer_timer = 0
 
@@ -151,6 +159,28 @@ class Hero(arcade.Sprite):
             else:
                 self.is_in_air = False
             self.is_walking = False
+
+        self.climb = False
+
+        if self.tile_map and 'Walls_climb_r' in self.tile_map.sprite_lists:
+            walls_climb_touch = self.collides_with_list(self.tile_map.sprite_lists['Walls_climb_r'])
+            if walls_climb_touch:
+                for wall in walls_climb_touch:
+                    if self.right + self.change_x > wall.right:
+                        self.engine.gravity_constant = 0
+                        if not self.climb:
+                            self.climb = True
+                            self.change_y = 0
+
+        if self.tile_map and 'Walls_climb_l' in self.tile_map.sprite_lists:
+            walls_climb_touch = self.collides_with_list(self.tile_map.sprite_lists['Walls_climb_l'])
+            if walls_climb_touch:
+                for wall in walls_climb_touch:
+                    if self.left + self.change_x < wall.left:
+                        self.engine.gravity_constant = 0
+                        if not self.climb:
+                            self.climb = True
+                            self.change_y = 0
 
         self.engine.update()
 
@@ -173,6 +203,12 @@ class Hero(arcade.Sprite):
                 self.texture = self.textures_hero['in_air'].flip_horizontally()
         else:
             self.texture = self.textures_hero['to_us']
+
+        if self.climb:
+            if self.face_direction:
+                self.texture = self.textures_hero['climb']
+            else:
+                self.texture = self.textures_hero['climb'].flip_horizontally()
 
         if self.dash_light == (False, True):
             self.dash_light = (True, False)
