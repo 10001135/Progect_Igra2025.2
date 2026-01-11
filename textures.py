@@ -6,7 +6,13 @@ class Textures:
     @staticmethod
     def textures_main_menu():
         Textures.textures_in_menu = {
-            'bg': arcade.load_texture('assets/textures/main_menu_pic.png'),
+            'first_plan': arcade.load_texture('assets/textures/character_at_ground.png'),
+            'mountain_bg': arcade.load_texture('assets/textures/main_menu_bg/parallax-mountain-bg.png'),
+            'mountain_far': arcade.load_texture('assets/textures/main_menu_bg/parallax-mountain-montain-far.png'),
+            'mountains_far': arcade.load_texture('assets/textures/main_menu_bg/parallax-mountain-mountains.png'),
+            'trees_near_mount': arcade.load_texture('assets/textures/main_menu_bg/parallax-mountain-trees.png'),
+            'foreground_trees': arcade.load_texture(
+                'assets/textures/main_menu_bg/parallax-mountain-foreground-trees.png'),
             'name': arcade.load_texture('assets/textures/name_pic.png'),
             'buttons': {
                 'style1':{
@@ -20,6 +26,7 @@ class Textures:
     def set_fonts():
         Textures.fonts = {
             'pixel_sans': arcade.load_font('assets/fonts/Comic Sans MS Pixel.ttf'),
+            'alfa_slab_one': arcade.load_font('assets/fonts/AlfaSlabOne-Regular.ttf'),
         }
 
     @staticmethod
