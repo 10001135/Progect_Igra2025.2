@@ -1,4 +1,5 @@
 import arcade
+from PIL import ImageEnhance
 from consts import *
 from textures import Textures
 
@@ -16,6 +17,13 @@ class Hero(arcade.Sprite):
         self.right_hero = False
         self.up_hero = False
         self.down_hero = False
+
+        self.run = False
+        self.dash = False
+        self.dash_size = DASH_SIZE
+        self.dash_time = 0
+        self.dash_light = (True, False)
+        self.dash_light_time = 0
 
         self.jump_pressed = False
 
@@ -53,6 +61,14 @@ class Hero(arcade.Sprite):
             self.jump_pressed = True
             self.jump_buffer_timer = JUMP_BUFFER
 
+        if key == arcade.key.LSHIFT:
+            self.run = True
+
+        if key == arcade.key.X and self.dash_time <= 0:
+            self.dash = True
+            self.dash_time = DASH_TIME
+            self.dash_light = (False, False)
+
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
             self.left_hero = False
@@ -67,14 +83,44 @@ class Hero(arcade.Sprite):
             if self.change_y > 0:
                 self.change_y *= 0.45
 
+        if key == arcade.key.LSHIFT:
+            self.run = False
+
     def on_update(self, dt):
         move = 0
-        if self.left_hero and not self.right_hero:
-            move = -self.speed
-            self.face_direction = False
-        elif self.right_hero and not self.left_hero:
-            move = self.speed
-            self.face_direction = True
+        if not self.dash:
+            if self.left_hero and not self.right_hero:
+                move = -self.speed
+                self.face_direction = False
+            elif self.right_hero and not self.left_hero:
+                move = self.speed
+                self.face_direction = True
+
+        if self.run:
+            move *= 2
+
+        if self.dash:
+            self.change_y = 0
+            self.engine.gravity_constant = 0
+            self.jump_speed = 0
+            if self.face_direction:
+                move = self.dash_size
+            else:
+                move = -self.dash_size
+            self.dash_size *= 0.7
+            if int(self.dash_size) == 0:
+                self.dash = False
+                self.dash_size = DASH_SIZE
+        else:
+            self.engine.gravity_constant = GRAVITY
+            self.jump_speed = JUMP_SPEED
+
+        if self.dash_time > 0:
+            self.dash_time -= dt
+        elif not self.dash_light[0]:
+            self.dash_light = (False, True)
+            self.dash_light_time = DASH_LIGHT_TIME
+
         self.change_x = move
 
         grounded = self.engine.can_jump(y_distance=6)
@@ -126,3 +172,13 @@ class Hero(arcade.Sprite):
                 self.texture = self.textures_hero['in_air'].flip_horizontally()
         else:
             self.texture = self.textures_hero['to_us']
+
+        if self.dash_light == (False, True):
+            self.dash_light = (True, False)
+        if self.dash_light_time > 0:
+            self.dash_light_time -= delta_time
+            if self.face_direction:
+                self.texture = arcade.Texture(ImageEnhance.Brightness(self.texture.image).enhance(1.5))
+            else:
+                self.texture = arcade.Texture(
+                    ImageEnhance.Brightness(self.texture.image).enhance(1.5)).flip_horizontally()
