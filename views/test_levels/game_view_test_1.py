@@ -17,8 +17,8 @@ class GameView_test_1(GameView_common):
         self.enter_list = Textures.tile_map_test_1.sprite_lists['Enter']
 
         self.hero = Hero()
-        self.hero.center_x = 10
-        self.hero.center_y = 500
+        self.hero.center_x = 10 * SCALE
+        self.hero.center_y = 500 * SCALE
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, Textures.tile_map_test_1)
