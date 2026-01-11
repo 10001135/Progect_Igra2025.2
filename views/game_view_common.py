@@ -15,15 +15,18 @@ def make_trace(hero):
         ),
     )
 
+
 class GameView_common(arcade.View):
     def __init__(self):
         super().__init__()
         self.emitter_trace = {}
+        self.reborn_point = (200, 200)
 
     def on_draw(self):
         self.clear()
         self.world_camera.use()
         self.walls_list.draw(pixelated=True)
+        self.reborn_point_list.draw(pixelated=True)
         for h in self.emitter_trace:
             for e in self.emitter_trace[h]:
                 e.draw()
@@ -37,6 +40,16 @@ class GameView_common(arcade.View):
                     self.emitter_trace[hero] = [make_trace(hero)]
                 else:
                     self.emitter_trace[hero].append(make_trace(hero))
+
+            tile_map_size = (self.tile_map.width * self.tile_map.tile_width * 3 * SCALE,
+                                  self.tile_map.height * self.tile_map.tile_height * 3 * SCALE)
+            if ((hero.center_y < 0 - (hero.height // 2)) or
+                    (hero.center_x < 0 - (hero.width // 2)) or
+                    (hero.center_x > tile_map_size[0] + (hero.width // 2))):
+                hero.health = 0
+
+            if hero.health <= 0:
+                self.deth(hero)
 
             hero.on_update(delta_time)
             hero.update_animation(delta_time)
@@ -56,3 +69,9 @@ class GameView_common(arcade.View):
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
+
+    def deth(self, hero):
+        hero.position = self.reborn_point
+        hero.health = hero.max_health
+        hero.dash_time = 0
+        hero.light_time = LIGHT_TIME

@@ -12,10 +12,15 @@ class GameView_test_2(GameView_common):
         Textures.textures_test_2()
         arcade.set_background_color(arcade.color.FRENCH_SKY_BLUE)
 
-        self.walls_list = Textures.tile_map_test_2.sprite_lists['Walls']
+        self.tile_map = Textures.tile_map_test_2
+        self.walls_list = self.tile_map.sprite_lists['Walls']
+        self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
+
         self.hero = Hero()
-        self.hero.center_x = 200 * SCALE
-        self.hero.center_y = 500 * SCALE
+        self.reborn_point = self.reborn_point_list[0].position
+        self.hero.position = self.reborn_point
+        # self.hero.center_x = 200 * SCALE
+        # self.hero.center_y = 500 * SCALE
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, Textures.tile_map_test_2)
