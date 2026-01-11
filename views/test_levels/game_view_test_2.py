@@ -14,7 +14,6 @@ class GameView_test_2(GameView_common):
 
         self.tile_map = Textures.tile_map_test_2
         self.walls_list = self.tile_map.sprite_lists['Walls']
-        # self.walls_climb_list = self.tile_map.sprite_lists['Walls_climb']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
 
         self.hero = Hero(tile_map=self.tile_map)
@@ -33,4 +32,3 @@ class GameView_test_2(GameView_common):
 
     def on_draw(self):
         super().on_draw()
-        # self.walls_climb_list.draw(pixelated=True)
