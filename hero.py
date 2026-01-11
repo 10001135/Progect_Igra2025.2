@@ -181,7 +181,6 @@ class Hero(arcade.Sprite):
             self.light_time -= delta_time
             self.shine()
 
-
     def shine(self):
         if self.face_direction:
             self.texture = arcade.Texture(ImageEnhance.Brightness(self.texture.image).enhance(1.5))

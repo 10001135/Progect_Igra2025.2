@@ -19,8 +19,6 @@ class GameView_test_2(GameView_common):
         self.hero = Hero()
         self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
-        # self.hero.center_x = 200 * SCALE
-        # self.hero.center_y = 500 * SCALE
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, Textures.tile_map_test_2)
