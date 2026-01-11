@@ -20,10 +20,19 @@ DEAD_ZONE_W = int(SCREEN_WIDTH * 0.35)
 DEAD_ZONE_H = int(SCREEN_HEIGHT * 0.45)
 
 BUTTON_STYLE1 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),
-                                                font_name='Comic Sans MS pixel rus eng',
-                                                font_color=(225, 153, 33, 255)),
+                                                font_name='Alfa Slab One',
+                                                font_color=(25, 82, 44, 255)),
                  'hover': UITextureButtonStyle(font_size=int(40 * SCALE),
-                                               font_name='Comic Sans MS pixel rus eng',
+                                               font_name='Alfa Slab One',
                                                font_color=(195, 123, 3, 255)),
                  'press': UITextureButtonStyle(font_size=int(40 * SCALE),
-                                               font_name='Comic Sans MS pixel rus eng')}
+                                               font_name='Alfa Slab One')}
+
+BUTTON_STYLE2 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),
+                                                font_name='Alfa Slab One',
+                                                font_color=(45, 40, 50, 255)),
+                 'hover': UITextureButtonStyle(font_size=int(40 * SCALE),
+                                               font_name='Alfa Slab One',
+                                               font_color=(195, 123, 3, 255)),
+                 'press': UITextureButtonStyle(font_size=int(40 * SCALE),
+                                               font_name='Alfa Slab One')}

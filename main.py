@@ -7,7 +7,7 @@ from views.main_menu_view import MainMenuView
 
 class Platformer(arcade.Window):
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, text_d['title'], antialiasing=True)
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, text_d['title'], samples=16, antialiasing=True)
         self.set_fullscreen(False)
 
     def on_key_press(self, key, modifiers):
