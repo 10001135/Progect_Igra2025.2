@@ -11,7 +11,8 @@ class Hero(arcade.Sprite):
         self.scale = 4 * SCALE
         self.speed = MOVE_SPEED
         self.jump_speed = JUMP_SPEED
-        self.health = 100
+        self.max_health = 3
+        self.health = self.max_health
 
         self.left_hero = False
         self.right_hero = False
@@ -23,7 +24,7 @@ class Hero(arcade.Sprite):
         self.dash_size = DASH_SIZE
         self.dash_time = 0
         self.dash_light = (True, False)
-        self.dash_light_time = 0
+        self.light_time = 0
 
         self.jump_pressed = False
 
@@ -119,7 +120,7 @@ class Hero(arcade.Sprite):
             self.dash_time -= dt
         elif not self.dash_light[0]:
             self.dash_light = (False, True)
-            self.dash_light_time = DASH_LIGHT_TIME
+            self.light_time = LIGHT_TIME
 
         self.change_x = move
 
@@ -175,10 +176,15 @@ class Hero(arcade.Sprite):
 
         if self.dash_light == (False, True):
             self.dash_light = (True, False)
-        if self.dash_light_time > 0:
-            self.dash_light_time -= delta_time
-            if self.face_direction:
-                self.texture = arcade.Texture(ImageEnhance.Brightness(self.texture.image).enhance(1.5))
-            else:
-                self.texture = arcade.Texture(
-                    ImageEnhance.Brightness(self.texture.image).enhance(1.5)).flip_horizontally()
+
+        if self.light_time > 0:
+            self.light_time -= delta_time
+            self.shine()
+
+
+    def shine(self):
+        if self.face_direction:
+            self.texture = arcade.Texture(ImageEnhance.Brightness(self.texture.image).enhance(1.5))
+        else:
+            self.texture = arcade.Texture(
+                ImageEnhance.Brightness(self.texture.image).enhance(1.5)).flip_horizontally()
