@@ -7,6 +7,7 @@ class Textures:
     def textures_main_menu():
         Textures.textures_in_menu = {
             'first_plan': arcade.load_texture('assets/textures/character_at_ground.png'),
+            'fog': arcade.load_texture('assets/textures/main_menu_bg/parallax-fog.png'),
             'mountain_bg': arcade.load_texture('assets/textures/main_menu_bg/parallax-mountain-bg.png'),
             'mountain_far': arcade.load_texture('assets/textures/main_menu_bg/parallax-mountain-montain-far.png'),
             'mountains_far': arcade.load_texture('assets/textures/main_menu_bg/parallax-mountain-mountains.png'),
