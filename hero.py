@@ -2,6 +2,7 @@ import arcade
 from PIL import ImageEnhance
 from consts import *
 from textures import Textures
+import pymunk
 
 
 class Hero(arcade.Sprite):
@@ -32,6 +33,7 @@ class Hero(arcade.Sprite):
         self.jump_pressed = False
 
         self.engine = 0
+        self.hook_engine = 0
         self.world_camera = arcade.camera.Camera2D()
 
         self.textures_hero = Textures.hero['Hero']
@@ -89,6 +91,19 @@ class Hero(arcade.Sprite):
 
         if key == arcade.key.LSHIFT:
             self.run = False
+
+    def do_hook(self, pos):
+        hero_body = self.hook_engine.sprites[self].body
+        self.joint = pymunk.PinJoint(self.hook_engine.space.static_body,
+                                     hero_body,
+                                     pos,
+                                     (0, 0))
+        self.hook_engine.space.add(self.joint)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        for hook_point in self.tile_map.sprite_lists['Hook_points']:
+            if (x < hook_point.right) and (x > hook_point.left) and (y > hook_point.bottom) and (y < hook_point.top):
+                self.do_hook((x, y))
 
     def on_update(self, dt):
         move = 0
