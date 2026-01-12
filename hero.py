@@ -66,9 +66,6 @@ class Hero(arcade.Sprite):
             self.jump_pressed = True
             self.jump_buffer_timer = JUMP_BUFFER
 
-        if key == arcade.key.P:
-            self.show_view(Inventory())
-
         if key == arcade.key.LSHIFT:
             self.run = True
 
