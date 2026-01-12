@@ -2,6 +2,7 @@ import arcade
 from PIL import ImageEnhance
 from consts import *
 from textures import Textures
+from views.inventory_view import Inventory
 
 
 class Hero(arcade.Sprite):
@@ -64,6 +65,9 @@ class Hero(arcade.Sprite):
         elif key == arcade.key.SPACE:
             self.jump_pressed = True
             self.jump_buffer_timer = JUMP_BUFFER
+
+        if key == arcade.key.P:
+            self.show_view(Inventory())
 
         if key == arcade.key.LSHIFT:
             self.run = True
