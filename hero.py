@@ -2,7 +2,6 @@ import arcade
 from PIL import ImageEnhance
 from consts import *
 from textures import Textures
-from views.inventory_view import Inventory
 
 
 class Hero(arcade.Sprite):

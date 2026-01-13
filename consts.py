@@ -19,6 +19,8 @@ CAMERA_LERP = 0.08
 DEAD_ZONE_W = int(SCREEN_WIDTH * 0.35)
 DEAD_ZONE_H = int(SCREEN_HEIGHT * 0.45)
 
+TRANSPARENT_BLACK = (0, 0, 0, 180)
+
 BUTTON_STYLE1 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),
                                                 font_name='Alfa Slab One',
                                                 font_color=(25, 82, 44, 255)),

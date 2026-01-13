@@ -5,6 +5,7 @@ from texts import text_d
 from arcade.gui import UIManager, UITextureButton
 from arcade.gui.widgets.layout import UIAnchorLayout, UIBoxLayout
 from views.test_levels.game_view_test_1 import GameView_test_1
+from views.Settings_view import SettingsPopup
 
 
 class BgPart(arcade.Sprite):
@@ -95,6 +96,8 @@ class MainMenuView(arcade.View):
         self.anchor_layout.add(self.box_layout)  # Box в anchor
         self.manager.add(self.anchor_layout)
 
+        self.settings_popup = SettingsPopup(self)
+
     def on_update(self, delta_time):
         for i in self.mountain_far:
             i.update(delta_time)
@@ -171,6 +174,8 @@ class MainMenuView(arcade.View):
                                               self.window.show_view(GameView_test_1()),
                                               self.manager.disable())
 
+        setting_button.on_click = lambda event: self.settings_popup.show()
+
         self.box_layout.add(play_button)
         self.box_layout.add(setting_button)
 
@@ -184,3 +189,12 @@ class MainMenuView(arcade.View):
         self.fog_list.draw()
         self.pics.draw(pixelated=True)
         self.manager.draw(pixelated=True)
+        self.settings_popup.draw()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        self.manager.on_mouse_press(x, y, button, modifiers)
+        self.settings_popup.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        self.manager.on_mouse_release(x, y, button, modifiers)
+        self.settings_popup.on_mouse_release(x, y, button, modifiers)
