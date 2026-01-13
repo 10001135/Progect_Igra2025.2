@@ -1,5 +1,6 @@
 import arcade
 from consts import *
+from audioplayer import AudioPlayer
 from arcade.gui import UIManager, UITextureButton
 
 
@@ -7,6 +8,8 @@ class SettingsPopup:
     def __init__(self, parent_view):
         self.parent_view = parent_view
         self.visible = False
+        self.play_music = True
+        self.player = AudioPlayer("assets/music/standart.mp3")
         self.manager = UIManager()
         self.setup_ui()
 
@@ -41,7 +44,7 @@ class SettingsPopup:
             style=BUTTON_STYLE1)
 
         saves_button.center_x = 775
-        saves_button.center_y = 675
+        saves_button.center_y = 650
         saves_button.on_click = self.saves
 
         music_button.center_x = 775
@@ -60,7 +63,12 @@ class SettingsPopup:
         print("Будет отдельное окно с сохранениями")
 
     def music(self, event=None):
-        print("music")
+        if self.play_music:
+            self.player.play(loop=-1)
+            self.play_music = False
+        else:
+            self.player.stop()
+            self.play_music = True
 
     def show(self):
         self.visible = True
