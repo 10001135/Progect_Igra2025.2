@@ -15,6 +15,8 @@ class Hero(arcade.Sprite):
 
         self.is_hooked = False
         self.joint = None
+        self.preserve_moment = False
+        self.moment_timer = 0
 
         self.scale = 4 * SCALE
         self.speed = MOVE_SPEED
@@ -131,14 +133,21 @@ class Hero(arcade.Sprite):
 
     def on_mouse_release(self, x, y, button, modifiers):
         if self.is_hooked and self.joint:
-            self.hook_engine.space.remove(self.joint)
-            self.joint = None
-            self.is_hooked = False
             hero_body = self.hook_engine.sprites[self].body
             self.change_x = hero_body.velocity.x / 60
             self.change_y = hero_body.velocity.y / 60
+            self.hook_engine.space.remove(self.joint)
+            self.joint = None
+            self.is_hooked = False
+            self.preserve_moment = True
+            self.moment_timer = 0.2
 
     def on_update(self, dt):
+        if self.moment_timer > 0:
+            self.moment_timer -= dt
+            if self.moment_timer <= 0:
+                self.preserve_moment = False
+
         move = 0
         if not self.dash:
             if self.left_hero and not self.right_hero:
@@ -173,7 +182,12 @@ class Hero(arcade.Sprite):
             self.dash_light = (False, True)
             self.light_time = LIGHT_TIME
 
-        self.change_x = move
+        if not self.preserve_moment:
+            self.change_x = move
+        else:
+            if move != 0:
+                blend = 1 - (self.moment_timer / 0.2)
+                self.change_x = self.change_x * (1 - blend) + move * blend
 
         self.engine.jumps_since_ground = self.jumps_left
         grounded = self.engine.can_jump(y_distance=6) or self.climb
