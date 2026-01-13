@@ -22,11 +22,45 @@ class SettingsPopup:
             text="Закрыть",
             style=BUTTON_STYLE1)
 
+        saves_button = UITextureButton(
+            texture=self.parent_view.textures['buttons']['style1']['normal'],
+            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
+            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
+            width=200,
+            height=50,
+            text="Сохранения",
+            style=BUTTON_STYLE1)
+
+        music_button = UITextureButton(
+            texture=self.parent_view.textures['buttons']['style1']['normal'],
+            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
+            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
+            width=200,
+            height=50,
+            text="Музыка вкл/выкл",
+            style=BUTTON_STYLE1)
+
+        saves_button.center_x = 775
+        saves_button.center_y = 675
+        saves_button.on_click = self.saves
+
+        music_button.center_x = 775
+        music_button.center_y = 725
+        music_button.on_click = self.music
+
         close_button.center_x = SCREEN_WIDTH // 2
-        close_button.center_y = 50
+        close_button.center_y = 300
         close_button.on_click = self.close
 
         self.manager.add(close_button)
+        self.manager.add(music_button)
+        self.manager.add(saves_button)
+
+    def saves(self, event=None):
+        print("Будет отдельное окно с сохранениями")
+
+    def music(self, event=None):
+        print("music")
 
     def show(self):
         self.visible = True
