@@ -28,6 +28,7 @@ class Hero(arcade.Sprite):
         self.light_time = 0
 
         self.climb = False
+        self.double_jump = False
 
         self.jump_pressed = False
 
@@ -50,7 +51,7 @@ class Hero(arcade.Sprite):
 
         self.jump_buffer_timer = 0
         self.time_since_ground = 999.0
-        self.jumps_left = MAX_JUMPS
+        self.jumps_left = 0
 
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -83,6 +84,7 @@ class Hero(arcade.Sprite):
         elif key in (arcade.key.DOWN, arcade.key.S):
             self.down_hero = False
         elif key == arcade.key.SPACE:
+            self.jumps_left += 1
             self.jump_pressed = False
             if self.change_y > 0:
                 self.change_y *= 0.45
@@ -91,6 +93,7 @@ class Hero(arcade.Sprite):
             self.run = False
 
     def on_update(self, dt):
+        self.engine.enable_multi_jump(2)
         move = 0
         if not self.dash:
             if self.left_hero and not self.right_hero:
@@ -127,10 +130,12 @@ class Hero(arcade.Sprite):
 
         self.change_x = move
 
+        self.engine.jumps_since_ground = self.jumps_left
         grounded = self.engine.can_jump(y_distance=6) or self.climb
-        if grounded:
+        print(self.engine.can_jump(y_distance=6))
+        print(self.engine.jumps_since_ground)
+        if self.jumps_left == 0:
             self.time_since_ground = 0
-            self.jumps_left = MAX_JUMPS
         else:
             self.time_since_ground += dt
 
@@ -141,7 +146,7 @@ class Hero(arcade.Sprite):
 
         if want_jump:
             can_coyote = (self.time_since_ground <= COYOTE_TIME)
-            if grounded or can_coyote:
+            if grounded and self.jump_buffer_timer > 0:
                 if self.climb:
                     if self.face_direction:
                         self.change_x = -self.speed * 2
@@ -159,6 +164,9 @@ class Hero(arcade.Sprite):
             else:
                 self.is_in_air = False
             self.is_walking = False
+
+        if not self.is_in_air:
+            self.jumps_left = 0
 
         self.climb = False
 
