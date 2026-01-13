@@ -73,6 +73,9 @@ class GameView_common(arcade.View):
     def on_mouse_press(self, x, y, button, modifiers):
         self.hero.on_mouse_press(x, y, button, modifiers)
 
+    def on_mouse_release(self, x, y, button, modifiers):
+        self.hero.on_mouse_release(x, y, button, modifiers)
+
     def deth(self, hero):
         hero.position = self.reborn_point
         hero.health = hero.max_health

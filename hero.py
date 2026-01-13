@@ -6,10 +6,16 @@ import pymunk
 
 
 class Hero(arcade.Sprite):
-    def __init__(self, tile_map=None):
+    def __init__(self, tile_map=None, engine=None, hook_engine=None):
         super().__init__()
 
         self.tile_map = tile_map
+        self.engine = engine
+        self.hook_engine = hook_engine
+
+        self.is_hooked = False
+        self.joint = None
+
         self.scale = 4 * SCALE
         self.speed = MOVE_SPEED
         self.jump_speed = JUMP_SPEED
@@ -31,9 +37,6 @@ class Hero(arcade.Sprite):
         self.climb = False
 
         self.jump_pressed = False
-
-        self.engine = 0
-        self.hook_engine = 0
         self.world_camera = arcade.camera.Camera2D()
 
         self.textures_hero = Textures.hero['Hero']
@@ -63,6 +66,14 @@ class Hero(arcade.Sprite):
             self.up_hero = True
         elif key in (arcade.key.DOWN, arcade.key.S):
             self.down_hero = True
+        elif key == arcade.key.R:
+            if self.is_hooked and self.joint:
+                self.joint.distance = max(20, self.joint.distance - 20 * SCALE)
+
+        elif key == arcade.key.F:
+            if self.is_hooked and self.joint:
+                self.joint.distance = min(400, self.joint.distance + 20 * SCALE)
+
         elif key == arcade.key.SPACE:
             self.jump_pressed = True
             self.jump_buffer_timer = JUMP_BUFFER
@@ -93,17 +104,37 @@ class Hero(arcade.Sprite):
             self.run = False
 
     def do_hook(self, pos):
-        hero_body = self.hook_engine.sprites[self].body
-        self.joint = pymunk.PinJoint(self.hook_engine.space.static_body,
-                                     hero_body,
-                                     pos,
-                                     (0, 0))
-        self.hook_engine.space.add(self.joint)
+        if not self.is_hooked:
+            self.is_hooked = True
+            hero_body = self.hook_engine.sprites[self].body
+            hero_body.position = self.center_x, self.center_y
+            hero_body.velocity = self.change_x * 60, self.change_y * 60
+
+            self.joint = pymunk.PinJoint(
+                self.hook_engine.space.static_body,
+                hero_body,
+                pos,
+                (0, 0)
+            )
+            self.hook_engine.space.add(self.joint)
 
     def on_mouse_press(self, x, y, button, modifiers):
+        world_pos = self.world_camera.unproject((x, y))
+        world_x, world_y = world_pos.x, world_pos.y
+
         for hook_point in self.tile_map.sprite_lists['Hook_points']:
-            if (x < hook_point.right) and (x > hook_point.left) and (y > hook_point.bottom) and (y < hook_point.top):
-                self.do_hook((x, y))
+            if (world_x < hook_point.right) and (world_x > hook_point.left) and \
+                    (world_y > hook_point.bottom) and (world_y < hook_point.top):
+                self.do_hook((world_x, world_y))
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        if self.is_hooked and self.joint:
+            self.hook_engine.space.remove(self.joint)
+            self.joint = None
+            self.is_hooked = False
+            hero_body = self.hook_engine.sprites[self].body
+            self.change_x = hero_body.velocity.x / 60
+            self.change_y = hero_body.velocity.y / 60
 
     def on_update(self, dt):
         move = 0
@@ -197,7 +228,17 @@ class Hero(arcade.Sprite):
                             self.climb = True
                             self.change_y = 0
 
-        self.engine.update()
+        if self.is_hooked:
+            self.hook_engine.step(dt)
+            hero_body = self.hook_engine.sprites[self].body
+            self.center_x = hero_body.position.x
+            self.center_y = hero_body.position.y
+            if self.left_hero:
+                hero_body.velocity = (hero_body.velocity.x - 5, hero_body.velocity.y)
+            if self.right_hero:
+                hero_body.velocity = (hero_body.velocity.x + 5, hero_body.velocity.y)
+        else:
+            self.engine.update()
 
     def update_animation(self, delta_time: float = 1 / 60):
         if self.is_walking:
