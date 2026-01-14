@@ -29,6 +29,7 @@ class GameView_test_2(GameView_common):
             walls=self.walls_list,
         )
         self.hero.engine = self.engine
+        self.hero.double_jump = True
 
     def on_draw(self):
         super().on_draw()
