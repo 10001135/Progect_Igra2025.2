@@ -50,7 +50,6 @@ class Hero(arcade.Sprite):
         self.face_direction = True
 
         self.jump_buffer_timer = 0
-        self.time_since_ground = 999.0
         self.jumps_left = 0
 
     def on_key_press(self, key, modifiers):
@@ -93,7 +92,6 @@ class Hero(arcade.Sprite):
             self.run = False
 
     def on_update(self, dt):
-        self.engine.enable_multi_jump(2)
         move = 0
         if not self.dash:
             if self.left_hero and not self.right_hero:
@@ -132,20 +130,13 @@ class Hero(arcade.Sprite):
 
         self.engine.jumps_since_ground = self.jumps_left
         grounded = self.engine.can_jump(y_distance=6) or self.climb
-        print(self.engine.can_jump(y_distance=6))
-        print(self.engine.jumps_since_ground)
-        if self.jumps_left == 0:
-            self.time_since_ground = 0
-        else:
-            self.time_since_ground += dt
 
         if self.jump_buffer_timer > 0:
             self.jump_buffer_timer -= dt
 
-        want_jump = self.jump_pressed or (self.jump_buffer_timer > 0)
+        want_jump = self.jump_pressed
 
         if want_jump:
-            can_coyote = (self.time_since_ground <= COYOTE_TIME)
             if grounded and self.jump_buffer_timer > 0:
                 if self.climb:
                     if self.face_direction:
@@ -153,7 +144,6 @@ class Hero(arcade.Sprite):
                     else:
                         self.change_x = self.speed
                 self.engine.jump(self.jump_speed)
-                self.jump_buffer_timer = 0
 
         if self.change_x and self.change_y == 0:
             self.is_walking = True
@@ -165,8 +155,7 @@ class Hero(arcade.Sprite):
                 self.is_in_air = False
             self.is_walking = False
 
-        if not self.is_in_air:
-            self.jumps_left = 0
+
 
         self.climb = False
 
@@ -190,7 +179,15 @@ class Hero(arcade.Sprite):
                             self.climb = True
                             self.change_y = 0
 
+        if self.double_jump:
+            self.engine.enable_multi_jump(2)
+        else:
+            self.engine.enable_multi_jump(1)
+
         self.engine.update()
+
+        if not self.is_in_air and self.change_y == 0:
+            self.jumps_left = 0
 
     def update_animation(self, delta_time: float = 1 / 60):
         if self.is_walking:
