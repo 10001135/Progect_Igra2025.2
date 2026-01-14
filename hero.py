@@ -51,6 +51,7 @@ class Hero(arcade.Sprite):
 
         self.jump_buffer_timer = 0
         self.jumps_left = 0
+        self.jump_emit = False
 
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -188,6 +189,7 @@ class Hero(arcade.Sprite):
 
         if not self.is_in_air and self.change_y == 0:
             self.jumps_left = 0
+            self.jump_emit = False
 
     def update_animation(self, delta_time: float = 1 / 60):
         if self.is_walking:
