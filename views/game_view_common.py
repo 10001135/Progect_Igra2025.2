@@ -40,6 +40,8 @@ class GameView_common(arcade.View):
     def on_draw(self):
         self.clear()
         self.world_camera.use()
+        self.background_list.draw(pixelated=True)
+        arcade.draw.draw_lbwh_rectangle_filled(0, 0, 2000, 2000, arcade.color.Color(0, 0, 0, 120))
         self.walls_list.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
         for emmiter in (self.emitter_trace, self.emitter_clouds):
