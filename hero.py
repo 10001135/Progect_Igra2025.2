@@ -69,13 +69,15 @@ class Hero(arcade.Sprite):
             self.up_hero = True
         elif key in (arcade.key.DOWN, arcade.key.S):
             self.down_hero = True
-        elif key == arcade.key.R:
+        if key in (arcade.key.W, arcade.key.UP):
             if self.is_hooked and self.joint:
-                self.joint.distance = max(20, self.joint.distance - 20 * SCALE)
+                self.joint.distance = max(20 * SCALE, self.joint.distance - 20 * SCALE)
 
-        elif key == arcade.key.F:
+        if key in (arcade.key.S, arcade.key.DOWN):
             if self.is_hooked and self.joint:
-                self.joint.distance = min(400, self.joint.distance + 20 * SCALE)
+                if not self.collides_with_list(self.tile_map.sprite_lists['Walls']):
+                    self.joint.distance = min(400 * SCALE, self.joint.distance + 20 * SCALE)
+
 
         elif key == arcade.key.SPACE:
             self.jump_pressed = True
@@ -128,7 +130,9 @@ class Hero(arcade.Sprite):
         for hook_point in self.tile_map.sprite_lists['Hook_points']:
             if (world_x < hook_point.right) and (world_x > hook_point.left) and \
                     (world_y > hook_point.bottom) and (world_y < hook_point.top):
-                self.do_hook((world_x, world_y))
+                if math.sqrt(abs(self.center_x - hook_point.center_x) ** 2 + abs(
+                        self.center_y - hook_point.center_y) ** 2) <= 400 * SCALE:
+                    self.do_hook((world_x, world_y))
 
     def on_mouse_release(self, x, y, button, modifiers):
         if self.is_hooked and self.joint:
