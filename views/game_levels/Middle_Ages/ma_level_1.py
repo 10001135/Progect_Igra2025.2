@@ -20,14 +20,16 @@ class GameView_ma_level_1(GameView_common):
         self.darkness_list = self.tile_map.sprite_lists['Darkness']
         self.light_list = self.tile_map.sprite_lists['Light']
 
-        self.decor_list1 = self.tile_map.sprite_lists['Decor_back2']
-        self.decor_list2 = self.tile_map.sprite_lists['Decor_back']
-        self.decor_list3 = self.tile_map.sprite_lists['Decor_back3']
-        self.decor_list4 = self.tile_map.sprite_lists['Decor_forw']
+        self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
+        self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
+        self.decor_list_b_b = self.tile_map.sprite_lists['Decor_back_b']
+        self.decor_list_f = self.tile_map.sprite_lists['Decor_forw']
+
+        self.thorns_list = self.tile_map.sprite_lists['Thorns']
 
         self.background_list = self.tile_map.sprite_lists['Background']
 
-        self.hero = Hero()
+        self.hero = Hero(self.tile_map)
         self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
         self.hero_l = arcade.SpriteList()
@@ -44,10 +46,13 @@ class GameView_ma_level_1(GameView_common):
 
     def on_draw(self):
         super().on_draw()
-        self.decor_list1.draw(pixelated=True)
-        self.decor_list2.draw(pixelated=True)
-        self.decor_list3.draw(pixelated=True)
-        self.decor_list4.draw(pixelated=True)
+        self.decor_list_b_b.draw(pixelated=True)
+        self.decor_list_b.draw(pixelated=True)
+        self.decor_list_b_f.draw(pixelated=True)
+        self.decor_list_f.draw(pixelated=True)
+
+        self.thorns_list.draw(pixelated=True)
+
         self.d_list.draw(pixelated=True)
 
         self.hero_l.draw(pixelated=True)
