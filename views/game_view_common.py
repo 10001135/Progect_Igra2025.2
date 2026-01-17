@@ -44,7 +44,7 @@ class GameView_common(arcade.View):
             a = 255
             for light in self.light_list:
                 r = max(abs(d.center_x - light.center_x), abs(d.center_y - light.center_y),
-                        sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2)) / 1.5
+                        sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2)) / (SCALE / (1 / 3))
                 if r < a:
                     a = r
             d.alpha = a
@@ -57,7 +57,7 @@ class GameView_common(arcade.View):
             # if (self.world_camera.position[0] - d.center_x <= SCREEN_WIDTH // 2) and (self.world_camera.position[1] - d.center_y <= SCREEN_HEIGHT // 2):
             for hero in self.hero_l:
                 r = max(abs(d.center_x - hero.center_x), abs(d.center_y - hero.center_y),
-                        sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2))
+                        sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2)) / (SCALE / 0.5)
                 if r < a:
                     a = r
             d.alpha = min(d.alpha_p, a)
@@ -66,7 +66,8 @@ class GameView_common(arcade.View):
         self.clear()
         self.world_camera.use()
         self.background_list.draw(pixelated=True)
-        arcade.draw.draw_lbwh_rectangle_filled(0, 0, 2000, 2000, arcade.color.Color(0, 0, 0, 120))
+        p = self.world_camera.position
+        arcade.draw.draw_lbwh_rectangle_filled(p[0] - SCREEN_WIDTH / 2, p[1] - SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.Color(0, 0, 0, 120))
         self.walls_list.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
         for emmiter in (self.emitter_trace, self.emitter_clouds):
