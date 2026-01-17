@@ -129,11 +129,12 @@ class Hero(arcade.Sprite):
         world_pos = self.world_camera.unproject((x, y))
         world_x, world_y = world_pos.x, world_pos.y
 
-        for hook_point in self.tile_map.sprite_lists['Hook_points']:
-            if (world_x < hook_point.right) and (world_x > hook_point.left) and \
-                    (world_y > hook_point.bottom) and (world_y < hook_point.top):
-                if math.sqrt(abs(world_x - self.center_x) ** 2 + abs(world_y - self.center_y) ** 2) <= 400 * SCALE:
-                    self.do_hook((world_x, world_y))
+        if 'Hook_points' in self.tile_map.sprite_lists:
+            for hook_point in self.tile_map.sprite_lists['Hook_points']:
+                if (world_x < hook_point.right) and (world_x > hook_point.left) and \
+                        (world_y > hook_point.bottom) and (world_y < hook_point.top):
+                    if math.sqrt(abs(world_x - self.center_x) ** 2 + abs(world_y - self.center_y) ** 2) <= 400 * SCALE:
+                        self.do_hook((world_x, world_y))
 
     def on_mouse_release(self, x, y, button, modifiers):
         if self.is_hooked and self.joint:

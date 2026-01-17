@@ -38,6 +38,24 @@ class GameView_common(arcade.View):
         self.emitter_clouds = {}
         self.reborn_point = (200, 200)
 
+    def draw_hook(self):
+        if self.hero.is_hooked:
+            hook_x = self.hook_points_list[0].center_x
+            hook_y = self.hook_points_list[0].center_y
+            if self.hero.face_direction:
+                hero_x = self.hero.center_x + 20 * SCALE
+            else:
+                hero_x = self.hero.center_x - 20 * SCALE
+            hero_y = self.hero.center_y
+            line_width = 15 * SCALE
+            arcade.draw_line(
+                hook_x, hook_y, hero_x, hero_y,
+                color=arcade.color.DIM_GRAY,
+                line_width=line_width)
+            radius = line_width / 2 * SCALE
+            arcade.draw_circle_filled(hook_x, hook_y, radius, arcade.color.DIM_GRAY)
+            arcade.draw_circle_filled(hero_x, hero_y, radius, arcade.color.DIM_GRAY)
+
     def set_darkness(self):
         self.d_list = arcade.SpriteList()
         for d in self.darkness_list:
