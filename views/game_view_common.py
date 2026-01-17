@@ -43,8 +43,7 @@ class GameView_common(arcade.View):
         for d in self.darkness_list:
             a = 255
             for light in self.light_list:
-                r = max(abs(d.center_x - light.center_x), abs(d.center_y - light.center_y),
-                        sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2)) / (SCALE / (1 / 3))
+                r = sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2) / (SCALE / (1 / 3))
                 if r < a:
                     a = r
             d.alpha = a
@@ -56,8 +55,7 @@ class GameView_common(arcade.View):
             a = 255
             # if (self.world_camera.position[0] - d.center_x <= SCREEN_WIDTH // 2) and (self.world_camera.position[1] - d.center_y <= SCREEN_HEIGHT // 2):
             for hero in self.hero_l:
-                r = max(abs(d.center_x - hero.center_x), abs(d.center_y - hero.center_y),
-                        sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2)) / (SCALE / 0.5)
+                r = sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2) / (SCALE / 0.5)
                 if r < a:
                     a = r
             d.alpha = min(d.alpha_p, a)
