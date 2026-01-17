@@ -17,6 +17,7 @@ class GameView_test_1(GameView_common):
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
         self.enter_list = self.tile_map.sprite_lists['Enter']
+        self.background_list = None
 
         self.hero = Hero()
         self.reborn_point = self.reborn_point_list[0].position

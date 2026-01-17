@@ -65,7 +65,8 @@ class GameView_common(arcade.View):
     def on_draw(self):
         self.clear()
         self.world_camera.use()
-        self.background_list.draw(pixelated=True)
+        if self.background_list:
+            self.background_list.draw(pixelated=True)
         p = self.world_camera.position
         arcade.draw.draw_lbwh_rectangle_filled(p[0] - SCREEN_WIDTH / 2, p[1] - SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.Color(0, 0, 0, 120))
         self.walls_list.draw(pixelated=True)
