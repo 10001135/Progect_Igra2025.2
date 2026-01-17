@@ -157,7 +157,7 @@ class Hero(arcade.Sprite):
             self.is_walking = False
 
         if self.collides_with_list(self.tile_map.sprite_lists['Thorns']):
-            self.damage(1)
+            self.damage(0)
 
         self.climb = False
 
@@ -234,7 +234,7 @@ class Hero(arcade.Sprite):
 
     def damage(self, power):
         print(self.health)
-        p = min([((abs(self.center_x - sp.center_x), abs(self.center_y - sp.center_y)), sp) for sp in
+        p = min([(abs(self.center_x - sp.center_x) + abs(self.center_y - sp.center_y), sp) for sp in
                  self.tile_map.sprite_lists['Safe_point']], key=lambda x: x[0])
         self.position = p[1].position
         self.health -= power
