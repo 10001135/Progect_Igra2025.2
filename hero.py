@@ -157,7 +157,7 @@ class Hero(arcade.Sprite):
             self.is_walking = False
 
         if self.collides_with_list(self.tile_map.sprite_lists['Thorns']):
-            self.damage(0)
+            self.damage(1)
 
         self.climb = False
 
