@@ -40,16 +40,7 @@ class GameView_ma_level_1(GameView_common):
         )
         self.hero.engine = self.engine
 
-        self.d_list = arcade.SpriteList()
-        for d in self.darkness_list:
-            a = 255
-            for light in self.light_list:
-                r = max(abs(d.center_x - light.center_x), abs(d.center_y - light.center_y), sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2)) / 1.5
-                if r < a:
-                    a = r
-            d.alpha = a
-            d.alpha_p = a
-            self.d_list.append(d)
+        self.set_darkness()
 
     def on_draw(self):
         super().on_draw()
@@ -61,15 +52,7 @@ class GameView_ma_level_1(GameView_common):
 
         self.hero_l.draw(pixelated=True)
 
-        for d in self.d_list:
-            a = 255
-            # if (self.world_camera.position[0] - d.center_x <= SCREEN_WIDTH // 2) and (self.world_camera.position[1] - d.center_y <= SCREEN_HEIGHT // 2):
-            for hero in self.hero_l:
-                r = max(abs(d.center_x - hero.center_x), abs(d.center_y - hero.center_y),
-                        sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2))
-                if r < a:
-                    a = r
-            d.alpha = min(d.alpha_p, a)
+        self.update_darkness()
 
 
 

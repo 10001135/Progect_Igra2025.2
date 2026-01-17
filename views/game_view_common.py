@@ -1,4 +1,5 @@
 import arcade
+from math import sqrt
 from random import uniform
 from arcade.particles import Emitter, EmitBurst, FadeParticle
 from consts import *
@@ -36,6 +37,30 @@ class GameView_common(arcade.View):
         self.emitter_trace = {}
         self.emitter_clouds = {}
         self.reborn_point = (200, 200)
+
+    def set_darkness(self):
+        self.d_list = arcade.SpriteList()
+        for d in self.darkness_list:
+            a = 255
+            for light in self.light_list:
+                r = max(abs(d.center_x - light.center_x), abs(d.center_y - light.center_y),
+                        sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2)) / 1.5
+                if r < a:
+                    a = r
+            d.alpha = a
+            d.alpha_p = a
+            self.d_list.append(d)
+
+    def update_darkness(self):
+        for d in self.d_list:
+            a = 255
+            # if (self.world_camera.position[0] - d.center_x <= SCREEN_WIDTH // 2) and (self.world_camera.position[1] - d.center_y <= SCREEN_HEIGHT // 2):
+            for hero in self.hero_l:
+                r = max(abs(d.center_x - hero.center_x), abs(d.center_y - hero.center_y),
+                        sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2))
+                if r < a:
+                    a = r
+            d.alpha = min(d.alpha_p, a)
 
     def on_draw(self):
         self.clear()
