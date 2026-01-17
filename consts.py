@@ -1,11 +1,10 @@
 from arcade.gui import UITextureButtonStyle
 
-SCALE = 1
+SCALE = 0.5
 SCREEN_WIDTH = int(1920 * SCALE)
 SCREEN_HEIGHT = int(1080 * SCALE)
 
 GRAVITY = 3 * SCALE
-MAX_JUMPS = 1
 JUMP_BUFFER = 0.12
 MOVE_SPEED = 10 * SCALE
 COYOTE_TIME = 0.08

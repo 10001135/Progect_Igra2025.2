@@ -38,6 +38,7 @@ class Hero(arcade.Sprite):
         self.light_time = 0
 
         self.climb = False
+        self.double_jump = False
 
         self.jump_pressed = False
         self.world_camera = arcade.camera.Camera2D()
@@ -57,8 +58,8 @@ class Hero(arcade.Sprite):
         self.face_direction = True
 
         self.jump_buffer_timer = 0
-        self.time_since_ground = 999.0
-        self.jumps_left = MAX_JUMPS
+        self.jumps_left = 0
+        self.jump_emit = False
 
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -99,6 +100,7 @@ class Hero(arcade.Sprite):
         elif key in (arcade.key.DOWN, arcade.key.S):
             self.down_hero = False
         elif key == arcade.key.SPACE:
+            self.jumps_left += 1
             self.jump_pressed = False
             if self.change_y > 0:
                 self.change_y *= 0.45
@@ -188,28 +190,22 @@ class Hero(arcade.Sprite):
                 blend = 1 - (self.moment_timer / 0.2)
                 self.change_x = self.change_x * (1 - blend) + move * blend
 
+        self.engine.jumps_since_ground = self.jumps_left
         grounded = self.engine.can_jump(y_distance=6) or self.climb
-        if grounded:
-            self.time_since_ground = 0
-            self.jumps_left = MAX_JUMPS
-        else:
-            self.time_since_ground += dt
 
         if self.jump_buffer_timer > 0:
             self.jump_buffer_timer -= dt
 
-        want_jump = self.jump_pressed or (self.jump_buffer_timer > 0)
+        want_jump = self.jump_pressed
 
         if want_jump:
-            can_coyote = (self.time_since_ground <= COYOTE_TIME)
-            if grounded or can_coyote:
+            if grounded and self.jump_buffer_timer > 0:
                 if self.climb:
                     if self.face_direction:
                         self.change_x = -self.speed * 2
                     else:
                         self.change_x = self.speed
                 self.engine.jump(self.jump_speed)
-                self.jump_buffer_timer = 0
 
         if self.change_x and self.change_y == 0:
             self.is_walking = True
@@ -220,6 +216,9 @@ class Hero(arcade.Sprite):
             else:
                 self.is_in_air = False
             self.is_walking = False
+
+        if self.collides_with_list(self.tile_map.sprite_lists['Thorns']):
+            self.damage(1)
 
         self.climb = False
 
@@ -253,7 +252,16 @@ class Hero(arcade.Sprite):
             if self.right_hero:
                 hero_body.velocity = (hero_body.velocity.x + 5, hero_body.velocity.y)
         else:
+          if self.double_jump:
+              self.engine.enable_multi_jump(2)
+          else:
+              self.engine.enable_multi_jump(1)
+
             self.engine.update()
+
+        if not self.is_in_air and self.change_y == 0:
+            self.jumps_left = 0
+            self.jump_emit = False
 
     def update_animation(self, delta_time: float = 1 / 60):
         if self.is_walking:
@@ -312,3 +320,10 @@ class Hero(arcade.Sprite):
         else:
             self.texture = arcade.Texture(
                 ImageEnhance.Brightness(self.texture.image).enhance(1.5)).flip_horizontally()
+
+    def damage(self, power):
+        print(self.health)
+        p = min([(abs(self.center_x - sp.center_x) + abs(self.center_y - sp.center_y), sp) for sp in
+                 self.tile_map.sprite_lists['Safe_point']], key=lambda x: x[0])
+        self.position = p[1].position
+        self.health -= power

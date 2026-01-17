@@ -48,6 +48,7 @@ class GameView_test_2(GameView_common):
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, Textures.tile_map_test_2)
         self.hero.world_camera = self.world_camera
+        self.hero.double_jump = True
 
     def on_draw(self):
         self.clear()
