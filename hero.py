@@ -3,6 +3,7 @@ from PIL import ImageEnhance
 from consts import *
 from textures import Textures
 import pymunk
+import math
 
 
 class Hero(arcade.Sprite):
@@ -279,8 +280,26 @@ class Hero(arcade.Sprite):
                 self.texture = self.textures_hero['in_air']
             else:
                 self.texture = self.textures_hero['in_air'].flip_horizontally()
+
         else:
             self.texture = self.textures_hero['to_us']
+
+        if self.is_hooked:
+            hook_x, hook_y = self.joint.anchor_a
+            x_diff = hook_x - self.center_x
+            y_diff = hook_y - self.center_y
+            angle = math.atan2(y_diff, x_diff)
+
+            self.angle = -math.degrees(angle) + 90
+
+            if self.face_direction:
+                self.texture = self.textures_hero['climb']
+                self.angle -= 10
+            else:
+                self.texture = self.textures_hero['climb'].flip_horizontally()
+                self.angle += 10
+        else:
+            self.angle = 0
 
         if self.climb:
             if self.face_direction:
