@@ -1,18 +1,118 @@
 import arcade
-import textures
-from pyglet.graphics import Batch
+from consts import *
+from arcade.gui import UIManager, UITextureButton
 
 
-class PauseView(arcade.View):
-    def __init__(self, game_view):
-        super().__init__()
-        self.game_view = game_view
+class PausPopup:
+    def __init__(self, parent_view):
+        self.parent_view = parent_view
+        self.visible = False
+        self.manager = UIManager()
+        self.setup_ui()
 
-    def on_draw(self):
-        self.clear()
-        arcade.draw_circle_filled(100, 100, 200, arcade.color.GREEN)
+    def setup_ui(self):
+        self.manager.clear()
 
-    def on_update(self, delta_time):
-        print(textures.Textures.pvt)
-        textures.Textures.f2()
-        self.window.show_view(self.game_view)
+        self.saves_button = UITextureButton(
+            texture=self.parent_view.textures['buttons']['style1']['normal'],
+            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
+            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
+            width=200,
+            height=50,
+            text="Сохранения",
+            style=BUTTON_STYLE1)
+
+        self.close_button = UITextureButton(
+            texture=self.parent_view.textures['buttons']['style1']['normal'],
+            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
+            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
+            width=200,
+            height=50,
+            text="Закрыть",
+            style=BUTTON_STYLE1)
+
+        self.saves_button.on_click = self.saves
+        self.close_button.on_click = self.close
+
+        self.manager.add(self.saves_button)
+        self.manager.add(self.close_button)
+
+        self.resize_positihon()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if self.visible:
+            self.manager.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        if self.visible:
+            self.manager.on_mouse_release(x, y, button, modifiers)
+
+    def resize_positihon(self):
+        width = self.parent_view.window.width
+
+        hiegh = self.parent_view.window.height
+
+        self.saves_button.center_x = width // 2
+        self.saves_button.center_y = hiegh // 2
+
+        self.close_button.center_x = width // 2
+        self.close_button.center_y = hiegh // 2 - 150
+
+    def saves(self, event=None):
+        print("Будет отдельное окно с сохранениями")
+
+    def show(self):
+        self.visible = True
+        self.manager.enable()
+        self.resize_positihon()
+
+    def close(self, event=None):
+        self.visible = False
+        self.manager.disable()
+
+    def draw(self):
+        if not self.visible:
+            return
+
+        window_width = self.parent_view.window.width
+        window_hieg = self.parent_view.window.height
+
+        settings_width = window_width * 0.6
+        settings_hieg = window_hieg * 0.7
+
+        settings_width = max(300, settings_width)
+        settings_hieg = max(400, settings_hieg)
+
+        window_left = window_width // 2 - settings_width // 2
+        window_right = window_left + settings_width
+        window_bottom = window_hieg // 2 - settings_hieg // 2
+        window_top = window_bottom + settings_hieg
+
+        arcade.draw_lrbt_rectangle_filled(
+            left=window_left,
+            right=window_right,
+            top=window_top,
+            bottom=window_bottom,
+            color=(0, 0, 0, 200))
+
+        arcade.draw_lrbt_rectangle_outline(
+            left=window_left,
+            right=window_right,
+            top=window_top,
+            bottom=window_bottom,
+            color=arcade.color.BLACK,
+            border_width=3)
+
+        arcade.draw_text(
+            "Пауза",
+            window_width // 2,
+            window_top - 50,
+            arcade.color.WHITE,
+            font_size=min(24, int(window_width * 0.03)),
+            anchor_x="center",
+            anchor_y="center")
+
+        self.manager.draw()
+
+    def on_resize(self, width, height):
+        self.resize_positihon()
