@@ -6,6 +6,7 @@ from arcade.gui import UIManager, UITextureButton
 
 class SettingsPopup:
     def __init__(self, parent_view):
+        super().__init__()
         self.parent_view = parent_view
         self.visible = False
         self.vki_music = True
