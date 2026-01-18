@@ -2,11 +2,11 @@ import arcade
 import textures
 from pyglet.graphics import Batch
 
+
 class PauseView(arcade.View):
     def __init__(self, game_view):
         super().__init__()
         self.game_view = game_view
-
 
     def on_draw(self):
         self.clear()
