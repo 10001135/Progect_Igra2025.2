@@ -8,8 +8,8 @@ class SettingsPopup:
     def __init__(self, parent_view):
         self.parent_view = parent_view
         self.visible = False
-        self.play_music = True
-        self.player = AudioPlayer("assets/music/standart.mp3")
+        self.vki_music = True
+        self.musik = AudioPlayer("assets/music/standart.mp3")
         self.manager = UIManager()
         self.setup_ui()
 
@@ -53,12 +53,12 @@ class SettingsPopup:
         self.resize_positihon()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if self.visible and self.manager:
-            pass
+        if self.visible:
+            self.manager.on_mouse_press(x, y, button, modifiers)
 
     def on_mouse_release(self, x, y, button, modifiers):
-        if self.visible and self.manager:
-            pass
+        if self.visible:
+            self.manager.on_mouse_release(x, y, button, modifiers)
 
     def resize_positihon(self):
         width = self.parent_view.window.width
@@ -78,12 +78,12 @@ class SettingsPopup:
         print("Будет отдельное окно с сохранениями")
 
     def music(self, event=None):
-        if self.play_music:
-            self.player.play(loop=-1)
-            self.play_music = False
+        if self.vki_music:
+            self.musik.play(loop=-1)
+            self.vki_music = False
         else:
-            self.player.stop()
-            self.play_music = True
+            self.musik.stop()
+            self.vki_music = True
 
     def show(self):
         self.visible = True
@@ -98,19 +98,19 @@ class SettingsPopup:
         if not self.visible:
             return
 
-        win_w = self.parent_view.window.width
-        win_h = self.parent_view.window.height
+        window_width = self.parent_view.window.width
+        window_hieg = self.parent_view.window.height
 
-        popup_width = win_w * 0.6
-        popup_height = win_h * 0.7
+        settings_width = window_width * 0.6
+        settings_hieg = window_hieg * 0.7
 
-        popup_width = max(300, popup_width)
-        popup_height = max(400, popup_height)
+        settings_width = max(300, settings_width)
+        settings_hieg = max(400, settings_hieg)
 
-        window_left = win_w // 2 - popup_width // 2
-        window_right = window_left + popup_width
-        window_bottom = win_h // 2 - popup_height // 2
-        window_top = window_bottom + popup_height
+        window_left = window_width // 2 - settings_width // 2
+        window_right = window_left + settings_width
+        window_bottom = window_hieg // 2 - settings_hieg // 2
+        window_top = window_bottom + settings_hieg
 
         arcade.draw_lrbt_rectangle_filled(
             left=window_left,
@@ -129,10 +129,10 @@ class SettingsPopup:
 
         arcade.draw_text(
             "НАСТРОЙКИ",
-            win_w // 2,
+            window_width // 2,
             window_top - 50,
             arcade.color.WHITE,
-            font_size=min(24, int(win_w * 0.03)),
+            font_size=min(24, int(window_width * 0.03)),
             anchor_x="center",
             anchor_y="center")
 
