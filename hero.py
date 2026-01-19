@@ -61,6 +61,8 @@ class Hero(arcade.Sprite):
         self.jumps_left = 0
         self.jump_emit = False
 
+        self.on_ladder = False
+
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
             self.left_hero = True
@@ -187,6 +189,15 @@ class Hero(arcade.Sprite):
             self.dash_light = (False, True)
             self.light_time = LIGHT_TIME
 
+        self.on_ladder = self.engine.is_on_ladder()
+        if self.on_ladder:
+            if self.up_hero and not self.down_hero:
+                self.change_y = self.speed
+            elif self.down_hero and not self.up_hero:
+                self.change_y = -self.speed
+            else:
+                self.change_y = 0
+
         if not self.preserve_moment:
             self.change_x = move
         else:
@@ -310,6 +321,9 @@ class Hero(arcade.Sprite):
                 self.texture = self.textures_hero['climb']
             else:
                 self.texture = self.textures_hero['climb'].flip_horizontally()
+
+        if self.on_ladder:
+            self.texture = self.textures_hero['to_forest']
 
         if self.dash_light == (False, True):
             self.dash_light = (True, False)
