@@ -32,7 +32,7 @@ class CameraForHero(Camera2D):
         half_w = self.viewport_width / 2
         half_h = self.viewport_height / 2
         target_x = max(half_w, min(self.world_width - half_w, target_x))
-        target_y = max(half_h, min(self.world_height - half_h, target_y))
+        target_y = max(half_h, min(self.world_height - half_h, target_y + 60 * SCALE))
 
         smooth_x = (1 - CAMERA_LERP) * cam_x + CAMERA_LERP * target_x
         smooth_y = (1 - CAMERA_LERP) * cam_y + CAMERA_LERP * target_y

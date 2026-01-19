@@ -52,10 +52,16 @@ class Textures:
         Textures.tile_map_ma_level_1 = arcade.load_tilemap(Textures.map_ma_level_1, scaling=3 * SCALE)
 
     @staticmethod
+    def textures_ma_level_2():
+        Textures.map_ma_level_2 = "assets/levels/MA_Level_2.tmx"
+        Textures.tile_map_ma_level_2 = arcade.load_tilemap(Textures.map_ma_level_2, scaling=3 * SCALE)
+
+    @staticmethod
     def texture_hero_1():
         hero = {'to_us': arcade.load_texture('assets/textures/Hero/Engineer.png'), 'walk': [],
                 'in_air': arcade.load_texture('assets/textures/Hero/Engineer_Walk_4.png'),
-                'climb': arcade.load_texture('assets/textures/Hero/Engineer_climb.png')}
+                'climb': arcade.load_texture('assets/textures/Hero/Engineer_climb.png'),
+                'to_forest': arcade.load_texture('assets/textures/Hero/Engineer_to_forest.png'),}
         for i in range(1, 5):
             hero['walk'].append(arcade.load_texture(f"assets/textures/Hero/Engineer_Walk_{i}.png"))
         Textures.hero = {'Hero': hero}

@@ -5,7 +5,10 @@ from texts import text_d
 from arcade.gui import UIManager, UITextureButton
 from arcade.gui.widgets.layout import UIAnchorLayout, UIBoxLayout
 from views.test_levels.game_view_test_1 import GameView_test_1
+from hero import Hero
 from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
+from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
+
 
 
 class BgPart(arcade.Sprite):
@@ -169,7 +172,7 @@ class MainMenuView(arcade.View):
                                          style=BUTTON_STYLE2)
 
         play_button.on_click = lambda event: (Textures.texture_hero_1(),
-                                              self.window.show_view(GameView_test_1()),
+                                              self.window.show_view(GameView_ma_level_1(Hero())),
                                               self.manager.disable())
 
         self.box_layout.add(play_button)
