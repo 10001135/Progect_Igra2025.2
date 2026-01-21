@@ -1,5 +1,6 @@
 import arcade
 from consts import *
+from textures import Textures
 from arcade.gui import UIManager, UITextureButton
 
 
@@ -8,24 +9,27 @@ class PausPopup:
         self.parent_view = parent_view
         self.visible = False
         self.manager = UIManager()
-        self.setup_ui()
 
     def setup_ui(self):
         self.manager.clear()
 
+        Textures.textures_main_menu()
+
+        buttons_textures = Textures.textures_in_menu['buttons']['style1']
+
         self.saves_button = UITextureButton(
-            texture=self.parent_view.textures['buttons']['style1']['normal'],
-            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
-            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
             width=200,
             height=50,
             text="Сохранения",
             style=BUTTON_STYLE1)
 
         self.close_button = UITextureButton(
-            texture=self.parent_view.textures['buttons']['style1']['normal'],
-            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
-            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
             width=200,
             height=50,
             text="Закрыть",
