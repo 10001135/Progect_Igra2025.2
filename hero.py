@@ -2,7 +2,7 @@ import arcade
 from PIL import ImageEnhance
 from consts import *
 from textures import Textures
-from views.inventory_view import Inventory
+from views.pause_view import PausPopup
 
 
 class Hero(arcade.Sprite):
@@ -53,6 +53,8 @@ class Hero(arcade.Sprite):
         self.time_since_ground = 999.0
         self.jumps_left = MAX_JUMPS
 
+        self.pause_popup = PausPopup(self)
+
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
             self.left_hero = True
@@ -73,6 +75,9 @@ class Hero(arcade.Sprite):
             self.dash = True
             self.dash_time = DASH_TIME
             self.dash_light = (False, False)
+
+        if key == arcade.key.ESCAPE:
+            self.pause_popup.show()
 
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -224,3 +229,12 @@ class Hero(arcade.Sprite):
         else:
             self.texture = arcade.Texture(
                 ImageEnhance.Brightness(self.texture.image).enhance(1.5)).flip_horizontally()
+
+    def on_draw(self):
+        self.pause_popup.draw()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        self.pause_popup.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        self.pause_popup.on_mouse_release(x, y, button, modifiers)
