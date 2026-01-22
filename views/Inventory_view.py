@@ -1,9 +1,10 @@
 import arcade
 from consts import *
+from textures import Textures
 from arcade.gui import UIManager, UITextureButton
 
 
-class SettingsPopup:
+class InventoryPopup:
     def __init__(self, parent_view):
         self.parent_view = parent_view
         self.visible = False
@@ -13,12 +14,16 @@ class SettingsPopup:
     def setup_ui(self):
         self.manager.clear()
 
+        Textures.textures_main_menu()
+
+        buttons_textures = Textures.textures_in_menu['buttons']['style1']
+
         self.close_button = UITextureButton(
-            texture=self.parent_view.textures['buttons']['style1']['normal'],
-            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
-            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
-            width=200,
-            height=50,
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=200 * SCALE,
+            height=50 * SCALE,
             text="Закрыть",
             style=BUTTON_STYLE1)
 
@@ -37,12 +42,8 @@ class SettingsPopup:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
     def resize_positihon(self):
-        width = self.parent_view.window.width
-
-        hiegh = self.parent_view.window.height
-
-        self.close_button.center_x = width // 2
-        self.close_button.center_y = hiegh // 2 - 150
+        self.close_button.center_x = SCREEN_WIDTH // 2
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
 
     def show(self):
         self.visible = True
@@ -57,18 +58,15 @@ class SettingsPopup:
         if not self.visible:
             return
 
-        window_width = self.parent_view.window.width
-        window_hieg = self.parent_view.window.height
-
-        settings_width = window_width * 0.6
-        settings_hieg = window_hieg * 0.7
+        settings_width = SCREEN_WIDTH * 0.6
+        settings_hieg = SCREEN_HEIGHT * 0.7
 
         settings_width = max(300, settings_width)
         settings_hieg = max(400, settings_hieg)
 
-        window_left = window_width // 2 - settings_width // 2
+        window_left = SCREEN_WIDTH // 2 - settings_width // 2
         window_right = window_left + settings_width
-        window_bottom = window_hieg // 2 - settings_hieg // 2
+        window_bottom = SCREEN_HEIGHT // 2 - settings_hieg // 2
         window_top = window_bottom + settings_hieg
 
         arcade.draw_lrbt_rectangle_filled(
@@ -88,10 +86,10 @@ class SettingsPopup:
 
         arcade.draw_text(
             "Инвентарь",
-            window_width // 2,
+            SCREEN_WIDTH // 2,
             window_top - 50,
             arcade.color.WHITE,
-            font_size=min(24, int(window_width * 0.03)),
+            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
             anchor_x="center",
             anchor_y="center")
 
