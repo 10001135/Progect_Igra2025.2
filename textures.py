@@ -64,4 +64,9 @@ class Textures:
                 'to_forest': arcade.load_texture('assets/textures/Hero/Engineer_to_forest.png'),}
         for i in range(1, 5):
             hero['walk'].append(arcade.load_texture(f"assets/textures/Hero/Engineer_Walk_{i}.png"))
-        Textures.hero = {'Hero': hero}
+        Textures.hero = {'Hero': hero, 'Dialog': 'assets/textures/Hero/Engineer_dialog.png'}
+
+    @staticmethod
+    def texture_king():
+        king = [arcade.load_texture(f'assets/textures/NPC/King_without_kindom/king{i}.png') for i in range(1, 3)]
+        Textures.king = {'King': king}

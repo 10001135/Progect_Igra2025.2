@@ -4,6 +4,7 @@ from camera_for_hero import CameraForHero
 from textures import Textures
 from consts import *
 from views.game_view_common import GameView_common
+from views.load_view import LoadView
 
 
 class GameView_ma_level_1(GameView_common):
@@ -44,6 +45,7 @@ class GameView_ma_level_1(GameView_common):
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)
+        self.world_camera.set()
         self.engine = arcade.PhysicsEnginePlatformer(
             player_sprite=self.hero,
             gravity_constant=GRAVITY,
@@ -74,11 +76,8 @@ class GameView_ma_level_1(GameView_common):
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
-        if not self.load:
-            for hero in self.hero_l:
-                b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.left > enter2.right]
-            if sum(b) > 0:
-                self.load = True
-                from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
-                self.window.show_view(GameView_ma_level_2(self.hero, 1))
-
+        for hero in self.hero_l:
+            b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.left > enter2.right and abs(hero.center_y - enter2.center_y) < enter2.height]
+        if sum(b) > 0:
+            from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
+            self.window.show_view(LoadView(self.hero, 1, GameView_ma_level_2))
