@@ -2,17 +2,11 @@ import arcade
 import traceback
 import sys
 
-import win32con
-import win32gui
-import pygetwindow as gw
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPaintEvent
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QMessageBox
 from arcade import get_display_size
 
-from texts import text_d
-from camera_for_hero import CameraForHero
 from consts import *
 
 from dialog_fr_ui import Ui_MainWindow
