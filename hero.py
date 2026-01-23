@@ -278,7 +278,7 @@ class Hero(arcade.Sprite):
             self.jumps_left = 0
             self.jump_emit = False
 
-    def update_animation(self, delta_time: float = 1 / 60):
+    def update_animation(self, delta_time):
         if self.is_walking:
             self.texture_change_time += delta_time
             if self.texture_change_time >= self.texture_change_delay:

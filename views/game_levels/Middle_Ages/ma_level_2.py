@@ -5,6 +5,8 @@ from textures import Textures
 from hero import Hero
 from consts import *
 from views.game_view_common import GameView_common
+from views.load_view import LoadView
+from NPC.king_without_kindom import KingWithoutKindom
 
 
 class GameView_ma_level_2(GameView_common):
@@ -46,6 +48,7 @@ class GameView_ma_level_2(GameView_common):
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)
+        self.world_camera.set()
         self.engine = arcade.PhysicsEnginePlatformer(
             player_sprite=self.hero,
             gravity_constant=GRAVITY,
@@ -54,6 +57,11 @@ class GameView_ma_level_2(GameView_common):
         )
         self.hero.engine = self.engine
 
+        self.npc = arcade.SpriteList()
+
+        self.king = KingWithoutKindom(*self.tile_map.sprite_lists['King'][0].position, 0)
+        self.npc.append(self.king)
+
         self.set_darkness()
 
     def on_draw(self):
@@ -61,6 +69,7 @@ class GameView_ma_level_2(GameView_common):
         self.decor_list_b_b.draw(pixelated=True)
         self.decor_list_b.draw(pixelated=True)
         self.decor_list_b_f.draw(pixelated=True)
+        self.npc.draw(pixelated=True)
         # self.decor_list_f.draw(pixelated=True)
 
         # self.ladders_list.draw(pixelated=True)
@@ -77,10 +86,14 @@ class GameView_ma_level_2(GameView_common):
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
-        if not self.load:
-            for hero in self.hero_l:
-                b = [1 for enter1 in self.tile_map.sprite_lists['Enter_1'] if hero.right< enter1.left]
-            if sum(b) > 0:
-                self.load = True
-                from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
-                self.window.show_view(GameView_ma_level_1(self.hero, 2))
+        for hero in self.hero_l:
+            b = [1 for enter1 in self.tile_map.sprite_lists['Enter_1'] if hero.right< enter1.left]
+        if sum(b) > 0:
+            from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
+            self.window.show_view(LoadView(self.hero, 2, GameView_ma_level_1))
+
+        for npc in self.npc:
+            npc.update_animation(delta_time)
+
+        if self.hero_l[0].collides_with_sprite(self.king):
+            self.king.firstD.start()
