@@ -70,3 +70,9 @@ class Textures:
     def texture_king():
         king = [arcade.load_texture(f'assets/textures/NPC/King_without_kindom/king{i}.png') for i in range(1, 3)]
         Textures.king = {'King': king}
+
+    @staticmethod
+    def texture_gui():
+        heart = arcade.load_texture(f'assets/textures/GUI/Heart.png')
+        unheart = arcade.load_texture(f'assets/textures/GUI/Unheart.png')
+        Textures.gui = {'Heart': heart, 'Unheart': unheart}
