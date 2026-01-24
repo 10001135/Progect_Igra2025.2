@@ -38,7 +38,7 @@ class GameView_ma_level_2(GameView_common):
 
         # self.ladders_list = self.tile_map.sprite_lists['Ladders']
 
-        self.hero = Hero(self.tile_map)
+        self.hero.level = self
         if level_p:
             if level_p == 1:
                 self.reborn_point = self.reborn_point_list[0].position
@@ -57,10 +57,13 @@ class GameView_ma_level_2(GameView_common):
         )
         self.hero.engine = self.engine
 
-        self.npc = arcade.SpriteList()
-
-        self.king = KingWithoutKindom(*self.tile_map.sprite_lists['King'][0].position, 0)
+        self.king = KingWithoutKindom(*self.tile_map.sprite_lists['King'][0].position)
         self.npc.append(self.king)
+
+        for npc in self.npc:
+            if npc.__class__.__name__ in self.hero.story_npc:
+                npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
+                npc.story_change()
 
         self.set_darkness()
 
@@ -82,6 +85,20 @@ class GameView_ma_level_2(GameView_common):
 
         self.update_darkness()
 
+        self.gui_camera.use()
+        if self.hero.collides_with_list(self.npc):
+            arcade.draw_lbwh_rectangle_filled(self.text_talk.position[0] - 10 * SCALE, self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE,
+                                              self.text_talk.content_width + 20 * SCALE, self.text_talk.content_height + 20 * SCALE, (21, 32, 59))
+            arcade.draw_circle_filled(self.text_talk.position[0] - 10 * SCALE,
+                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
+                                              self.text_talk.content_height + 20 * SCALE) / 2, (
+                                              self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
+            arcade.draw_circle_filled(self.text_talk.position[0] + 10 * SCALE + self.text_talk.content_width,
+                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
+                                              self.text_talk.content_height + 20 * SCALE) / 2, (
+                                              self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
+            self.text_talk.draw()
+
 
 
     def on_update(self, delta_time):
@@ -94,6 +111,3 @@ class GameView_ma_level_2(GameView_common):
 
         for npc in self.npc:
             npc.update_animation(delta_time)
-
-        if self.hero_l[0].collides_with_sprite(self.king):
-            self.king.firstD.start()
