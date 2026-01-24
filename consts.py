@@ -1,6 +1,6 @@
 from arcade.gui import UITextureButtonStyle
 
-SCALE = 0.5
+SCALE = 0.9999
 SCREEN_WIDTH = int(1920 * SCALE)
 SCREEN_HEIGHT = int(1080 * SCALE)
 

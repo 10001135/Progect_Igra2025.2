@@ -86,18 +86,7 @@ class GameView_ma_level_2(GameView_common):
         self.update_darkness()
 
         self.gui_camera.use()
-        if self.hero.collides_with_list(self.npc):
-            arcade.draw_lbwh_rectangle_filled(self.text_talk.position[0] - 10 * SCALE, self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE,
-                                              self.text_talk.content_width + 20 * SCALE, self.text_talk.content_height + 20 * SCALE, (21, 32, 59))
-            arcade.draw_circle_filled(self.text_talk.position[0] - 10 * SCALE,
-                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
-                                              self.text_talk.content_height + 20 * SCALE) / 2, (
-                                              self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
-            arcade.draw_circle_filled(self.text_talk.position[0] + 10 * SCALE + self.text_talk.content_width,
-                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
-                                              self.text_talk.content_height + 20 * SCALE) / 2, (
-                                              self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
-            self.text_talk.draw()
+        self.gui()
 
 
 
