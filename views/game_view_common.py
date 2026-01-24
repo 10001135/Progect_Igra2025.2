@@ -2,6 +2,8 @@ import arcade
 from math import sqrt
 from random import uniform
 from arcade.particles import Emitter, EmitBurst, FadeParticle
+from texts import text_d
+
 from consts import *
 from textures import Textures
 from views.dialog import Dialog
@@ -40,6 +42,13 @@ class GameView_common(arcade.View):
         self.emitter_trace = {}
         self.emitter_clouds = {}
         self.reborn_point = (200, 200)
+        self.npc = arcade.SpriteList()
+        self.gui_camera = arcade.camera.Camera2D()
+
+        self.text_talk = arcade.Text(text_d['t_to_talk'],
+                                     SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                     30 * SCALE)
+        self.text_talk.position = (SCREEN_WIDTH - self.text_talk.content_width - 50 * SCALE, 36 * SCALE)
 
     def draw_hook(self):
         if self.hero.is_hooked:

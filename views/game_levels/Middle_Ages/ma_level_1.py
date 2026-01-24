@@ -42,6 +42,7 @@ class GameView_ma_level_1(GameView_common):
         else:
             self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
+        self.hero.level = self
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)
@@ -73,11 +74,23 @@ class GameView_ma_level_1(GameView_common):
 
         self.update_darkness()
 
+        self.gui_camera.use()
+        if self.hero.collides_with_list(self.npc):
+            arcade.draw_lbwh_rectangle_filled(self.text_talk.position[0] - 10 * SCALE,
+                                              self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE,
+                                              self.text_talk.content_width + 20 * SCALE,
+                                              self.text_talk.content_height + 20 * SCALE, (21, 32, 59))
+            arcade.draw_circle_filled(self.text_talk.position[0] - 10 * SCALE,
+                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
+                                                  self.text_talk.content_height + 20 * SCALE) / 2, (
+                                                  self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
+            self.text_talk.draw()
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
         for hero in self.hero_l:
-            b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.left > enter2.right and abs(hero.center_y - enter2.center_y) < enter2.height]
+            b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if
+                 hero.left > enter2.right and abs(hero.center_y - enter2.center_y) < enter2.height]
         if sum(b) > 0:
             from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
             self.window.show_view(LoadView(self.hero, 1, GameView_ma_level_2))

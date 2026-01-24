@@ -21,6 +21,7 @@ class LoadView(arcade.View):
         text_size = font_size * len(text) / 2
         text_a = arcade.Text(text, SCREEN_WIDTH / 2 - text_size * SCALE, SCREEN_HEIGHT / 2, color=(182, 154, 122),
                              font_name='Comic Sans MS pixel rus eng', font_size=font_size)
+        text_a.position = ((SCREEN_WIDTH / 2) - (text_a.content_width / 2), SCREEN_HEIGHT / 2)
         text_a.draw()
 
     def on_update(self, delta_time):

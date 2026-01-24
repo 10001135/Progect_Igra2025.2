@@ -63,6 +63,8 @@ class Hero(arcade.Sprite):
 
         self.on_ladder = False
 
+        self.story_npc = {}
+
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
             self.left_hero = True
@@ -93,6 +95,12 @@ class Hero(arcade.Sprite):
             self.dash = True
             self.dash_time = DASH_TIME
             self.dash_light = (False, False)
+
+        if key == arcade.key.T:
+            for npc in self.collides_with_list(self.level.npc):
+                npc.story_change()
+                npc.dialog.start()
+                self.story_npc[npc.__class__.__name__] = (npc.story, npc.dialog, npc.greeting)
 
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
