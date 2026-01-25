@@ -21,6 +21,7 @@ def make_trace(hero):
         ),
     )
 
+
 def make_cloud_for_hero(hero):
     return [Emitter(
         center_xy=(hero.center_x + uniform(-hero.width // 2, hero.width // 2), hero.bottom + uniform(0, 5 * SCALE)),
@@ -39,6 +40,8 @@ class GameView_common(arcade.View):
     def __init__(self, hero):
         super().__init__()
         self.hero = hero
+        if self.__class__.__name__ not in self.hero.chests_open_coord:
+            self.hero.chests_open_coord[self.__class__.__name__] = []
         Textures.texture_gui()
         self.emitter_trace = {}
         self.emitter_clouds = {}
@@ -55,6 +58,11 @@ class GameView_common(arcade.View):
                                      SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
                                      30 * SCALE)
         self.text_save.position = (SCREEN_WIDTH - self.text_save.content_width - 50 * SCALE, 36 * SCALE)
+
+        self.text_open = arcade.Text(text_d['o_to_open'],
+                                     SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                     30 * SCALE)
+        self.text_open.position = (SCREEN_WIDTH - self.text_open.content_width - 50 * SCALE, 36 * SCALE)
 
     def draw_hook(self):
         if self.hero.is_hooked:
@@ -79,7 +87,8 @@ class GameView_common(arcade.View):
         for d in self.darkness_list:
             a = 255
             for light in self.light_list:
-                r = sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2) / (SCALE / (1 / 3))
+                r = sqrt(abs(d.center_x - light.center_x) ** 2 + abs(d.center_y - light.center_y) ** 2) / (
+                        SCALE / (1 / 3))
                 if r < a:
                     a = r
             d.alpha = a
@@ -89,9 +98,11 @@ class GameView_common(arcade.View):
     def update_darkness(self):
         for d in self.d_list:
             a = 255
-            if (abs(self.world_camera.position[0] - d.center_x) <= (SCREEN_WIDTH // 2)) and (abs(self.world_camera.position[1] - d.center_y) <= (SCREEN_HEIGHT // 2)):
+            if (abs(self.world_camera.position[0] - d.center_x) <= (SCREEN_WIDTH // 2)) and (
+                    abs(self.world_camera.position[1] - d.center_y) <= (SCREEN_HEIGHT // 2)):
                 for hero in self.hero_l:
-                    r = sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2) / (SCALE / 0.5)
+                    r = sqrt(abs(d.center_x - hero.center_x) ** 2 + abs(d.center_y - hero.center_y) ** 2) / (
+                            SCALE / 0.5)
                     if r < a:
                         a = r
                 d.alpha = min(d.alpha_p, a)
@@ -102,7 +113,8 @@ class GameView_common(arcade.View):
         if self.background_list:
             self.background_list.draw(pixelated=True)
         p = self.world_camera.position
-        arcade.draw.draw_lbwh_rectangle_filled(p[0] - SCREEN_WIDTH / 2, p[1] - SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.Color(0, 0, 0, 120))
+        arcade.draw.draw_lbwh_rectangle_filled(p[0] - SCREEN_WIDTH / 2, p[1] - SCREEN_HEIGHT / 2, SCREEN_WIDTH,
+                                               SCREEN_HEIGHT, arcade.color.Color(0, 0, 0, 120))
         self.walls_list_p.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
         self.reborn_bed_list.draw(pixelated=True)
@@ -132,9 +144,9 @@ class GameView_common(arcade.View):
 
             tile_map_size = (self.tile_map.width * self.tile_map.tile_width * 3 * SCALE,
                              self.tile_map.height * self.tile_map.tile_height * 3 * SCALE)
-            if ((hero.center_y < 0 - (hero.height // 2)) or
-                    (hero.center_x < 0 - (hero.width // 2)) or
-                    (hero.center_x > tile_map_size[0] + (hero.width // 2))):
+            if ((hero.center_y < 0 - (hero.height // 2) - 16 * SCALE) or
+                    (hero.center_x < 0 - (hero.width // 2) - 16 * SCALE) or
+                    (hero.center_x > tile_map_size[0] + (hero.width // 2) + 16 * SCALE)):
                 hero.health = 0
 
             if hero.health <= 0:
@@ -188,6 +200,16 @@ class GameView_common(arcade.View):
                     if e.can_reap():
                         emitter[h].remove(e)
 
+        if 'Chests' in self.tile_map.sprite_lists:
+            for chest in self.chests_list:
+                if chest.position in self.hero.chests_open_coord[self.__class__.__name__]:
+                    chest.texture = Textures.chest_opened['Chest_opened']
+
+        if 'ChestsG' in self.tile_map.sprite_lists:
+            for chestg in self.chestsg_list:
+                if chestg.position in self.hero.chests_open_coord[self.__class__.__name__]:
+                    chestg.texture = Textures.chestg_opened['ChestG_opened']
+
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
         if key == arcade.key.Q:
@@ -196,6 +218,19 @@ class GameView_common(arcade.View):
                 self.hero.light_time = LIGHT_TIME
                 self.hero.health = self.hero.max_health
 
+        if key == arcade.key.O:
+            if 'Chests' in self.tile_map.sprite_lists:
+                for chest in self.hero.collides_with_list(self.chests_list):
+                    if chest.position not in self.hero.chests_open_coord[self.__class__.__name__]:
+                        self.hero.chests_open_coord[self.__class__.__name__].append(chest.position)
+                        self.hero.gold += 1
+
+            if 'ChestsG' in self.tile_map.sprite_lists:
+                for chestg in self.hero.collides_with_list(self.chestsg_list):
+                    if chestg.position not in self.hero.chests_open_coord[self.__class__.__name__]:
+                        self.hero.chests_open_coord[self.__class__.__name__].append(chestg.position)
+                        self.hero.max_health += 1
+                        self.hero.health = self.hero.max_health
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
@@ -212,43 +247,51 @@ class GameView_common(arcade.View):
         hero.dash_time = 0
         hero.light_time = LIGHT_TIME
 
+    def text_field(self, text):
+        arcade.draw_lbwh_rectangle_filled(text.position[0] - 10 * SCALE,
+                                          text.position[1] - text.content_height + 30 * SCALE,
+                                          text.content_width + 20 * SCALE,
+                                          text.content_height + 20 * SCALE, (21, 32, 59))
+
+        arcade.draw_circle_filled(text.position[0] - 10 * SCALE,
+                                  text.position[1] - text.content_height + 30 * SCALE + (
+                                          text.content_height + 20 * SCALE) / 2, (
+                                          text.content_height + 20 * SCALE) / 2, (21, 32, 59))
+        arcade.draw_circle_filled(text.position[0] + text.content_width,
+                                  text.position[1] - text.content_height + 30 * SCALE + (
+                                          text.content_height + 20 * SCALE) / 2, (
+                                          text.content_height + 20 * SCALE) / 2, (21, 32, 59))
+
     def gui(self):
         if self.hero.collides_with_list(self.npc):
-            arcade.draw_lbwh_rectangle_filled(self.text_talk.position[0] - 10 * SCALE,
-                                              self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE,
-                                              self.text_talk.content_width + 20 * SCALE,
-                                              self.text_talk.content_height + 20 * SCALE, (21, 32, 59))
-
-            arcade.draw_circle_filled(self.text_talk.position[0] - 10 * SCALE,
-                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
-                                              self.text_talk.content_height + 20 * SCALE) / 2, (
-                                              self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
-            arcade.draw_circle_filled(self.text_talk.position[0] + self.text_talk.content_width,
-                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
-                                                  self.text_talk.content_height + 20 * SCALE) / 2, (
-                                                  self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
+            self.text_field(self.text_talk)
             self.text_talk.draw()
 
         self.hearts = arcade.SpriteList()
         for h in range(self.hero.max_health):
             if h <= self.hero.health - 1:
-                self.hearts.append(arcade.Sprite(Textures.gui['Heart'], 4 * SCALE, SCALE * (40 + h * 65), SCREEN_HEIGHT - 40 * SCALE))
+                self.hearts.append(
+                    arcade.Sprite(Textures.gui['Heart'], 4 * SCALE, SCALE * (40 + h * 65), SCREEN_HEIGHT - 40 * SCALE))
             else:
-                self.hearts.append(arcade.Sprite(Textures.gui['Unheart'], 4 * SCALE, SCALE * (40 + h * 65), SCREEN_HEIGHT - 40 * SCALE))
+                self.hearts.append(arcade.Sprite(Textures.gui['Unheart'], 4 * SCALE, SCALE * (40 + h * 65),
+                                                 SCREEN_HEIGHT - 40 * SCALE))
         self.hearts.draw(pixelated=True)
 
-        if self.hero.collides_with_list(self.reborn_bed_list):
-            arcade.draw_lbwh_rectangle_filled(self.text_save.position[0] - 10 * SCALE,
-                                              self.text_save.position[1] - self.text_save.content_height + 30 * SCALE,
-                                              self.text_save.content_width + 20 * SCALE,
-                                              self.text_save.content_height + 20 * SCALE, (21, 32, 59))
+        if 'Reborn_bed' in self.tile_map.sprite_lists:
+            if self.hero.collides_with_list(self.reborn_bed_list):
+                self.text_field(self.text_save)
+                self.text_save.draw()
 
-            arcade.draw_circle_filled(self.text_save.position[0] - 10 * SCALE,
-                                      self.text_save.position[1] - self.text_save.content_height + 30 * SCALE + (
-                                              self.text_save.content_height + 20 * SCALE) / 2, (
-                                              self.text_save.content_height + 20 * SCALE) / 2, (21, 32, 59))
-            arcade.draw_circle_filled(self.text_save.position[0] + self.text_save.content_width,
-                                      self.text_save.position[1] - self.text_save.content_height + 30 * SCALE + (
-                                              self.text_save.content_height + 20 * SCALE) / 2, (
-                                              self.text_save.content_height + 20 * SCALE) / 2, (21, 32, 59))
-            self.text_save.draw()
+        if 'Chests' in self.tile_map.sprite_lists:
+            if self.hero.collides_with_list(self.chests_list):
+                if self.hero.collides_with_list(self.chests_list)[0].position not in self.hero.chests_open_coord[
+                    self.__class__.__name__]:
+                    self.text_field(self.text_open)
+                    self.text_open.draw()
+
+        if 'ChestsG' in self.tile_map.sprite_lists:
+            if self.hero.collides_with_list(self.chestsg_list):
+                if self.hero.collides_with_list(self.chestsg_list)[0].position not in self.hero.chests_open_coord[
+                    self.__class__.__name__]:
+                    self.text_field(self.text_open)
+                    self.text_open.draw()
