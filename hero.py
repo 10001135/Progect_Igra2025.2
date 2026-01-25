@@ -19,11 +19,13 @@ class Hero(arcade.Sprite):
         self.preserve_moment = False
         self.moment_timer = 0
 
-        self.scale = 4 * SCALE
+        self.scale = 3.5 * SCALE
         self.speed = MOVE_SPEED
         self.jump_speed = JUMP_SPEED
         self.max_health = 3
         self.health = self.max_health
+
+        self.gold = 0
 
         self.left_hero = False
         self.right_hero = False
@@ -64,6 +66,7 @@ class Hero(arcade.Sprite):
         self.on_ladder = False
 
         self.story_npc = {}
+        self.chests_open_coord = {}
 
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):

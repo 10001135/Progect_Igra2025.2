@@ -47,6 +47,16 @@ class Textures:
         Textures.tile_map_test_2 = arcade.load_tilemap(Textures.map_test_2, scaling=3 * SCALE)
 
     @staticmethod
+    def texture_chests_opened_1():
+        chest_opened = arcade.load_texture(f'assets/textures/Chest_opened.png')
+        Textures.chest_opened = {'Chest_opened': chest_opened}
+
+    @staticmethod
+    def texture_chestsg_opened_1():
+        chest_openedg = arcade.load_texture(f'assets/textures/ChestG_opened.png')
+        Textures.chestg_opened = {'ChestG_opened': chest_openedg}
+
+    @staticmethod
     def textures_ma_level_1():
         Textures.map_ma_level_1 = "assets/levels/MA_Level_1.tmx"
         Textures.tile_map_ma_level_1 = arcade.load_tilemap(Textures.map_ma_level_1, scaling=3 * SCALE)
@@ -55,6 +65,11 @@ class Textures:
     def textures_ma_level_2():
         Textures.map_ma_level_2 = "assets/levels/MA_Level_2.tmx"
         Textures.tile_map_ma_level_2 = arcade.load_tilemap(Textures.map_ma_level_2, scaling=3 * SCALE)
+
+    @staticmethod
+    def textures_ma_level_3():
+        Textures.map_ma_level_3 = "assets/levels/MA_Level_3.tmx"
+        Textures.tile_map_ma_level_3 = arcade.load_tilemap(Textures.map_ma_level_3, scaling=3 * SCALE)
 
     @staticmethod
     def texture_hero_1():
@@ -75,6 +90,11 @@ class Textures:
     def texture_gugunek():
         gugunek = [arcade.load_texture(f'assets/textures/NPC/Gugunek/Gugunek{i}.png') for i in range(2)]
         Textures.gugunek = {'Gugunek': gugunek}
+
+    @staticmethod
+    def texture_nikshulp():
+        nikshulp = [arcade.load_texture(f'assets/textures/NPC/Nikshulp/Nikshulp{i}.png') for i in range(2)]
+        Textures.nikshulp = {'Nikshulp': nikshulp}
 
     @staticmethod
     def texture_gui():
