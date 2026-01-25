@@ -52,10 +52,6 @@ class PausPopup:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
     def resize_positihon(self):
-        width = SCREEN_WIDTH
-
-        hiegh = SCREEN_HEIGHT
-
         self.saves_button.center_x = SCREEN_WIDTH // 2
         self.saves_button.center_y = SCREEN_HEIGHT // 2
 
@@ -101,7 +97,7 @@ class PausPopup:
             right=window_right,
             top=window_top,
             bottom=window_bottom,
-            color=arcade.color.BLACK,
+            color=arcade.color.GOLD,
             border_width=3)
 
         arcade.draw_text(
