@@ -1,5 +1,7 @@
 import arcade
 from math import sqrt
+
+from NPC.gugunek import Gugunek
 from camera_for_hero import CameraForHero
 from textures import Textures
 from hero import Hero
@@ -19,24 +21,25 @@ class GameView_ma_level_2(GameView_common):
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
+        self.reborn_bed_list = self.tile_map.sprite_lists['Reborn_bed']
         self.darkness_list = self.tile_map.sprite_lists['Darkness']
         self.light_list = self.tile_map.sprite_lists['Light']
 
         self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
         self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
         self.decor_list_b_b = self.tile_map.sprite_lists['Decor_back_b']
-        # self.decor_list_f = self.tile_map.sprite_lists['Decor_forw']
+        self.decor_list_f = self.tile_map.sprite_lists['Decor_forw']
 
-        # self.thorns_list = self.tile_map.sprite_lists['Thorns']
+        self.thorns_list = self.tile_map.sprite_lists['Thorns']
 
-        # self.barrier_l = self.tile_map.sprite_lists['Barrier_l']
-        self.walls_list_p = self.walls_list
-        # for wall in (*self.walls_list, *self.barrier_l):
-        #     self.walls_list_p.append(wall)
+        self.barrier_l = self.tile_map.sprite_lists['Barrier_l']
+        self.walls_list_p = arcade.SpriteList()
+        for wall in (*self.walls_list, *self.barrier_l):
+            self.walls_list_p.append(wall)
 
         self.background_list = self.tile_map.sprite_lists['Background']
 
-        # self.ladders_list = self.tile_map.sprite_lists['Ladders']
+        self.ladders_list = self.tile_map.sprite_lists['Ladders']
 
         self.hero.level = self
         if level_p:
@@ -53,12 +56,14 @@ class GameView_ma_level_2(GameView_common):
             player_sprite=self.hero,
             gravity_constant=GRAVITY,
             walls=self.walls_list_p,
-            # ladders=self.ladders_list,
+            ladders=self.ladders_list,
         )
         self.hero.engine = self.engine
 
         self.king = KingWithoutKindom(*self.tile_map.sprite_lists['King'][0].position)
         self.npc.append(self.king)
+        self.gugunek = Gugunek(*self.tile_map.sprite_lists['Gugunek'][0].position)
+        self.npc.append(self.gugunek)
 
         for npc in self.npc:
             if npc.__class__.__name__ in self.hero.story_npc:
@@ -72,12 +77,13 @@ class GameView_ma_level_2(GameView_common):
         self.decor_list_b_b.draw(pixelated=True)
         self.decor_list_b.draw(pixelated=True)
         self.decor_list_b_f.draw(pixelated=True)
+        self.reborn_bed_list.draw(pixelated=True)
         self.npc.draw(pixelated=True)
-        # self.decor_list_f.draw(pixelated=True)
+        self.decor_list_f.draw(pixelated=True)
 
-        # self.ladders_list.draw(pixelated=True)
+        self.ladders_list.draw(pixelated=True)
 
-        # self.thorns_list.draw(pixelated=True)
+        self.thorns_list.draw(pixelated=True)
 
         self.d_list.draw(pixelated=True)
 

@@ -17,6 +17,7 @@ class GameView_ma_level_1(GameView_common):
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
+        self.reborn_bed_list = self.tile_map.sprite_lists['Reborn_bed']
         self.darkness_list = self.tile_map.sprite_lists['Darkness']
         self.light_list = self.tile_map.sprite_lists['Light']
 
@@ -62,6 +63,7 @@ class GameView_ma_level_1(GameView_common):
         self.decor_list_b_b.draw(pixelated=True)
         self.decor_list_b.draw(pixelated=True)
         self.decor_list_b_f.draw(pixelated=True)
+        self.reborn_bed_list.draw(pixelated=True)
         self.decor_list_f.draw(pixelated=True)
 
         self.ladders_list.draw(pixelated=True)
