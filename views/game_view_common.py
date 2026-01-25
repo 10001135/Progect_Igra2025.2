@@ -51,6 +51,11 @@ class GameView_common(arcade.View):
                                      30 * SCALE)
         self.text_talk.position = (SCREEN_WIDTH - self.text_talk.content_width - 50 * SCALE, 36 * SCALE)
 
+        self.text_save = arcade.Text(text_d['q_to_save'],
+                                     SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                     30 * SCALE)
+        self.text_save.position = (SCREEN_WIDTH - self.text_save.content_width - 50 * SCALE, 36 * SCALE)
+
     def draw_hook(self):
         if self.hero.is_hooked:
             hook_x = self.hook_points_list[0].center_x
@@ -100,6 +105,7 @@ class GameView_common(arcade.View):
         arcade.draw.draw_lbwh_rectangle_filled(p[0] - SCREEN_WIDTH / 2, p[1] - SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.Color(0, 0, 0, 120))
         self.walls_list_p.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
+        self.reborn_bed_list.draw(pixelated=True)
         for emmiter in (self.emitter_trace, self.emitter_clouds):
             for h in emmiter:
                 for e in emmiter[h]:
@@ -184,6 +190,12 @@ class GameView_common(arcade.View):
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
+        if key == arcade.key.Q:
+            for bed in self.hero.collides_with_list(self.reborn_bed_list):
+                self.reborn_point = bed.position
+                self.hero.light_time = LIGHT_TIME
+                self.hero.health = self.hero.max_health
+
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
@@ -206,7 +218,12 @@ class GameView_common(arcade.View):
                                               self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE,
                                               self.text_talk.content_width + 20 * SCALE,
                                               self.text_talk.content_height + 20 * SCALE, (21, 32, 59))
+
             arcade.draw_circle_filled(self.text_talk.position[0] - 10 * SCALE,
+                                      self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
+                                              self.text_talk.content_height + 20 * SCALE) / 2, (
+                                              self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
+            arcade.draw_circle_filled(self.text_talk.position[0] + self.text_talk.content_width,
                                       self.text_talk.position[1] - self.text_talk.content_height + 30 * SCALE + (
                                                   self.text_talk.content_height + 20 * SCALE) / 2, (
                                                   self.text_talk.content_height + 20 * SCALE) / 2, (21, 32, 59))
@@ -220,3 +237,18 @@ class GameView_common(arcade.View):
                 self.hearts.append(arcade.Sprite(Textures.gui['Unheart'], 4 * SCALE, SCALE * (40 + h * 65), SCREEN_HEIGHT - 40 * SCALE))
         self.hearts.draw(pixelated=True)
 
+        if self.hero.collides_with_list(self.reborn_bed_list):
+            arcade.draw_lbwh_rectangle_filled(self.text_save.position[0] - 10 * SCALE,
+                                              self.text_save.position[1] - self.text_save.content_height + 30 * SCALE,
+                                              self.text_save.content_width + 20 * SCALE,
+                                              self.text_save.content_height + 20 * SCALE, (21, 32, 59))
+
+            arcade.draw_circle_filled(self.text_save.position[0] - 10 * SCALE,
+                                      self.text_save.position[1] - self.text_save.content_height + 30 * SCALE + (
+                                              self.text_save.content_height + 20 * SCALE) / 2, (
+                                              self.text_save.content_height + 20 * SCALE) / 2, (21, 32, 59))
+            arcade.draw_circle_filled(self.text_save.position[0] + self.text_save.content_width,
+                                      self.text_save.position[1] - self.text_save.content_height + 30 * SCALE + (
+                                              self.text_save.content_height + 20 * SCALE) / 2, (
+                                              self.text_save.content_height + 20 * SCALE) / 2, (21, 32, 59))
+            self.text_save.draw()

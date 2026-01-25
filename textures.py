@@ -72,6 +72,11 @@ class Textures:
         Textures.king = {'King': king}
 
     @staticmethod
+    def texture_gugunek():
+        gugunek = [arcade.load_texture(f'assets/textures/NPC/Gugunek/Gugunek{i}.png') for i in range(2)]
+        Textures.gugunek = {'Gugunek': gugunek}
+
+    @staticmethod
     def texture_gui():
         heart = arcade.load_texture(f'assets/textures/GUI/Heart.png')
         unheart = arcade.load_texture(f'assets/textures/GUI/Unheart.png')
