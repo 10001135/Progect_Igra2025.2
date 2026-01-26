@@ -174,14 +174,7 @@ class InventoryPopup:
                 anchor_x="center",
                 anchor_y="center")
         else:
-            arcade.draw_text(
-                "Что это:( ?",
-                SCREEN_WIDTH // 2,
-                SCREEN_HEIGHT // 2 - 150,
-                arcade.color.WHITE,
-                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-                anchor_x="center",
-                anchor_y="center")
+            self.not_have_pover()
 
     def dobl_jump(self, event=None):
         if DOBL_JUMP:
@@ -193,6 +186,8 @@ class InventoryPopup:
                 font_size=min(24, int(SCREEN_WIDTH * 0.03)),
                 anchor_x="center",
                 anchor_y="center")
+        else:
+            self.not_have_pover()
 
     def climb(self, event=None):
         if CLIMB:
@@ -205,14 +200,7 @@ class InventoryPopup:
                 anchor_x="center",
                 anchor_y="center")
         else:
-            arcade.draw_text(
-                "Что это:( ?",
-                SCREEN_WIDTH // 2,
-                SCREEN_HEIGHT // 2 - 150,
-                arcade.color.WHITE,
-                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-                anchor_x="center",
-                anchor_y="center")
+            self.not_have_pover()
 
     def hook(self, event=None):
         if HOOK:
@@ -225,14 +213,17 @@ class InventoryPopup:
                 anchor_x="center",
                 anchor_y="center")
         else:
-            arcade.draw_text(
-                "Что это:( ?",
-                SCREEN_WIDTH // 2,
-                SCREEN_HEIGHT // 2 - 150,
-                arcade.color.WHITE,
-                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-                anchor_x="center",
-                anchor_y="center")
+            self.not_have_pover()
+            
+    def not_have_pover(self):
+        arcade.draw_text(
+            "Что это:( ?",
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2 - 150,
+            arcade.color.WHITE,
+            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+            anchor_x="center",
+            anchor_y="center")
 
     def draw(self):
         if not self.visible:
