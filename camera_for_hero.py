@@ -10,7 +10,7 @@ class CameraForHero(Camera2D):
             self.world_width = int(self.tile_map.width * self.tile_map.tile_width * 3 * SCALE)
             self.world_height = int(self.tile_map.height * self.tile_map.tile_height * 3 * SCALE)
 
-    def on_update(self):
+    def on_update(self, dt):
         if self.tile_map:
             cam_x, cam_y = self.position
             dz_left = cam_x - DEAD_ZONE_W // 2
@@ -35,8 +35,9 @@ class CameraForHero(Camera2D):
             target_x = max(half_w, min(self.world_width - half_w, target_x))
             target_y = max(half_h, min(self.world_height - half_h, target_y + 60 * SCALE))
 
-            smooth_x = (1 - CAMERA_LERP) * cam_x + CAMERA_LERP * target_x
-            smooth_y = (1 - CAMERA_LERP) * cam_y + CAMERA_LERP * target_y
+            cam_l = CAMERA_LERP * (dt ** 0.3)
+            smooth_x = (1 - cam_l) * cam_x + cam_l * target_x
+            smooth_y = (1 - cam_l) * cam_y + cam_l * target_y
             self.cam_target = (smooth_x, smooth_y)
 
             self.position = (self.cam_target[0], self.cam_target[1])

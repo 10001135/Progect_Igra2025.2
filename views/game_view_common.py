@@ -154,7 +154,7 @@ class GameView_common(arcade.View):
 
             hero.on_update(delta_time)
             hero.update_animation(delta_time)
-        self.world_camera.on_update()
+        self.world_camera.on_update(delta_time)
 
         if 'Barrier_l' in self.tile_map.sprite_lists:
             for hero in self.hero_l:

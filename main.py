@@ -15,6 +15,7 @@ class Platformer(arcade.Window):
 
         window_width, window_height = self.get_framebuffer_size()
         self.set_location((screen_width - window_width) // 2, (screen_height - window_height) // 2)
+        self.set_update_rate(1/60)
     #     self.set_fullscreen(False)
     #
     # def on_key_press(self, key, modifiers):
