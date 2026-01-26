@@ -49,7 +49,14 @@ class InventoryPopup:
                 text="Дэш",
                 style=BUTTON_STYLE1)
         else:
-            pass
+            self.dash_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Дэш",
+                style=BUTTON_STYLE1)
 
         if HOOK:
             self.hook_button = UITextureButton(
@@ -61,7 +68,14 @@ class InventoryPopup:
                 text="Крюк",
                 style=BUTTON_STYLE1)
         else:
-            pass
+            self.hook_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Крюк",
+                style=BUTTON_STYLE1)
 
         if DOBL_JUMP:
             self.dobl_jump_button = UITextureButton(
@@ -73,7 +87,14 @@ class InventoryPopup:
                 text="Двойной прыжок",
                 style=BUTTON_STYLE1)
         else:
-            pass
+            self.dobl_jump_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Двойной прыжок",
+                style=BUTTON_STYLE1)
 
         if CLIMB:
             self.climb_button = UITextureButton(
@@ -85,7 +106,14 @@ class InventoryPopup:
                 text="Лазанье",
                 style=BUTTON_STYLE1)
         else:
-            pass
+            self.climb_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Лазанье",
+                style=BUTTON_STYLE1)
 
         self.close_button.on_click = self.close
         self.climb_button.on_click = self.climb
@@ -111,19 +139,19 @@ class InventoryPopup:
 
     def resize_positihon(self):
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 200
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
 
-        self.hook_button.center_x = SCREEN_WIDTH // 2 + 100
+        self.hook_button.center_x = SCREEN_WIDTH // 2 + 150
         self.hook_button.center_y = SCREEN_HEIGHT // 2
 
-        self.dash_button.center_x = SCREEN_WIDTH // 2 - 100
+        self.dash_button.center_x = SCREEN_WIDTH // 2 - 150
         self.dash_button.center_y = SCREEN_HEIGHT // 2
 
-        self.dobl_jump_button.center_x = SCREEN_WIDTH // 2 + 100
-        self.dobl_jump_button.center_y = SCREEN_HEIGHT // 2 + 150
+        self.dobl_jump_button.center_x = SCREEN_WIDTH // 2 + 150
+        self.dobl_jump_button.center_y = SCREEN_HEIGHT // 2 + 75
 
-        self.climb_button.center_x = SCREEN_WIDTH // 2 - 100
-        self.climb_button.center_y = SCREEN_HEIGHT // 2 + 150
+        self.climb_button.center_x = SCREEN_WIDTH // 2 - 150
+        self.climb_button.center_y = SCREEN_HEIGHT // 2 + 75
 
     def show(self):
         self.visible = True
