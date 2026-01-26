@@ -67,6 +67,7 @@ class Hero(arcade.Sprite):
 
         self.story_npc = {}
         self.chests_open_coord = {}
+        self.det_t = [9, 0]
 
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -161,6 +162,11 @@ class Hero(arcade.Sprite):
             self.moment_timer = 0.2
 
     def on_update(self, dt):
+        self.speed = MOVE_SPEED * (dt ** 0.3)
+        if dt > self.det_t[1]:
+            self.det_t[1] = dt
+        if dt < self.det_t[0]:
+            self.det_t[0] = dt
         if self.moment_timer > 0:
             self.moment_timer -= dt
             if self.moment_timer <= 0:
@@ -231,7 +237,7 @@ class Hero(arcade.Sprite):
                         self.change_x = -self.speed * 2
                     else:
                         self.change_x = self.speed
-                self.engine.jump(self.jump_speed)
+                self.engine.jump(self.jump_speed * (dt ** 0.3))
 
         if self.change_x and self.change_y == 0:
             self.is_walking = True
