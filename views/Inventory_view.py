@@ -9,6 +9,18 @@ class InventoryPopup:
         self.parent_view = parent_view
         self.visible = False
         self.manager = UIManager()
+
+        self.settings_width = SCREEN_WIDTH * 0.6
+        self.settings_hieg = SCREEN_HEIGHT * 0.7
+
+        self.settings_width = max(300, self.settings_width)
+        self.settings_hieg = max(400, self.settings_hieg)
+
+        self.window_left = SCREEN_WIDTH // 2 - self.settings_width // 2
+        self.window_right = self.window_left + self.settings_width
+        self.window_bottom = SCREEN_HEIGHT // 2 - self.settings_hieg // 2
+        self.window_top = self.window_bottom + self.settings_hieg
+
         self.setup_ui()
 
     def setup_ui(self):
@@ -101,17 +113,17 @@ class InventoryPopup:
         self.close_button.center_x = SCREEN_WIDTH // 2
         self.close_button.center_y = SCREEN_HEIGHT // 2 - 200
 
-        self.close_button.center_x = SCREEN_WIDTH // 2 + 100
-        self.close_button.center_y = SCREEN_HEIGHT // 2
+        self.hook_button.center_x = SCREEN_WIDTH // 2 + 100
+        self.hook_button.center_y = SCREEN_HEIGHT // 2
 
-        self.close_button.center_x = SCREEN_WIDTH // 2 - 100
-        self.close_button.center_y = SCREEN_HEIGHT // 2
+        self.dash_button.center_x = SCREEN_WIDTH // 2 - 100
+        self.dash_button.center_y = SCREEN_HEIGHT // 2
 
-        self.close_button.center_x = SCREEN_WIDTH // 2 + 100
-        self.close_button.center_y = SCREEN_HEIGHT // 2 + 150
+        self.dobl_jump_button.center_x = SCREEN_WIDTH // 2 + 100
+        self.dobl_jump_button.center_y = SCREEN_HEIGHT // 2 + 150
 
-        self.close_button.center_x = SCREEN_WIDTH // 2 - 100
-        self.close_button.center_y = SCREEN_HEIGHT // 2 + 150
+        self.climb_button.center_x = SCREEN_WIDTH // 2 - 100
+        self.climb_button.center_y = SCREEN_HEIGHT // 2 + 150
 
     def show(self):
         self.visible = True
@@ -123,51 +135,100 @@ class InventoryPopup:
         self.manager.disable()
 
     def dash(self, event=None):
-        pass
+        if DASH:
+            arcade.draw_text(
+                "Странный щит с глазом по середине. Стоп что, глаз стал ртом? ААААААААА!! Почему меня перенесло вперёд?\
+                (даёт dash)",
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - 150,
+                arcade.color.WHITE,
+                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+                anchor_x="center",
+                anchor_y="center")
+        else:
+            arcade.draw_text(
+                "Что это:( ?",
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - 150,
+                arcade.color.WHITE,
+                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+                anchor_x="center",
+                anchor_y="center")
 
     def dobl_jump(self, event=None):
-        pass
+        if DOBL_JUMP:
+            arcade.draw_text(
+                "Облако в бутылке. Странно но оно твёрдое00? На нём можно прыгать!? ГДЕ ЗАКОНЫ ФИЗИКИ!!!!!",
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - 150,
+                arcade.color.WHITE,
+                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+                anchor_x="center",
+                anchor_y="center")
 
     def climb(self, event=None):
-        pass
+        if CLIMB:
+            arcade.draw_text(
+                "Это когти и шипы на ботинки. Ими вы можете цепляться за стены(они отличаются от обычных;)",
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - 150,
+                arcade.color.WHITE,
+                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+                anchor_x="center",
+                anchor_y="center")
+        else:
+            arcade.draw_text(
+                "Что это:( ?",
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - 150,
+                arcade.color.WHITE,
+                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+                anchor_x="center",
+                anchor_y="center")
 
     def hook(self, event=None):
-        pass
+        if HOOK:
+            arcade.draw_text(
+                "Странная металлическая лоза. Ей вы можете цепляться за уступы(они выглядят как чёрные круги)",
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - 150,
+                arcade.color.WHITE,
+                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+                anchor_x="center",
+                anchor_y="center")
+        else:
+            arcade.draw_text(
+                "Что это:( ?",
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - 150,
+                arcade.color.WHITE,
+                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+                anchor_x="center",
+                anchor_y="center")
 
     def draw(self):
         if not self.visible:
             return
 
-        settings_width = SCREEN_WIDTH * 0.6
-        settings_hieg = SCREEN_HEIGHT * 0.7
-
-        settings_width = max(300, settings_width)
-        settings_hieg = max(400, settings_hieg)
-
-        window_left = SCREEN_WIDTH // 2 - settings_width // 2
-        window_right = window_left + settings_width
-        window_bottom = SCREEN_HEIGHT // 2 - settings_hieg // 2
-        window_top = window_bottom + settings_hieg
-
         arcade.draw_lrbt_rectangle_filled(
-            left=window_left,
-            right=window_right,
-            top=window_top,
-            bottom=window_bottom,
+            left=self.window_left,
+            right=self.window_right,
+            top=self.window_top,
+            bottom=self.window_bottom,
             color=(0, 0, 0, 200))
 
         arcade.draw_lrbt_rectangle_outline(
-            left=window_left,
-            right=window_right,
-            top=window_top,
-            bottom=window_bottom,
+            left=self.window_left,
+            right=self.window_right,
+            top=self.window_top,
+            bottom=self.window_bottom,
             color=arcade.color.BLACK,
             border_width=3)
 
         arcade.draw_text(
             "Инвентарь",
             SCREEN_WIDTH // 2,
-            window_top - 50,
+            self.window_top - 50,
             arcade.color.WHITE,
             font_size=min(24, int(SCREEN_WIDTH * 0.03)),
             anchor_x="center",
