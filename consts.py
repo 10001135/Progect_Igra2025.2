@@ -19,10 +19,10 @@ CAMERA_LERP = 0.08
 DEAD_ZONE_W = int(SCREEN_WIDTH * 0.35)
 DEAD_ZONE_H = int(SCREEN_HEIGHT * 0.45)
 
-dash = False
-doubl_jump = False
-hook = False
-climb = False
+DASH = False
+DOBL_JUMP = False
+HOOK = False
+CLIMB = False
 
 BUTTON_STYLE1 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),
                                                 font_name='Alfa Slab One',

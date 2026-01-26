@@ -27,9 +27,65 @@ class InventoryPopup:
             text="Закрыть",
             style=BUTTON_STYLE1)
 
+        if DASH:
+            self.dash_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Дэш",
+                style=BUTTON_STYLE1)
+        else:
+            pass
+
+        if HOOK:
+            self.hook_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Крюк",
+                style=BUTTON_STYLE1)
+        else:
+            pass
+
+        if DOBL_JUMP:
+            self.dobl_jump_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Двойной прыжок",
+                style=BUTTON_STYLE1)
+        else:
+            pass
+
+        if CLIMB:
+            self.climb_button = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=200 * SCALE,
+                height=50 * SCALE,
+                text="Лазанье",
+                style=BUTTON_STYLE1)
+        else:
+            pass
+
         self.close_button.on_click = self.close
+        self.climb_button.on_click = self.climb
+        self.dobl_jump_button.on_click = self.dobl_jump_button
+        self.hook_button.on_click = self.hook
+        self.dash_button.on_click = self.dash
 
         self.manager.add(self.close_button)
+        self.manager.add(self.climb_button)
+        self.manager.add(self.dobl_jump_button)
+        self.manager.add(self.hook_button)
+        self.manager.add(self.dash_button)
 
         self.resize_positihon()
 
@@ -43,7 +99,19 @@ class InventoryPopup:
 
     def resize_positihon(self):
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 200
+
+        self.close_button.center_x = SCREEN_WIDTH // 2 + 100
+        self.close_button.center_y = SCREEN_HEIGHT // 2
+
+        self.close_button.center_x = SCREEN_WIDTH // 2 - 100
+        self.close_button.center_y = SCREEN_HEIGHT // 2
+
+        self.close_button.center_x = SCREEN_WIDTH // 2 + 100
+        self.close_button.center_y = SCREEN_HEIGHT // 2 + 150
+
+        self.close_button.center_x = SCREEN_WIDTH // 2 - 100
+        self.close_button.center_y = SCREEN_HEIGHT // 2 + 150
 
     def show(self):
         self.visible = True
@@ -53,6 +121,18 @@ class InventoryPopup:
     def close(self, event=None):
         self.visible = False
         self.manager.disable()
+
+    def dash(self, event=None):
+        pass
+
+    def dobl_jump(self, event=None):
+        pass
+
+    def climb(self, event=None):
+        pass
+
+    def hook(self, event=None):
+        pass
 
     def draw(self):
         if not self.visible:
