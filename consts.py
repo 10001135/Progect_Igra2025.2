@@ -1,6 +1,6 @@
 from arcade.gui import UITextureButtonStyle
 
-SCALE = 1
+SCALE = 0.5
 SCREEN_WIDTH = int(1920 * SCALE)
 SCREEN_HEIGHT = int(1080 * SCALE)
 
@@ -18,6 +18,11 @@ CAMERA_LERP = 0.08
 
 DEAD_ZONE_W = int(SCREEN_WIDTH * 0.35)
 DEAD_ZONE_H = int(SCREEN_HEIGHT * 0.45)
+
+dash = False
+doubl_jump = False
+hook = False
+climb = False
 
 BUTTON_STYLE1 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),
                                                 font_name='Alfa Slab One',
