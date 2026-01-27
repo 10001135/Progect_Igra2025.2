@@ -9,8 +9,8 @@ class InventoryPopup:
         self.parent_view = parent_view
         self.visible = False
 
-        Textures.inventory_textures()
-        self.textures = Textures.textures_in_menu
+        Textures.inventory_textures(Textures)
+        self.textures = getattr(Textures, 'inventory_icons', {})
 
         self.manager = UIManager()
 
@@ -27,14 +27,46 @@ class InventoryPopup:
 
         self.text = ''
 
+        self.dash_icon = None
+        self.climb_icon = None
+        self.hook_icon = None
+        self.jump_icon = None
+
+        self.icons()
         self.setup_ui()
+
+    def icons(self):
+        if not self.textures:
+            return
+
+        if DASH:
+            self.dash_icon = self.textures.get('dash')
+        else:
+            self.dash_icon = self.textures.get('chto_eto')
+
+        if CLIMB:
+            self.climb_icon = self.textures.get('cogti')
+        else:
+            self.climb_icon = self.textures.get('chto_eto')
+
+        if HOOK:
+            self.hook_icon = self.textures.get('hook')
+        else:
+            self.hook_icon = self.textures.get('chto_eto')
+
+        if DOBL_JUMP:
+            self.jump_icon = self.textures.get('jump')
+        else:
+            self.jump_icon = self.textures.get('chto_eto')
 
     def setup_ui(self):
         self.manager.clear()
 
         Textures.textures_main_menu()
 
-        buttons_textures = Textures.textures_in_menu['buttons']['style1']
+        menu_textures = getattr(Textures, 'textures_in_menu', {})
+        buttons_textures = menu_textures.get('buttons', {}).get('style1', {'normal': None, 'hovered': None,
+                                                                           'pressed': None})
 
         self.close_button = UITextureButton(
             texture=buttons_textures['normal'],
@@ -45,81 +77,33 @@ class InventoryPopup:
             text="Закрыть",
             style=BUTTON_STYLE1)
 
-        if DASH:
-            self.dash_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="Dash",
-                style=BUTTON_STYLE1)
-        else:
-            self.dash_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="",
-                style=BUTTON_STYLE1)
+        self.dash_button = UITextureButton(
+            texture=self.dash_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
 
-        if HOOK:
-            self.hook_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="Hook",
-                style=BUTTON_STYLE1)
-        else:
-            self.hook_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="",
-                style=BUTTON_STYLE1)
+        self.hook_button = UITextureButton(
+            texture=self.hook_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
 
-        if DOBL_JUMP:
-            self.dobl_jump_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="Jump",
-                style=BUTTON_STYLE1)
-        else:
-            self.dobl_jump_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="",
-                style=BUTTON_STYLE1)
+        self.dobl_jump_button = UITextureButton(
+            texture=self.jump_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
 
-        if CLIMB:
-            self.climb_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="Climb",
-                style=BUTTON_STYLE1)
-        else:
-            self.climb_button = UITextureButton(
-                texture=buttons_textures['normal'],
-                texture_hovered=buttons_textures['hovered'],
-                texture_pressed=buttons_textures['pressed'],
-                width=200 * SCALE,
-                height=50 * SCALE,
-                text="",
-                style=BUTTON_STYLE1)
+        self.climb_button = UITextureButton(
+            texture=self.climb_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
 
         self.close_button.on_click = self.close
         self.climb_button.on_click = self.climb
@@ -160,6 +144,8 @@ class InventoryPopup:
         self.climb_button.center_y = SCREEN_HEIGHT // 2 + 100
 
     def show(self):
+        self.icons()
+        self.setup_ui()
         self.visible = True
         self.manager.enable()
         self.resize_positihon()
@@ -171,7 +157,7 @@ class InventoryPopup:
     def dash(self, event=None):
         if DASH:
             self.text = "Странный щит с глазом по середине. Стоп что, глаз стал ртом? ААААААААА!! Почему меня перенесло\
-        вперёд? (даёт dash)"
+             вперёд? (даёт dash)"
         else:
             self.text = 'Что это:('
 
@@ -184,20 +170,12 @@ class InventoryPopup:
     def climb(self, event=None):
         if CLIMB:
             self.text = "Это когти и шипы на ботинки. Ими вы можете цепляться за стены(они отличаются от обычных;)"
-
         else:
             self.text = 'Что это:('
 
     def hook(self, event=None):
         if HOOK:
-            arcade.draw_text(
-                "Странная металлическая лоза. Ей вы можете цепляться за уступы(они выглядят как чёрные круги)",
-                SCREEN_WIDTH // 2,
-                SCREEN_HEIGHT // 2 - 150,
-                arcade.color.WHITE,
-                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-                anchor_x="center",
-                anchor_y="center")
+            self.text = "Странная металлическая лоза. Ей вы можете цепляться за уступы(они выглядят как чёрные круги)"
         else:
             self.text = 'Что это:('
 

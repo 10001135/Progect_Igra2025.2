@@ -3,6 +3,8 @@ from consts import *
 
 
 class Textures:
+    inventory_icons = {}
+
     @staticmethod
     def textures_main_menu():
         Textures.textures_in_menu = {
@@ -56,8 +58,8 @@ class Textures:
         Textures.hero = {'Hero': hero}
 
     @staticmethod
-    def inventory_textures():
-        inventory_icons = {
+    def inventory_textures(csl):
+        csl.inventory_icons = {
             'dash': arcade.load_texture('assets/items/dash_shild.png'),
             'hook': arcade.load_texture('assets/items/kruck.png'),
             'jump': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),

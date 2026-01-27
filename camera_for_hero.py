@@ -1,6 +1,7 @@
 from arcade.camera import Camera2D
 from consts import *
 
+
 class CameraForHero(Camera2D):
     def __init__(self, hero, tile_map):
         super().__init__()
