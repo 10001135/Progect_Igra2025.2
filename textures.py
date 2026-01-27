@@ -54,3 +54,12 @@ class Textures:
         for i in range(1, 5):
             hero['walk'].append(arcade.load_texture(f"assets/textures/Hero/Engineer_Walk_{i}.png"))
         Textures.hero = {'Hero': hero}
+
+    @staticmethod
+    def inventory_textures():
+        inventory_icons = {
+            'dash': arcade.load_texture('assets/items/dash_shild.png'),
+            'hook': arcade.load_texture('assets/items/kruck.png'),
+            'jump': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
+            'kogti': arcade.load_texture('assets/items/Master_Ninja_Gear.png'),
+        }
