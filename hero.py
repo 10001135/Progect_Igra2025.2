@@ -100,10 +100,10 @@ class Hero(arcade.Sprite):
             self.jump_pressed = True
             self.jump_buffer_timer = JUMP_BUFFER
 
-        if key == arcade.key.LSHIFT:
+        if key == arcade.key.LCTRL:
             self.run = True
 
-        if key == arcade.key.X and self.dash_time <= 0 and self.dash_b:
+        if key == arcade.key.LSHIFT and self.dash_time <= 0 and self.dash_b:
             self.dash = True
             self.dash_time = DASH_TIME
             self.dash_light = (False, False)
@@ -132,7 +132,7 @@ class Hero(arcade.Sprite):
             if self.change_y > 0:
                 self.change_y *= 0.45
 
-        if key == arcade.key.LSHIFT:
+        if key == arcade.key.LCTRL:
             self.run = False
 
     def do_hook(self, pos):
