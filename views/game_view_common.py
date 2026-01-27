@@ -1,6 +1,7 @@
 import arcade
 from arcade.particles import Emitter, EmitBurst, FadeParticle
 from consts import *
+from arcade.camera import Camera2D
 from views.Inventory_view import InventoryPopup
 
 
@@ -36,6 +37,9 @@ class GameView_common(arcade.View):
                 e.draw()
 
         self.hero_l.draw(pixelated=True)
+
+        ui_camera = Camera2D()
+        ui_camera.use()
 
         self.inventory_popup.draw()
 
