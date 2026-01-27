@@ -8,6 +8,10 @@ class InventoryPopup:
     def __init__(self, parent_view):
         self.parent_view = parent_view
         self.visible = False
+
+        Textures.inventory_textures()
+        self.textures = Textures.textures_in_menu
+
         self.manager = UIManager()
 
         self.settings_width = SCREEN_WIDTH * 0.6

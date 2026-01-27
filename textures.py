@@ -62,4 +62,5 @@ class Textures:
             'hook': arcade.load_texture('assets/items/kruck.png'),
             'jump': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
             'kogti': arcade.load_texture('assets/items/Master_Ninja_Gear.png'),
+            'chto_eto': arcade.load_texture('assets/items/chto_eto.png'),
         }
