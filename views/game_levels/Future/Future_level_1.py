@@ -11,17 +11,25 @@ class GameView_fut_level_1(GameView_common):
         super().__init__(hero)
         Textures.textures_future_level_1()
         arcade.set_background_color(arcade.color.FRENCH_SKY_BLUE)
+        self.hero.double_jump = True
+        self.draw_fake_floor = True
 
         self.tile_map = Textures.tile_map_future_level_1
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.platform_list = self.tile_map.sprite_lists['Platforms']
+        for i in self.platform_list:
+            i.boundary_left *= SCALE
+            i.boundary_right *= SCALE
+            i.change_x *= SCALE
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
-        #self.darkness_list = self.tile_map.sprite_lists['Darkness']
-        #self.light_list = self.tile_map.sprite_lists['Light']
+        self.darkness_list = self.tile_map.sprite_lists['Darkness']
+        self.light_list = self.tile_map.sprite_lists['Light']
+        self.no_light_list = self.tile_map.sprite_lists['No_light']
+        self.fake_floor_list = self.tile_map.sprite_lists['Fake_floor']
 
-        #self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
-        #self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
+        # self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
+        # self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
         self.decor_list_b = self.tile_map.sprite_lists['Decor_b']
         for sprite in self.decor_list_b:
             sprite.alpha = 150
@@ -29,14 +37,14 @@ class GameView_fut_level_1(GameView_common):
 
         self.thorns_list = self.tile_map.sprite_lists['Thorns']
 
-        #self.barrier_l = self.tile_map.sprite_lists['Barrier_l']
+        # self.barrier_l = self.tile_map.sprite_lists['Barrier_l']
         self.walls_list_p = arcade.SpriteList()
         for wall in self.walls_list:
             self.walls_list_p.append(wall)
 
         self.background_list = self.tile_map.sprite_lists['Background']
 
-        #self.ladders_list = self.tile_map.sprite_lists['Ladders']
+        self.ladders_list = self.tile_map.sprite_lists['Ladders']
 
         if level_p:
             if level_p == 2:
@@ -52,11 +60,11 @@ class GameView_fut_level_1(GameView_common):
             gravity_constant=GRAVITY,
             walls=self.walls_list_p,
             platforms=self.platform_list,
+            ladders=self.ladders_list,
         )
         self.hero.engine = self.engine
 
-        #self.set_darkness()
-
+        self.set_darkness()
 
     def on_draw(self):
         self.clear()
@@ -77,6 +85,8 @@ class GameView_fut_level_1(GameView_common):
             self.background_list.draw(pixelated=True)
 
         self.walls_list_p.draw(pixelated=True)
+        if self.draw_fake_floor:
+            self.fake_floor_list.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
 
         for emmiter in (self.emitter_trace, self.emitter_clouds):
@@ -86,6 +96,16 @@ class GameView_fut_level_1(GameView_common):
 
         self.decor_list_b.draw(pixelated=True)
         self.decor_list.draw(pixelated=True)
+        self.ladders_list.draw(pixelated=True)
+        self.d_list.draw()
+        self.no_light_list.draw(pixelated=True)
         self.hero_l.draw(pixelated=True)
         self.platform_list.draw(pixelated=True)
         self.thorns_list.draw(pixelated=True)
+        self.update_darkness()
+
+    def on_update(self, delta_time):
+        super().on_update(delta_time)
+
+        if self.fake_floor_list[0].left <= self.hero_l[0].center_x <= self.fake_floor_list[-1].right:
+            self.draw_fake_floor = False
