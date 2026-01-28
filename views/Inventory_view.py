@@ -195,7 +195,7 @@ class InventoryPopup:
             right=self.window_right,
             top=self.window_top,
             bottom=self.window_bottom,
-            color=arcade.color.BLACK,
+            color=arcade.color.GOLD,
             border_width=3)
 
         arcade.draw_text(
