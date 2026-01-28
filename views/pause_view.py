@@ -21,18 +21,18 @@ class PausPopup:
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
-            width=200*SCALE,
-            height=50*SCALE,
-            text="Сохранения",
+            width=250*SCALE,
+            height=65*SCALE,
+            text="Saves",
             style=BUTTON_STYLE1)
 
         self.close_button = UITextureButton(
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
-            width=200*SCALE,
-            height=50*SCALE,
-            text="Закрыть",
+            width=280*SCALE,
+            height=65*SCALE,
+            text="Continue",
             style=BUTTON_STYLE1)
 
         self.saves_button.on_click = self.saves
@@ -56,7 +56,7 @@ class PausPopup:
         self.saves_button.center_y = SCREEN_HEIGHT // 2
 
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 250 * SCALE
 
     def saves(self, event=None):
         print("Будет отдельное окно с сохранениями")
