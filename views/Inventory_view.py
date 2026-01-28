@@ -74,7 +74,7 @@ class InventoryPopup:
             texture_pressed=buttons_textures['pressed'],
             width=200 * SCALE,
             height=50 * SCALE,
-            text="Закрыть",
+            text="Close",
             style=BUTTON_STYLE1)
 
         self.dash_button = UITextureButton(
