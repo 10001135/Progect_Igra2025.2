@@ -2,13 +2,23 @@ import arcade
 from PIL import ImageEnhance
 from consts import *
 from textures import Textures
+import pymunk
+import math
 
 
 class Hero(arcade.Sprite):
-    def __init__(self, tile_map=None):
+    def __init__(self, tile_map=None, engine=None, hook_engine=None):
         super().__init__()
 
         self.tile_map = tile_map
+        self.engine = engine
+        self.hook_engine = hook_engine
+
+        self.is_hooked = False
+        self.joint = None
+        self.preserve_moment = False
+        self.moment_timer = 0
+
         self.scale = 4 * SCALE
         self.speed = MOVE_SPEED
         self.jump_speed = JUMP_SPEED
@@ -28,10 +38,9 @@ class Hero(arcade.Sprite):
         self.light_time = 0
 
         self.climb = False
+        self.double_jump = False
 
         self.jump_pressed = False
-
-        self.engine = 0
         self.world_camera = arcade.camera.Camera2D()
 
         self.textures_hero = Textures.hero['Hero']
@@ -49,8 +58,12 @@ class Hero(arcade.Sprite):
         self.face_direction = True
 
         self.jump_buffer_timer = 0
-        self.time_since_ground = 999.0
-        self.jumps_left = MAX_JUMPS
+        self.jumps_left = 0
+        self.jump_emit = False
+
+        self.on_ladder = False
+
+        self.story_npc = {}
 
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -61,6 +74,16 @@ class Hero(arcade.Sprite):
             self.up_hero = True
         elif key in (arcade.key.DOWN, arcade.key.S):
             self.down_hero = True
+
+        if key in (arcade.key.UP, arcade.key.W):
+            if self.is_hooked and self.joint:
+                if not self.collides_with_list(self.tile_map.sprite_lists['Walls']):
+                    self.joint.distance = max(20 * SCALE, self.joint.distance - 20 * SCALE)
+        if key in (arcade.key.DOWN, arcade.key.S):
+            if self.is_hooked and self.joint:
+                if not self.collides_with_list(self.tile_map.sprite_lists['Walls']):
+                    self.joint.distance = min(400 * SCALE, self.joint.distance + 20 * SCALE)
+
         elif key == arcade.key.SPACE:
             self.jump_pressed = True
             self.jump_buffer_timer = JUMP_BUFFER
@@ -73,6 +96,12 @@ class Hero(arcade.Sprite):
             self.dash_time = DASH_TIME
             self.dash_light = (False, False)
 
+        if key == arcade.key.T:
+            for npc in self.collides_with_list(self.level.npc):
+                npc.story_change()
+                npc.dialog.start()
+                self.story_npc[npc.__class__.__name__] = (npc.story, npc.dialog, npc.greeting)
+
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
             self.left_hero = False
@@ -83,6 +112,7 @@ class Hero(arcade.Sprite):
         elif key in (arcade.key.DOWN, arcade.key.S):
             self.down_hero = False
         elif key == arcade.key.SPACE:
+            self.jumps_left += 1
             self.jump_pressed = False
             if self.change_y > 0:
                 self.change_y *= 0.45
@@ -90,7 +120,49 @@ class Hero(arcade.Sprite):
         if key == arcade.key.LSHIFT:
             self.run = False
 
+    def do_hook(self, pos):
+        if not self.is_hooked:
+            self.is_hooked = True
+            hero_body = self.hook_engine.sprites[self].body
+            hero_body.position = self.center_x, self.center_y
+            hero_body.velocity = self.change_x * 60 * SCALE, self.change_y * 60 * SCALE
+
+            self.joint = pymunk.PinJoint(
+                self.hook_engine.space.static_body,
+                hero_body,
+                pos,
+                (0, 0)
+            )
+            self.hook_engine.space.add(self.joint)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        world_pos = self.world_camera.unproject((x, y))
+        world_x, world_y = world_pos.x, world_pos.y
+
+        if 'Hook_points' in self.tile_map.sprite_lists:
+            for hook_point in self.tile_map.sprite_lists['Hook_points']:
+                if (world_x < hook_point.right) and (world_x > hook_point.left) and \
+                        (world_y > hook_point.bottom) and (world_y < hook_point.top):
+                    if math.sqrt(abs(world_x - self.center_x) ** 2 + abs(world_y - self.center_y) ** 2) <= 400 * SCALE:
+                        self.do_hook((world_x, world_y))
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        if self.is_hooked and self.joint:
+            hero_body = self.hook_engine.sprites[self].body
+            self.change_x = hero_body.velocity.x / 60
+            self.change_y = hero_body.velocity.y / 60
+            self.hook_engine.space.remove(self.joint)
+            self.joint = None
+            self.is_hooked = False
+            self.preserve_moment = True
+            self.moment_timer = 0.2
+
     def on_update(self, dt):
+        if self.moment_timer > 0:
+            self.moment_timer -= dt
+            if self.moment_timer <= 0:
+                self.preserve_moment = False
+
         move = 0
         if not self.dash:
             if self.left_hero and not self.right_hero:
@@ -125,30 +197,38 @@ class Hero(arcade.Sprite):
             self.dash_light = (False, True)
             self.light_time = LIGHT_TIME
 
-        self.change_x = move
+        self.on_ladder = self.engine.is_on_ladder()
+        if self.on_ladder:
+            if self.up_hero and not self.down_hero:
+                self.change_y = self.speed
+            elif self.down_hero and not self.up_hero:
+                self.change_y = -self.speed
+            else:
+                self.change_y = 0
 
-        grounded = self.engine.can_jump(y_distance=6) or self.climb
-        if grounded:
-            self.time_since_ground = 0
-            self.jumps_left = MAX_JUMPS
+        if not self.preserve_moment:
+            self.change_x = move
         else:
-            self.time_since_ground += dt
+            if move != 0:
+                blend = 1 - (self.moment_timer / 0.2)
+                self.change_x = self.change_x * (1 - blend) + move * blend
+
+        self.engine.jumps_since_ground = self.jumps_left
+        grounded = self.engine.can_jump(y_distance=6) or self.climb
 
         if self.jump_buffer_timer > 0:
             self.jump_buffer_timer -= dt
 
-        want_jump = self.jump_pressed or (self.jump_buffer_timer > 0)
+        want_jump = self.jump_pressed
 
         if want_jump:
-            can_coyote = (self.time_since_ground <= COYOTE_TIME)
-            if grounded or can_coyote:
+            if grounded and self.jump_buffer_timer > 0:
                 if self.climb:
                     if self.face_direction:
                         self.change_x = -self.speed * 2
                     else:
                         self.change_x = self.speed
                 self.engine.jump(self.jump_speed)
-                self.jump_buffer_timer = 0
 
         if self.change_x and self.change_y == 0:
             self.is_walking = True
@@ -159,6 +239,9 @@ class Hero(arcade.Sprite):
             else:
                 self.is_in_air = False
             self.is_walking = False
+
+        if self.tile_map and 'Thorns' in self.tile_map.sprite_lists and self.collides_with_list(self.tile_map.sprite_lists['Thorns']):
+            self.damage(1)
 
         self.climb = False
 
@@ -182,9 +265,28 @@ class Hero(arcade.Sprite):
                             self.climb = True
                             self.change_y = 0
 
-        self.engine.update()
+        if self.is_hooked:
+            self.hook_engine.step(dt)
+            hero_body = self.hook_engine.sprites[self].body
+            self.center_x = hero_body.position.x
+            self.center_y = hero_body.position.y
+            if self.left_hero:
+                hero_body.velocity = (hero_body.velocity.x - 5, hero_body.velocity.y)
+            if self.right_hero:
+                hero_body.velocity = (hero_body.velocity.x + 5, hero_body.velocity.y)
+        else:
+            if self.double_jump:
+                self.engine.enable_multi_jump(2)
+            else:
+                self.engine.enable_multi_jump(1)
 
-    def update_animation(self, delta_time: float = 1 / 60):
+            self.engine.update()
+
+        if not self.is_in_air and self.change_y == 0:
+            self.jumps_left = 0
+            self.jump_emit = False
+
+    def update_animation(self, delta_time):
         if self.is_walking:
             self.texture_change_time += delta_time
             if self.texture_change_time >= self.texture_change_delay:
@@ -201,14 +303,35 @@ class Hero(arcade.Sprite):
                 self.texture = self.textures_hero['in_air']
             else:
                 self.texture = self.textures_hero['in_air'].flip_horizontally()
+
         else:
             self.texture = self.textures_hero['to_us']
+
+        if self.is_hooked:
+            hook_x, hook_y = self.joint.anchor_a
+            x_diff = hook_x - self.center_x
+            y_diff = hook_y - self.center_y
+            angle = math.atan2(y_diff, x_diff)
+
+            self.angle = -math.degrees(angle) + 90
+
+            if self.face_direction:
+                self.texture = self.textures_hero['climb']
+                self.angle -= 10
+            else:
+                self.texture = self.textures_hero['climb'].flip_horizontally()
+                self.angle += 10
+        else:
+            self.angle = 0
 
         if self.climb:
             if self.face_direction:
                 self.texture = self.textures_hero['climb']
             else:
                 self.texture = self.textures_hero['climb'].flip_horizontally()
+
+        if self.on_ladder:
+            self.texture = self.textures_hero['to_forest']
 
         if self.dash_light == (False, True):
             self.dash_light = (True, False)
@@ -223,3 +346,9 @@ class Hero(arcade.Sprite):
         else:
             self.texture = arcade.Texture(
                 ImageEnhance.Brightness(self.texture.image).enhance(1.5)).flip_horizontally()
+
+    def damage(self, power):
+        p = min([(abs(self.center_x - sp.center_x) + abs(self.center_y - sp.center_y), sp) for sp in
+                 self.tile_map.sprite_lists['Safe_point']], key=lambda x: x[0])
+        self.position = p[1].position
+        self.health -= power
