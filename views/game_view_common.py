@@ -66,19 +66,21 @@ class GameView_common(arcade.View):
         self.text_open.position = (SCREEN_WIDTH - self.text_open.content_width - 50 * SCALE, 36 * SCALE)
 
     def draw_hook(self):
-        if self.hero.is_hooked:
-            hook_x = self.hook_points_list[0].center_x
-            hook_y = self.hook_points_list[0].center_y
+        if self.hero.is_hooked and self.hero.joint:
+            hook_x, hook_y = self.hero.joint.anchor_a
+
             if self.hero.face_direction:
                 hero_x = self.hero.center_x + 20 * SCALE
             else:
                 hero_x = self.hero.center_x - 20 * SCALE
             hero_y = self.hero.center_y
+
             line_width = 15 * SCALE
             arcade.draw_line(
                 hook_x, hook_y, hero_x, hero_y,
                 color=arcade.color.DIM_GRAY,
                 line_width=line_width)
+
             radius = line_width / 2 * SCALE
             arcade.draw_circle_filled(hook_x, hook_y, radius, arcade.color.DIM_GRAY)
             arcade.draw_circle_filled(hero_x, hero_y, radius, arcade.color.DIM_GRAY)

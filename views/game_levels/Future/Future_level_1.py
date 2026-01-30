@@ -18,16 +18,23 @@ class GameView_fut_level_1(GameView_common):
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.platform_list = self.tile_map.sprite_lists['Platforms']
-        for i in self.platform_list:
-            i.boundary_left *= SCALE
-            i.boundary_right *= SCALE
-            i.change_x *= SCALE
+        for i in range(len(self.platform_list)):
+            if i == 0:
+                self.platform_list[i].boundary_left *= SCALE
+                self.platform_list[i].boundary_right *= SCALE
+                self.platform_list[i].change_x *= SCALE
+            elif i == 1:
+                self.platform_list[i].boundary_top *= SCALE
+                self.platform_list[i].boundary_bottom *= SCALE
+                self.platform_list[i].change_y *= SCALE
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
         self.darkness_list = self.tile_map.sprite_lists['Darkness']
         self.light_list = self.tile_map.sprite_lists['Light']
         self.no_light_list = self.tile_map.sprite_lists['No_light']
         self.fake_floor_list = self.tile_map.sprite_lists['Fake_floor']
         self.hook_points_list = self.tile_map.sprite_lists['Hook_points']
+        self.decor_list_f = self.tile_map.sprite_lists['Decor_f']
+        self.electro_list = self.tile_map.sprite_lists['Electro']
 
         # self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
         # self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
@@ -115,6 +122,7 @@ class GameView_fut_level_1(GameView_common):
                     e.draw()
         self.decor_list_b.draw(pixelated=True)
         self.decor_list.draw(pixelated=True)
+        self.decor_list_f.draw(pixelated=True)
         self.ladders_list.draw(pixelated=True)
         self.d_list.draw()
         self.draw_hook()
@@ -123,6 +131,7 @@ class GameView_fut_level_1(GameView_common):
         self.hero_l.draw(pixelated=True)
         self.platform_list.draw(pixelated=True)
         self.thorns_list.draw(pixelated=True)
+        self.electro_list.draw(pixelated=True)
         self.update_darkness()
 
     def on_update(self, delta_time):
