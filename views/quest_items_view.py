@@ -115,7 +115,7 @@ class InventoryPopup:
                 y = 100
             else:
                 y -= 75
-                
+
     def show(self):
         self.setup_ui()
         self.visible = True
