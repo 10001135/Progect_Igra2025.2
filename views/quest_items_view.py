@@ -9,7 +9,7 @@ class InventoryPopup:
         self.parent_view = parent_view
         self.visible = False
 
-        Textures.inventory_textures(Textures)
+        Textures.quest_textures(Textures)
         self.textures = getattr(Textures, 'quest_icons', {})
 
         self.manager = UIManager()
