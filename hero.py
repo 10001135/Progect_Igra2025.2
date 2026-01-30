@@ -9,7 +9,7 @@ import math
 class Hero(arcade.Sprite):
     def __init__(self, tile_map=None, engine=None, hook_engine=None):
         super().__init__()
-
+        Textures.texture_hero_1()
         self.tile_map = tile_map
         self.engine = engine
         self.hook_engine = hook_engine
@@ -158,7 +158,7 @@ class Hero(arcade.Sprite):
             for hook_point in self.tile_map.sprite_lists['Hook_points']:
                 if (world_x < hook_point.right) and (world_x > hook_point.left) and \
                         (world_y > hook_point.bottom) and (world_y < hook_point.top):
-                    if math.sqrt(abs(world_x - self.center_x) ** 2 + abs(world_y - self.center_y) ** 2) <= 400 * SCALE:
+                    if math.sqrt(abs(world_x - self.center_x) ** 2 + abs(world_y - self.center_y) ** 2) <= 550 * SCALE:
                         self.do_hook((world_x, world_y))
 
     def on_mouse_release(self, x, y, button, modifiers):

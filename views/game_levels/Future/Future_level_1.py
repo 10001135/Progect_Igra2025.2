@@ -27,6 +27,7 @@ class GameView_fut_level_1(GameView_common):
         self.light_list = self.tile_map.sprite_lists['Light']
         self.no_light_list = self.tile_map.sprite_lists['No_light']
         self.fake_floor_list = self.tile_map.sprite_lists['Fake_floor']
+        self.hook_points_list = self.tile_map.sprite_lists['Hook_points']
 
         # self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
         # self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
@@ -52,9 +53,6 @@ class GameView_fut_level_1(GameView_common):
         else:
             self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
-        self.hero_l = arcade.SpriteList()
-        self.hero_l.append(self.hero)
-        self.world_camera = CameraForHero(self.hero, self.tile_map)
         self.engine = arcade.PhysicsEnginePlatformer(
             player_sprite=self.hero,
             gravity_constant=GRAVITY,
@@ -62,7 +60,29 @@ class GameView_fut_level_1(GameView_common):
             platforms=self.platform_list,
             ladders=self.ladders_list,
         )
+        self.hook_engine = arcade.PymunkPhysicsEngine(gravity=(0, -900))
+
         self.hero.engine = self.engine
+        self.hero.double_jump = True
+        self.hero.hook_engine = self.hook_engine
+
+        self.hook_engine.add_sprite(self.hero,
+                                    mass=1.0,
+                                    collision_type="player",
+                                    body_type=arcade.PymunkPhysicsEngine.DYNAMIC)
+        physics_object = self.hook_engine.get_physics_object(self.hero)
+        physics_object.body.moment = float('inf')
+
+        self.hook_engine.add_sprite_list(
+            self.walls_list_p,
+            collision_type="wall",
+            body_type=arcade.PymunkPhysicsEngine.STATIC
+        )
+
+        self.hero_l = arcade.SpriteList()
+        self.hero_l.append(self.hero)
+        self.world_camera = CameraForHero(self.hero, self.tile_map)
+        self.hero.world_camera = self.world_camera
 
         self.set_darkness()
 
@@ -93,12 +113,13 @@ class GameView_fut_level_1(GameView_common):
             for h in emmiter:
                 for e in emmiter[h]:
                     e.draw()
-
         self.decor_list_b.draw(pixelated=True)
         self.decor_list.draw(pixelated=True)
         self.ladders_list.draw(pixelated=True)
         self.d_list.draw()
+        self.draw_hook()
         self.no_light_list.draw(pixelated=True)
+        self.hook_points_list.draw(pixelated=True)
         self.hero_l.draw(pixelated=True)
         self.platform_list.draw(pixelated=True)
         self.thorns_list.draw(pixelated=True)
