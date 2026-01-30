@@ -6,7 +6,7 @@ from arcade.gui import UIManager, UITextureButton
 from arcade.gui.widgets.layout import UIAnchorLayout, UIBoxLayout
 
 from views.load_view import LoadView
-from views.test_levels.game_view_test_1 import GameView_test_1
+from views.test_levels.game_view_test_1 import GameView_test_2
 from hero import Hero
 from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
 from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2

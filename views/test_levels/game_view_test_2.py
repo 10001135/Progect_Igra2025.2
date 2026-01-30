@@ -7,14 +7,14 @@ from views.game_view_common import GameView_common
 
 
 class GameView_test_2(GameView_common):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, hero):
+        super().__init__(hero)
         Textures.textures_test_2()
         arcade.set_background_color(arcade.color.FRENCH_SKY_BLUE)
 
         self.background_list = None
         self.tile_map = Textures.tile_map_test_2
-        self.walls_list = self.tile_map.sprite_lists['Walls']
+        self.walls_list_p = self.tile_map.sprite_lists['Walls']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
         self.hook_points_list = self.tile_map.sprite_lists['Hook_points']
 
@@ -25,7 +25,7 @@ class GameView_test_2(GameView_common):
         self.engine = arcade.PhysicsEnginePlatformer(
             player_sprite=self.hero,
             gravity_constant=GRAVITY,
-            walls=self.walls_list,
+            walls=self.walls_list_p,
         )
         self.hook_engine = arcade.PymunkPhysicsEngine(gravity=(0, -900))
 
@@ -41,7 +41,7 @@ class GameView_test_2(GameView_common):
         physics_object.body.moment = float('inf')
 
         self.hook_engine.add_sprite_list(
-            self.walls_list,
+            self.walls_list_p,
             collision_type="wall",
             body_type=arcade.PymunkPhysicsEngine.STATIC
         )
