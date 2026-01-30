@@ -23,6 +23,12 @@ DOBL_JUMP = False
 HOOK = False
 CLIMB = False
 
+KEY1 = False
+KEY2 = False
+KEY3 = False
+GUGUNEK_AXE = False
+GROSBUCH = False
+
 BUTTON_STYLE1 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),
                                                 font_name='Alfa Slab One',
                                                 font_color=(25, 82, 44, 255)),
