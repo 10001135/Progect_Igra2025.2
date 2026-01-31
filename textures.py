@@ -128,6 +128,11 @@ class Textures:
         Textures.nikshulp = {'Nikshulp': nikshulp}
 
     @staticmethod
+    def texture_captain():
+        captain = [arcade.load_texture(f'assets/textures/NPC/Captain/Captain{i}.png').flip_horizontally() for i in range(2)]
+        Textures.captain = {'Captain': captain}
+
+    @staticmethod
     def texture_fara():
         fara = [arcade.load_texture(f'assets/textures/NPC/Fara/Fara{i}.png') for i in range(2)]
         Textures.fara = {'Fara': fara}

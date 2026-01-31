@@ -1,6 +1,7 @@
 import arcade
 from texts import text_d
 import sys
+from texts import text_d
 
 from PyQt6.QtCore import Qt
 
@@ -47,6 +48,9 @@ class DialogQt(QMainWindow, Ui_MainWindow):
         self.npc_av.setFixedSize(int(200 * SCALE), int(200 * SCALE))
         if self.npc_name == text_d['fara_name']:
             self.npc_av.setFixedSize(int(200 * SCALE), int(313 * SCALE))
+
+        if self.npc_name == text_d['captain_name']:
+            self.npc_av.setFixedSize(int(125 * SCALE), int(264 * SCALE))
 
         self.hero_av.setStyleSheet(f"border-image: url({hero}) space")
         self.hero_av.setFixedSize(int(200 * SCALE), int(200 * SCALE))
