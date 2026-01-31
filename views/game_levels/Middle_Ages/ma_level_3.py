@@ -1,15 +1,12 @@
 import arcade
 from math import sqrt
 
-from NPC.gugunek import Gugunek
 from NPC.nikshulp import Nikshulp
 from camera_for_hero import CameraForHero
 from textures import Textures
-from hero import Hero
 from consts import *
 from views.game_view_common import GameView_common
 from views.load_view import LoadView
-from NPC.king_without_kindom import KingWithoutKindom
 
 
 class GameView_ma_level_3(GameView_common):
@@ -51,6 +48,8 @@ class GameView_ma_level_3(GameView_common):
         if level_p:
             if level_p == 2:
                 self.reborn_point = self.reborn_point_list[0].position
+            if level_p == 4:
+                self.reborn_point = self.reborn_point_list[1].position
         else:
             self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
@@ -109,6 +108,13 @@ class GameView_ma_level_3(GameView_common):
         if sum(b) > 0:
             from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
             self.window.show_view(LoadView(self.hero, 3, GameView_ma_level_2))
+
+        for hero in self.hero_l:
+            b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.right < enter2.left and sqrt(
+                abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE]
+        if sum(b) > 0:
+            from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
+            self.window.show_view(LoadView(self.hero, 3, GameView_ma_level_4))
 
         for npc in self.npc:
             npc.update_animation(delta_time)

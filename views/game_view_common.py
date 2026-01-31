@@ -163,7 +163,9 @@ class GameView_common(arcade.View):
                     for b in self.barrier_l:
                         barrier_l_c.append(b)
                     for b in barrier_l_c:
-                        if abs(b.right - (hero.left + hero.change_x)) < 10:
+                        if abs(b.right - (hero.left + hero.change_x)) < 10 and (
+                                sqrt(abs(hero.center_x - b.center_x) ** 2 + abs(
+                                        hero.center_y - b.center_y) ** 2) < 16 * 3 * 4 * SCALE):
                             self.walls_list_p.remove(b)
                             self.barrier_l.remove(b)
                             if b not in self.emitter_clouds:
@@ -180,7 +182,9 @@ class GameView_common(arcade.View):
                     for b in self.barrier_r:
                         barrier_r_c.append(b)
                     for b in barrier_r_c:
-                        if abs(b.left - (hero.right + hero.change_x)) < 10:
+                        if abs(b.left - (hero.right + hero.change_x)) < 10 and (
+                                sqrt(abs(hero.center_x - b.center_x) ** 2 + abs(
+                                        hero.center_y - b.center_y) ** 2) < 16 * 3 * 4 * SCALE):
                             self.walls_list_p.remove(b)
                             self.barrier_r.remove(b)
                             if b not in self.emitter_clouds:
