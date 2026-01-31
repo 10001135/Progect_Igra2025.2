@@ -107,6 +107,15 @@ class GameView_common(arcade.View):
                         a = r
                 d.alpha = min(d.alpha_p, a)
 
+    def update_walls_forw(self):
+        for w in self.walls_front_list:
+            if (abs(self.world_camera.position[0] - w.center_x) <= (SCREEN_WIDTH // 2)) and (
+                    abs(self.world_camera.position[1] - w.center_y) <= (SCREEN_HEIGHT // 2)):
+                for hero in self.hero_l:
+                    r = sqrt(abs(w.center_x - hero.center_x) ** 2 + abs(w.center_y - hero.center_y) ** 2) / (
+                            SCALE / 0.5)
+                w.alpha = r
+
     def on_draw(self):
         self.clear()
         self.world_camera.use()

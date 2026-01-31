@@ -45,6 +45,8 @@ class DialogQt(QMainWindow, Ui_MainWindow):
 
         self.npc_av.setStyleSheet(f"border-image: url(assets/textures/NPC/{npc}) space")
         self.npc_av.setFixedSize(int(200 * SCALE), int(200 * SCALE))
+        if self.npc_name == 'Фара':
+            self.npc_av.setFixedSize(int(200 * SCALE), int(313 * SCALE))
 
         self.hero_av.setStyleSheet(f"border-image: url({hero}) space")
         self.hero_av.setFixedSize(int(200 * SCALE), int(200 * SCALE))
