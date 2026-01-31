@@ -3,6 +3,7 @@ from arcade.particles import Emitter, EmitBurst, FadeParticle
 from consts import *
 from arcade.camera import Camera2D
 from views.pause_view import PausPopup
+from views.quest_view import QuestPopup
 
 
 def make_trace(hero):
@@ -24,7 +25,9 @@ class GameView_common(arcade.View):
         self.emitter_trace = {}
         self.reborn_point = (200, 200)
         self.pause_popup = PausPopup(self)
+        self.quest_popup = QuestPopup(self)
         self.pause_popup.setup_ui()
+        self.quest_popup.setup_ui()
 
     def on_draw(self):
         self.clear()
@@ -41,6 +44,7 @@ class GameView_common(arcade.View):
         ui_camera.use()
 
         self.pause_popup.draw()
+        self.quest_popup.draw()
 
     def on_update(self, delta_time):
         for hero in self.hero_l:
@@ -76,10 +80,16 @@ class GameView_common(arcade.View):
         if self.pause_popup.visible:
             return
 
+        if self.quest_popup.visible:
+            return
+
     def on_show_view(self):
         self.window.set_mouse_visible(True)
         if hasattr(self, 'pause_popup'):
             self.pause_popup.setup_ui()
+
+        if hasattr(self, 'quest_popup'):
+            self.quest_popup.setup_ui()
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
@@ -88,6 +98,12 @@ class GameView_common(arcade.View):
                 self.pause_popup.close()
             else:
                 self.pause_popup.show()
+
+        if key == arcade.key.O:
+            if self.quest_popup.visible:
+                self.quest_popup.close()
+            else:
+                self.quest_popup.show()
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)

@@ -4,7 +4,7 @@ from textures import Textures
 from arcade.gui import UIManager, UITextureButton
 
 
-class PausPopup:
+class MusicPopup:
     def __init__(self, parent_view):
         self.parent_view = parent_view
         self.visible = False

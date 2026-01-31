@@ -54,3 +54,13 @@ class Textures:
         for i in range(1, 5):
             hero['walk'].append(arcade.load_texture(f"assets/textures/Hero/Engineer_Walk_{i}.png"))
         Textures.hero = {'Hero': hero}
+
+    @staticmethod
+    def quest_textures(csl):
+        csl.quest_icons = {
+            'key1_icon': arcade.load_texture('assets/items/dash_shild.png'),  # картинки затычки пока не пределаю в пнг
+            'key2_icon': arcade.load_texture('assets/items/kruck.png'),
+            'key3_icon': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
+            'grosbuch_icon': arcade.load_texture('assets/items/buch.jpg'),
+            'gugunek_axe_icon': arcade.load_texture('assets/items/axe.jpg'),
+        }

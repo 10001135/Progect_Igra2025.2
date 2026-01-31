@@ -1,7 +1,9 @@
 import arcade
 from consts import *
+from textures import Textures
 from audioplayer import AudioPlayer
 from arcade.gui import UIManager, UITextureButton
+from views.choose_music_view import MusicPopup
 
 
 class SettingsPopup:
@@ -13,41 +15,38 @@ class SettingsPopup:
         self.manager = UIManager()
         self.setup_ui()
 
+        self.music_popup = MusicPopup(parent_view)
+        self.music_popup_visible = False
+
     def setup_ui(self):
         self.manager.clear()
-        self.music_button = UITextureButton(
-            texture=self.parent_view.textures['buttons']['style1']['normal'],
-            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
-            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
-            width=200,
-            height=50,
-            text="Музыка",
-            style=BUTTON_STYLE1)
 
-        self.saves_button = UITextureButton(
-            texture=self.parent_view.textures['buttons']['style1']['normal'],
-            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
-            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
-            width=200,
-            height=50,
-            text="Сохранения",
+        Textures.textures_main_menu()
+
+        buttons_textures = Textures.textures_in_menu['buttons']['style1']
+
+        self.music_button = UITextureButton(
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=280 * SCALE,
+            height=65 * SCALE,
+            text="Music",
             style=BUTTON_STYLE1)
 
         self.close_button = UITextureButton(
-            texture=self.parent_view.textures['buttons']['style1']['normal'],
-            texture_hovered=self.parent_view.textures['buttons']['style1']['hovered'],
-            texture_pressed=self.parent_view.textures['buttons']['style1']['pressed'],
-            width=200,
-            height=50,
-            text="Закрыть",
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=280 * SCALE,
+            height=65 * SCALE,
+            text="Close",
             style=BUTTON_STYLE1)
 
-        self.saves_button.on_click = self.saves
         self.music_button.on_click = self.music
         self.close_button.on_click = self.close
 
         self.manager.add(self.music_button)
-        self.manager.add(self.saves_button)
         self.manager.add(self.close_button)
 
         self.resize_positihon()
@@ -61,18 +60,11 @@ class SettingsPopup:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
     def resize_positihon(self):
-        width = self.parent_view.window.width
+        self.music_button.center_x = SCREEN_WIDTH // 2
+        self.music_button.center_y = SCREEN_HEIGHT // 2 + 75
 
-        hiegh = self.parent_view.window.height
-
-        self.music_button.center_x = width // 2
-        self.music_button.center_y = hiegh // 2 + 75
-
-        self.saves_button.center_x = width // 2
-        self.saves_button.center_y = hiegh // 2
-
-        self.close_button.center_x = width // 2
-        self.close_button.center_y = hiegh // 2 - 150
+        self.close_button.center_x = SCREEN_WIDTH // 2
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
 
     def saves(self, event=None):
         print("Будет отдельное окно с сохранениями")
@@ -98,18 +90,15 @@ class SettingsPopup:
         if not self.visible:
             return
 
-        window_width = self.parent_view.window.width
-        window_hieg = self.parent_view.window.height
-
-        settings_width = window_width * 0.6
-        settings_hieg = window_hieg * 0.7
+        settings_width = SCREEN_WIDTH * 0.6
+        settings_hieg = SCREEN_HEIGHT * 0.7
 
         settings_width = max(300, settings_width)
         settings_hieg = max(400, settings_hieg)
 
-        window_left = window_width // 2 - settings_width // 2
+        window_left = SCREEN_WIDTH // 2 - settings_width // 2
         window_right = window_left + settings_width
-        window_bottom = window_hieg // 2 - settings_hieg // 2
+        window_bottom = SCREEN_HEIGHT // 2 - settings_hieg // 2
         window_top = window_bottom + settings_hieg
 
         arcade.draw_lrbt_rectangle_filled(
@@ -124,15 +113,15 @@ class SettingsPopup:
             right=window_right,
             top=window_top,
             bottom=window_bottom,
-            color=arcade.color.BLACK,
+            color=arcade.color.PURPLE,
             border_width=3)
 
         arcade.draw_text(
             "НАСТРОЙКИ",
-            window_width // 2,
+            SCREEN_WIDTH // 2,
             window_top - 50,
             arcade.color.WHITE,
-            font_size=min(24, int(window_width * 0.03)),
+            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
             anchor_x="center",
             anchor_y="center")
 
