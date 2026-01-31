@@ -40,7 +40,7 @@ class Hero(arcade.Sprite):
         self.light_time = 0
 
         self.climb = False
-        self.double_jump = False
+        self.double_jump = True
 
         self.jump_pressed = False
         self.world_camera = arcade.camera.Camera2D()
