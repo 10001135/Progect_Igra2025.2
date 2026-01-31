@@ -96,6 +96,13 @@ class GameView_ma_level_4(GameView_common):
             self.window.show_view(LoadView(self.hero, 4, GameView_ma_level_3))
 
         for hero in self.hero_l:
+            b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.top < enter2.bottom and sqrt(
+                abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE]
+        if sum(b) > 0:
+            from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
+            self.window.show_view(LoadView(self.hero, 4, GameView_ma_level_6))
+
+        for hero in self.hero_l:
             b = [1 for enter3 in self.tile_map.sprite_lists['Enter_3'] if hero.right < enter3.left and sqrt(
                 abs(hero.center_x - enter3.center_x) ** 2 + abs(hero.center_y - enter3.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
