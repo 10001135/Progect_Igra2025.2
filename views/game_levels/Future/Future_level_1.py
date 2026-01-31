@@ -1,5 +1,7 @@
 import arcade
 from math import sqrt
+
+from NPC.captain import Captain
 from camera_for_hero import CameraForHero
 from textures import Textures
 from consts import *
@@ -14,6 +16,7 @@ class GameView_fut_level_1(GameView_common):
         arcade.set_background_color(arcade.color.FRENCH_SKY_BLUE)
         self.hero.double_jump = True
         self.draw_fake_floor = True
+        self.hero.level = self
 
         self.asdf = 0
         self.reverse_alpha = True
@@ -92,6 +95,14 @@ class GameView_fut_level_1(GameView_common):
         if self.hero.is_hooked and self.hero.collides_with_list(self.tile_map.sprite_lists['Thorns']):
             self.hero.damage(1)
 
+        self.captain = Captain(*self.tile_map.sprite_lists['Captain'][0].position)
+        self.npc.append(self.captain)
+
+        for npc in self.npc:
+            if npc.__class__.__name__ in self.hero.story_npc:
+                npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
+                npc.story_change()
+
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)
@@ -130,15 +141,19 @@ class GameView_fut_level_1(GameView_common):
         self.decor_list.draw(pixelated=True)
         self.decor_list_f.draw(pixelated=True)
         self.ladders_list.draw(pixelated=True)
-        self.d_list.draw()
+        self.npc.draw(pixelated=True)
         self.draw_hook()
         self.no_light_list.draw(pixelated=True)
         self.hook_points_list.draw(pixelated=True)
         self.hero_l.draw(pixelated=True)
         self.platform_list.draw(pixelated=True)
         self.thorns_list.draw(pixelated=True)
+        self.d_list.draw()
         self.electro_list.draw(pixelated=True)
         self.update_darkness()
+
+        self.gui_camera.use()
+        self.gui()
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
@@ -158,3 +173,6 @@ class GameView_fut_level_1(GameView_common):
 
         if self.fake_floor_list[0].left <= self.hero_l[0].center_x <= self.fake_floor_list[-1].right:
             self.draw_fake_floor = False
+
+        for npc in self.npc:
+            npc.update_animation(delta_time)
