@@ -77,6 +77,11 @@ class Textures:
         Textures.tile_map_ma_level_4 = arcade.load_tilemap(Textures.map_ma_level_4, scaling=3 * SCALE)
 
     @staticmethod
+    def textures_ma_level_5():
+        Textures.map_ma_level_5 = "assets/levels/MA_Level_5.tmx"
+        Textures.tile_map_ma_level_5 = arcade.load_tilemap(Textures.map_ma_level_5, scaling=3 * SCALE)
+
+    @staticmethod
     def texture_hero_1():
         hero = {'to_us': arcade.load_texture('assets/textures/Hero/Engineer.png'), 'walk': [],
                 'in_air': arcade.load_texture('assets/textures/Hero/Engineer_Walk_4.png'),
@@ -100,6 +105,11 @@ class Textures:
     def texture_nikshulp():
         nikshulp = [arcade.load_texture(f'assets/textures/NPC/Nikshulp/Nikshulp{i}.png') for i in range(2)]
         Textures.nikshulp = {'Nikshulp': nikshulp}
+
+    @staticmethod
+    def texture_fara():
+        fara = [arcade.load_texture(f'assets/textures/NPC/Fara/Fara{i}.png') for i in range(2)]
+        Textures.fara = {'Fara': fara}
 
     @staticmethod
     def texture_gui():
