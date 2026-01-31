@@ -377,5 +377,7 @@ class Hero(arcade.Sprite):
     def damage(self, power):
         p = min([(abs(self.center_x - sp.center_x) + abs(self.center_y - sp.center_y), sp) for sp in
                  self.tile_map.sprite_lists['Safe_point']], key=lambda x: x[0])
+        if self.is_hooked:
+            self.is_hooked = False
         self.position = p[1].position
         self.health -= power

@@ -4,6 +4,7 @@ from camera_for_hero import CameraForHero
 from textures import Textures
 from consts import *
 from views.game_view_common import GameView_common
+import random
 
 
 class GameView_fut_level_1(GameView_common):
@@ -14,6 +15,9 @@ class GameView_fut_level_1(GameView_common):
         self.hero.double_jump = True
         self.draw_fake_floor = True
 
+        self.asdf = 0
+        self.reverse_alpha = True
+
         self.tile_map = Textures.tile_map_future_level_1
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
@@ -23,7 +27,7 @@ class GameView_fut_level_1(GameView_common):
                 self.platform_list[i].boundary_left *= SCALE
                 self.platform_list[i].boundary_right *= SCALE
                 self.platform_list[i].change_x *= SCALE
-            elif i == 1:
+            else:
                 self.platform_list[i].boundary_top *= SCALE
                 self.platform_list[i].boundary_bottom *= SCALE
                 self.platform_list[i].change_y *= SCALE
@@ -85,6 +89,8 @@ class GameView_fut_level_1(GameView_common):
             collision_type="wall",
             body_type=arcade.PymunkPhysicsEngine.STATIC
         )
+        if self.hero.is_hooked and self.hero.collides_with_list(self.tile_map.sprite_lists['Thorns']):
+            self.hero.damage(1)
 
         self.hero_l = arcade.SpriteList()
         self.hero_l.append(self.hero)
@@ -136,6 +142,19 @@ class GameView_fut_level_1(GameView_common):
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
+        self.asdf += delta_time
+        if self.asdf >= random.uniform(0.02, 0.08):
+            self.asdf = 0
+            for sprite in self.electro_list:
+                chance = random.random()
+                if chance < 0.3:
+                    sprite.alpha = 255
+                elif chance < 0.6:
+                    sprite.alpha = random.randint(150, 200)
+                elif chance < 0.85:
+                    sprite.alpha = random.randint(80, 130)
+                else:
+                    sprite.alpha = random.randint(40, 80)
 
         if self.fake_floor_list[0].left <= self.hero_l[0].center_x <= self.fake_floor_list[-1].right:
             self.draw_fake_floor = False
