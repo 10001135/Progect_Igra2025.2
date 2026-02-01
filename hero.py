@@ -25,7 +25,10 @@ class Hero(arcade.Sprite):
         self.max_health = 3
         self.health = self.max_health
 
-        self.gold = 0
+        self.gold = 9
+
+        self.gugunek_axe = False
+        self.pearl_of_moira = False
 
         self.left_hero = False
         self.right_hero = False
@@ -102,7 +105,10 @@ class Hero(arcade.Sprite):
 
         if key == arcade.key.T:
             for npc in self.collides_with_list(self.level.npc):
-                npc.story_change()
+                if npc.__class__.__name__ == 'KingWithoutKindom':
+                    npc.story_change(self.gold)
+                else:
+                    npc.story_change()
                 npc.dialog.start()
                 self.story_npc[npc.__class__.__name__] = (npc.story, npc.dialog, npc.greeting)
 
