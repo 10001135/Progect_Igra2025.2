@@ -38,9 +38,9 @@ class SettingsPopup:
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
-            width=280 * SCALE,
+            width=400 * SCALE,
             height=65 * SCALE,
-            text="Close",
+            text="Back to game",
             style=BUTTON_STYLE1)
 
         self.music_button.on_click = self.music
