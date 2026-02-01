@@ -58,10 +58,10 @@ class GameView_ma_level_3(GameView_common):
             self.bell = arcade.Sprite(Textures.objects['Bell'], SCALE * 3, *self.bell_pos[0].position)
             self.bell_list.append(self.bell)
 
-        self.text_book = arcade.Text(text_d['o_to_take'],
+        self.text_obj = arcade.Text(text_d['o_to_take'],
                                      SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
                                      30 * SCALE)
-        self.text_book.position = (SCREEN_WIDTH - self.text_save.content_width - 50 * SCALE, 36 * SCALE)
+        self.text_obj.position = (SCREEN_WIDTH - self.text_obj.content_width - 50 * SCALE, 36 * SCALE)
 
         self.hero.level = self
         if level_p:
@@ -163,5 +163,5 @@ class GameView_ma_level_3(GameView_common):
     def gui(self):
         super().gui()
         if (not self.hero.book and self.hero.collides_with_list(self.book_pos)) or (not self.hero.dash_b and self.hero.collides_with_list(self.bell_pos)):
-            self.text_field(self.text_book)
-            self.text_book.draw()
+            self.text_field(self.text_obj)
+            self.text_obj.draw()

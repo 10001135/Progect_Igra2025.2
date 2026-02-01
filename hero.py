@@ -46,6 +46,7 @@ class Hero(arcade.Sprite):
         self.light_time = 0
 
         self.climb = False
+        self.climb_b = False
         self.double_jump = True
 
         self.jump_pressed = False
@@ -263,25 +264,26 @@ class Hero(arcade.Sprite):
 
         self.climb = False
 
-        if self.tile_map and 'Walls_climb_r' in self.tile_map.sprite_lists:
-            walls_climb_touch = self.collides_with_list(self.tile_map.sprite_lists['Walls_climb_r'])
-            if walls_climb_touch:
-                for wall in walls_climb_touch:
-                    if self.right + self.change_x > wall.right:
-                        self.engine.gravity_constant = 0
-                        if not self.climb:
-                            self.climb = True
-                            self.change_y = 0
+        if self.climb_b:
+            if self.tile_map and 'Walls_climb_r' in self.tile_map.sprite_lists:
+                walls_climb_touch = self.collides_with_list(self.tile_map.sprite_lists['Walls_climb_r'])
+                if walls_climb_touch:
+                    for wall in walls_climb_touch:
+                        if self.right + self.change_x > wall.right:
+                            self.engine.gravity_constant = 0
+                            if not self.climb:
+                                self.climb = True
+                                self.change_y = 0
 
-        if self.tile_map and 'Walls_climb_l' in self.tile_map.sprite_lists:
-            walls_climb_touch = self.collides_with_list(self.tile_map.sprite_lists['Walls_climb_l'])
-            if walls_climb_touch:
-                for wall in walls_climb_touch:
-                    if self.left + self.change_x < wall.left:
-                        self.engine.gravity_constant = 0
-                        if not self.climb:
-                            self.climb = True
-                            self.change_y = 0
+            if self.tile_map and 'Walls_climb_l' in self.tile_map.sprite_lists:
+                walls_climb_touch = self.collides_with_list(self.tile_map.sprite_lists['Walls_climb_l'])
+                if walls_climb_touch:
+                    for wall in walls_climb_touch:
+                        if self.left + self.change_x < wall.left:
+                            self.engine.gravity_constant = 0
+                            if not self.climb:
+                                self.climb = True
+                                self.change_y = 0
 
         if self.is_hooked:
             self.hook_engine.step(dt)

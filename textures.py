@@ -134,4 +134,5 @@ class Textures:
     def texture_objects():
         book = arcade.load_texture('assets/textures/Book.png')
         bell = arcade.load_texture('assets/textures/bell.png')
-        Textures.objects = {'Book': book, 'Bell': bell}
+        climb = arcade.load_texture('assets/textures/climb.png')
+        Textures.objects = {'Book': book, 'Bell': bell, 'Climb': climb}
