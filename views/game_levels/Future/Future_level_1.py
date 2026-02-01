@@ -200,8 +200,6 @@ class GameView_fut_level_1(GameView_common):
                 bullet.remove_from_sprite_lists()
 
         for hero in self.hero_l:
-            b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if
-                 hero.left > enter2.right and (sqrt(abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE)]
-        if sum(b) > 0:
-            from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
-            self.window.show_view(LoadView(self.hero, 1, GameView_fut_level_2))
+            if self.hero.collides_with_list(self.tile_map.sprite_lists['Enter_2']):
+                from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
+                self.window.show_view(LoadView(self.hero, 1, GameView_fut_level_2))
