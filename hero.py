@@ -39,7 +39,7 @@ class Hero(arcade.Sprite):
 
         self.run = False
         self.dash = False
-        self.dash_b = False
+        self.dash_b = True
         self.dash_size = DASH_SIZE
         self.dash_time = 0
         self.dash_light = (True, False)
