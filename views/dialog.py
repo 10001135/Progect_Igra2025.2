@@ -115,7 +115,12 @@ class DialogQt(QMainWindow, Ui_MainWindow):
                 self.answers_lay.addWidget(self.answers_buttons[answer_new])
             self.npc_tb.setText(self.npc_tb.toHtml() + '\n' + f'<b>{self.npc_name}: </b>' + list(answer)[0])
 
-        if answer.__class__.__name__ == 'int':
+        if answer == 0:
+            self.self2.hero_answers = self.hero_answers
+            self.close()
+
+        if answer == 1:
+            del self.hero_answers[answer_0]
             self.self2.hero_answers = self.hero_answers
             self.close()
 

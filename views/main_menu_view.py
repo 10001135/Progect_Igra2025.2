@@ -179,7 +179,7 @@ class MainMenuView(arcade.View):
 
         play_button.on_click = lambda event: (Textures.texture_hero_1(),
                                               self.manager.disable(),
-                                              self.window.show_view(LoadView(Hero(), None, GameView_ma_level_1)))
+                                              self.window.show_view(LoadView(Hero(), None, GameView_ma_level_2)))
 
         self.box_layout.add(play_button)
         self.box_layout.add(setting_button)
