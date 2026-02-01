@@ -1,7 +1,6 @@
 import arcade
 from consts import *
 from textures import Textures
-from audioplayer import AudioPlayer
 from arcade.gui import UIManager, UITextureButton
 from views.choose_music_view import MusicPopup
 
@@ -11,7 +10,6 @@ class SettingsPopup:
         self.parent_view = parent_view
         self.visible = False
         self.vki_music = True
-        self.musik = AudioPlayer("assets/music/standart.mp3")
         self.manager = UIManager()
         self.setup_ui()
 
@@ -52,42 +50,58 @@ class SettingsPopup:
         self.resize_positihon()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if self.visible:
+        if self.music_popup_visible:
+            self.music_popup.on_mouse_press(x, y, button, modifiers)
+        elif self.visible:
             self.manager.on_mouse_press(x, y, button, modifiers)
 
     def on_mouse_release(self, x, y, button, modifiers):
-        if self.visible:
+        if self.music_popup_visible:
+            self.music_popup.on_mouse_release(x, y, button, modifiers)
+        elif self.visible:
             self.manager.on_mouse_release(x, y, button, modifiers)
+
+    def on_key_press(self, key, modifiers):
+        if self.music_popup_visible:
+            if key == arcade.key.ESCAPE:
+                self.music_popup.close()
+                self.music_popup_visible = False
+                self.show()
 
     def resize_positihon(self):
         self.music_button.center_x = SCREEN_WIDTH // 2
-        self.music_button.center_y = SCREEN_HEIGHT // 2 + 75
+        self.music_button.center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
 
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
 
     def saves(self, event=None):
         print("Будет отдельное окно с сохранениями")
 
     def music(self, event=None):
-        if self.vki_music:
-            self.musik.play(loop=-1)
-            self.vki_music = False
-        else:
-            self.musik.stop()
-            self.vki_music = True
+        self.visible = False
+        self.manager.disable()
+        self.music_popup.show()
+        self.music_popup_visible = True
 
     def show(self):
         self.visible = True
         self.manager.enable()
+        self.music_popup_visible = False
         self.resize_positihon()
 
     def close(self, event=None):
         self.visible = False
         self.manager.disable()
+        self.music_popup_visible = False
+        self.music_popup.close()
 
     def draw(self):
-        if not self.visible:
+        if not self.visible and not self.music_popup_visible:
+            return
+
+        if self.music_popup_visible:
+            self.music_popup.draw()
             return
 
         settings_width = SCREEN_WIDTH * 0.6
@@ -129,3 +143,4 @@ class SettingsPopup:
 
     def on_resize(self, width, height):
         self.resize_positihon()
+        self.music_popup.on_resize(width, height)

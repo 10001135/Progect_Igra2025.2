@@ -118,7 +118,7 @@ class QuestPopup:
 
     def resize_position(self):
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 350 * SCALE
         start_x = SCREEN_WIDTH // 2 - 125
         start_y = SCREEN_HEIGHT // 2 + 50
 
@@ -129,8 +129,8 @@ class QuestPopup:
             row = i // 2
             col = i % 2
 
-            button.center_x = start_x + (col * spacing_x)
-            button.center_y = start_y - (row * spacing_y)
+            button.center_x = start_x + (col * spacing_x) * SCALE
+            button.center_y = start_y - (row * spacing_y) * SCALE
 
     def show(self):
         self.setup_ui()

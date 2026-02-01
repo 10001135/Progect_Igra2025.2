@@ -20,13 +20,31 @@ class PausPopup:
 
         buttons_textures = Textures.textures_in_menu['buttons']['style1']
 
-        self.saves_button = UITextureButton(
+        self.saves1 = UITextureButton(
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
             width=250 * SCALE,
             height=65 * SCALE,
-            text="Settings",
+            text="Save_1",
+            style=BUTTON_STYLE1)
+
+        self.saves2 = UITextureButton(
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=250 * SCALE,
+            height=65 * SCALE,
+            text="Save_2",
+            style=BUTTON_STYLE1)
+
+        self.saves3 = UITextureButton(
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=250 * SCALE,
+            height=65 * SCALE,
+            text="Save_3",
             style=BUTTON_STYLE1)
 
         self.close_button = UITextureButton(
@@ -38,10 +56,14 @@ class PausPopup:
             text="Continue",
             style=BUTTON_STYLE1)
 
-        self.saves_button.on_click = self.saves
+        self.saves1.on_click = self.saves1
+        self.saves2.on_click = self.saves2
+        self.saves3.on_click = self.saves3
         self.close_button.on_click = self.close
 
-        self.manager.add(self.saves_button)
+        self.manager.add(self.saves1)
+        self.manager.add(self.saves2)
+        self.manager.add(self.saves3)
         self.manager.add(self.close_button)
 
         self.resize_position()
@@ -65,11 +87,14 @@ class PausPopup:
         self.close_button.center_x = SCREEN_WIDTH // 2
         self.close_button.center_y = SCREEN_HEIGHT // 2 - 250 * SCALE
 
-    def saves(self, event=None):
-        self.close_pause_only()
-        self.settings_popup_visible = True
-        self.settings_popup.show()
-        self.settings_popup.manager.enable()
+    def saves1(self, event=None):
+        print('Sohranenie 1')
+
+    def saves2(self, event=None):
+        print('Sohranenie 2')
+
+    def saves3(self, event=None):
+        print('Sohranenie 3')
 
     def close_pause_only(self):
         self.visible = False
@@ -86,7 +111,8 @@ class PausPopup:
         self.visible = False
         self.manager.disable()
         self.settings_popup_visible = False
-        self.settings_popup.close()
+        if hasattr(self.settings_popup, 'close'):
+            self.settings_popup.close()
 
     def draw(self):
         if self.visible:
@@ -113,11 +139,11 @@ class PausPopup:
                 right=window_right,
                 top=window_top,
                 bottom=window_bottom,
-                color=arcade.color.PINK,
+                color=arcade.color.WHITE,
                 border_width=3)
 
             arcade.draw_text(
-                "Пауза",
+                "Saves",
                 SCREEN_WIDTH // 2,
                 window_top - 50,
                 arcade.color.WHITE,
