@@ -76,6 +76,14 @@ class Textures:
         Textures.map_future_level_1 = "assets/levels/Fut_Level_1.tmx"
         Textures.tile_map_future_level_1 = arcade.load_tilemap(Textures.map_future_level_1, scaling=3 * SCALE)
         Textures.cosmo_bg = arcade.load_texture("assets/textures/cosmobg.png")
+        Textures.bullet = arcade.load_texture(":resources:/images/space_shooter/laserBlue01.png")
+
+    @staticmethod
+    def textures_future_level_2():
+        Textures.map_future_level_2 = "assets/levels/Fut_Level_2.tmx"
+        Textures.tile_map_future_level_2 = arcade.load_tilemap(Textures.map_future_level_2, scaling=3 * SCALE)
+        visor = [arcade.load_texture(f'bosses/visor/visor{i}.png') for i in range(3)]
+        Textures.visor = {'Visor': visor}
 
     @staticmethod
     def textures_ma_level_3():
