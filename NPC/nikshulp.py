@@ -7,7 +7,7 @@ from texts import text_d
 
 
 class Nikshulp(arcade.Sprite):
-    def __init__(self, x, y, story=0):
+    def __init__(self, hero, x, y, story=0):
         super().__init__()
         Textures.texture_nikshulp()
         self.textures = Textures.nikshulp['Nikshulp']
@@ -16,6 +16,7 @@ class Nikshulp(arcade.Sprite):
         self.texture_change_delay = 0.8
         self.current_texture = 0
         self.name = text_d['nikshulp_name']
+        self.hero = hero
 
         self.position = (x, y)
         self.scale = SCALE * 4
@@ -52,7 +53,22 @@ class Nikshulp(arcade.Sprite):
                    self.dialog.hero_answers,
                    'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self, self.name)
 
+        if self.story == 2 and self.hero.book:
+            self.dialog.hero_answers[text_d['hero_nikshulp_replic_6']] = text_d['nikshulp_replic_7']
+            self.dialog = Dialog(text_d[self.greeting],
+                                 self.dialog.hero_answers,
+                                 'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self, self.name)
+            self.story = 31
+
     def dialog_end(self):
         if self.story == 0:
             self.story = 1
             self.greeting = 'nikshulp_replic_6'
+
+        if self.story == 1 and text_d['hero_nikshulp_replic_1'] not in self.dialog.hero_answers:
+            self.story = 2
+
+        if self.story == 31 and text_d['hero_nikshulp_replic_6'] not in self.dialog.hero_answers:
+            self.story = 3
+            self.hero.book = 2
+            self.hero.keys += 1
