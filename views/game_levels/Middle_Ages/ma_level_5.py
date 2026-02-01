@@ -7,6 +7,7 @@ from textures import Textures
 from consts import *
 from views.game_view_common import GameView_common
 from views.load_view import LoadView
+from texts import text_d
 
 
 class GameView_ma_level_5(GameView_common):
@@ -27,11 +28,16 @@ class GameView_ma_level_5(GameView_common):
 
         self.chests_list = self.tile_map.sprite_lists['Chests']
 
+        self.cloud_pos = self.tile_map.sprite_lists['Cloud_pos']
+        self.cloud_list = arcade.SpriteList()
+        if not self.hero.double_jump:
+            self.cloud = arcade.Sprite(Textures.objects['Cloud'], SCALE * 3, self.cloud_pos[0].position[0], self.cloud_pos[0].top)
+            self.cloud_list.append(self.cloud)
+
         self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
         self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
         self.decor_list_b_b = self.tile_map.sprite_lists['Decor_back_b']
         self.decor_list_b_b_f = self.tile_map.sprite_lists['Decor_back_b_f']
-        # self.decor_list_f = self.tile_map.sprite_lists['Decor_forw']
 
         self.walls_front_list = self.tile_map.sprite_lists['Walls_front']
 
@@ -45,6 +51,11 @@ class GameView_ma_level_5(GameView_common):
         self.background_list = self.tile_map.sprite_lists['Background']
 
         self.ladders_list = self.tile_map.sprite_lists['Ladders']
+
+        self.text_obj = arcade.Text(text_d['o_to_take'],
+                                    SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                    30 * SCALE)
+        self.text_obj.position = (SCREEN_WIDTH - self.text_obj.content_width - 50 * SCALE, 36 * SCALE)
 
         self.hero.level = self
         if level_p:
@@ -91,6 +102,7 @@ class GameView_ma_level_5(GameView_common):
         self.ladders_list.draw(pixelated=True)
 
         self.thorns_list.draw(pixelated=True)
+        self.cloud_list.draw(pixelated=True)
 
         self.walls_front_list.draw(pixelated=True)
 
@@ -127,3 +139,17 @@ class GameView_ma_level_5(GameView_common):
 
         for npc in self.npc:
             npc.update_animation(delta_time)
+
+    def gui(self):
+        super().gui()
+        if not self.hero.double_jump and self.hero.collides_with_list(self.cloud_pos):
+            self.text_field(self.text_obj)
+            self.text_obj.draw()
+
+
+    def on_key_press(self, key, modifiers):
+        super().on_key_press(key, modifiers)
+        if key == arcade.key.O:
+            if self.hero.collides_with_list(self.cloud_pos) and not self.hero.double_jump:
+                self.hero.double_jump = True
+                self.cloud_list = arcade.SpriteList()
