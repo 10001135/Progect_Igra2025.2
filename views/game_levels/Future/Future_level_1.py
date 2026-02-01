@@ -1,12 +1,16 @@
 import arcade
 from math import sqrt
 
+from bullet_generator import BulletGenerator
+from views import load_view
 from NPC.captain import Captain
 from camera_for_hero import CameraForHero
 from textures import Textures
 from consts import *
 from views.game_view_common import GameView_common
 import random
+
+from views.load_view import LoadView
 
 
 class GameView_fut_level_1(GameView_common):
@@ -42,6 +46,10 @@ class GameView_fut_level_1(GameView_common):
         self.hook_points_list = self.tile_map.sprite_lists['Hook_points']
         self.decor_list_f = self.tile_map.sprite_lists['Decor_f']
         self.electro_list = self.tile_map.sprite_lists['Electro']
+        self.generator_bullets_list = self.tile_map.sprite_lists['Generator']
+        self.reborn_bed_list = self.tile_map.sprite_lists['Reborn_bed']
+        self.generator = BulletGenerator(self.generator_bullets_list[0].center_x,
+                                         self.generator_bullets_list[0].center_y)
 
         # self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
         # self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
@@ -103,7 +111,7 @@ class GameView_fut_level_1(GameView_common):
                 npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
                 npc.story_change()
 
-        self.hero_l = arcade.SpriteList()
+        self.hero_l = arcade.SpriteList(use_spatial_hash=True)
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)
         self.hero.world_camera = self.world_camera
@@ -137,6 +145,7 @@ class GameView_fut_level_1(GameView_common):
             for h in emmiter:
                 for e in emmiter[h]:
                     e.draw()
+
         self.decor_list_b.draw(pixelated=True)
         self.decor_list.draw(pixelated=True)
         self.decor_list_f.draw(pixelated=True)
@@ -145,18 +154,22 @@ class GameView_fut_level_1(GameView_common):
         self.draw_hook()
         self.no_light_list.draw(pixelated=True)
         self.hook_points_list.draw(pixelated=True)
+        self.reborn_bed_list.draw(pixelated=True)
         self.hero_l.draw(pixelated=True)
         self.platform_list.draw(pixelated=True)
         self.thorns_list.draw(pixelated=True)
         self.d_list.draw()
+        self.generator.on_draw()
         self.electro_list.draw(pixelated=True)
         self.update_darkness()
 
         self.gui_camera.use()
         self.gui()
 
+
     def on_update(self, delta_time):
         super().on_update(delta_time)
+        self.generator.update(delta_time)
         self.asdf += delta_time
         if self.asdf >= random.uniform(0.02, 0.08):
             self.asdf = 0
@@ -176,3 +189,19 @@ class GameView_fut_level_1(GameView_common):
 
         for npc in self.npc:
             npc.update_animation(delta_time)
+
+        for bullet in self.generator.bullet_list:
+            if bullet.collides_with_list(self.walls_list):
+                bullet.remove_from_sprite_lists()
+                continue
+
+            if bullet.collides_with_list(self.hero_l):
+                self.hero.damage(1)
+                bullet.remove_from_sprite_lists()
+
+        for hero in self.hero_l:
+            b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if
+                 hero.left > enter2.right and (sqrt(abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE)]
+        if sum(b) > 0:
+            from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
+            self.window.show_view(LoadView(self.hero, 1, GameView_fut_level_2))
