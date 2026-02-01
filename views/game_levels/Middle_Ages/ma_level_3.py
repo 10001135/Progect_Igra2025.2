@@ -50,6 +50,8 @@ class GameView_ma_level_3(GameView_common):
                 self.reborn_point = self.reborn_point_list[0].position
             if level_p == 4:
                 self.reborn_point = self.reborn_point_list[1].position
+            if level_p == 7:
+                self.reborn_point = self.reborn_point_list[2].position
         else:
             self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
@@ -115,6 +117,13 @@ class GameView_ma_level_3(GameView_common):
         if sum(b) > 0:
             from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
             self.window.show_view(LoadView(self.hero, 3, GameView_ma_level_4))
+
+        for hero in self.hero_l:
+            b = [1 for enter3 in self.tile_map.sprite_lists['Enter_3'] if hero.top < enter3.bottom and sqrt(
+                abs(hero.center_x - enter3.center_x) ** 2 + abs(hero.center_y - enter3.center_y) ** 2) < 16 * 5 * SCALE]
+        if sum(b) > 0:
+            from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
+            self.window.show_view(LoadView(self.hero, 3, GameView_ma_level_7))
 
         for npc in self.npc:
             npc.update_animation(delta_time)

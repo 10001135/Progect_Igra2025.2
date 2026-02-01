@@ -1,5 +1,5 @@
 import arcade
-import traceback
+from texts import text_d
 import sys
 
 from PyQt6.QtCore import Qt
@@ -45,7 +45,7 @@ class DialogQt(QMainWindow, Ui_MainWindow):
 
         self.npc_av.setStyleSheet(f"border-image: url(assets/textures/NPC/{npc}) space")
         self.npc_av.setFixedSize(int(200 * SCALE), int(200 * SCALE))
-        if self.npc_name == 'Фара':
+        if self.npc_name == text_d['fara_name']:
             self.npc_av.setFixedSize(int(200 * SCALE), int(313 * SCALE))
 
         self.hero_av.setStyleSheet(f"border-image: url({hero}) space")
