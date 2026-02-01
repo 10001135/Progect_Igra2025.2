@@ -7,7 +7,7 @@ from texts import text_d
 
 
 class Gugunek(arcade.Sprite):
-    def __init__(self, x, y, story=0):
+    def __init__(self, hero, x, y, story=0):
         super().__init__()
         Textures.texture_gugunek()
         self.textures = Textures.gugunek['Gugunek']
@@ -16,6 +16,7 @@ class Gugunek(arcade.Sprite):
         self.texture_change_delay = 0.8
         self.current_texture = 0
         self.name = text_d['gugunek_name']
+        self.hero = hero
 
         self.position = (x, y)
         self.scale = SCALE * 4
@@ -49,10 +50,27 @@ class Gugunek(arcade.Sprite):
 
         if self.story != 0:
             self.dialog = Dialog(text_d[self.greeting],
-                   self.dialog.hero_answers,
-                   'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 self.dialog.hero_answers,
+                                 'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self, self.name)
+
+            if self.story == 2 and self.hero.gugunek_axe:
+                self.dialog.hero_answers[text_d['hero_gugunek_replic_5']] = {
+                    text_d['gugunek_replic_7']: {text_d['hero_gugunek_replic_6']: text_d['gugunek_replic_8'],
+                                                 text_d['hero_gugunek_replic_7']: text_d['gugunek_replic_9']}}
+                self.dialog = Dialog(text_d[self.greeting],
+                                     self.dialog.hero_answers,
+                                     'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self, self.name)
+                self.story = 31
 
     def dialog_end(self):
         if self.story == 0:
             self.story = 1
             self.greeting = 'gugunek_replic_6'
+
+        if self.story == 1 and text_d['hero_gugunek_replic_1'] not in self.dialog.hero_answers:
+            self.story = 2
+
+        if self.story == 31 and text_d['hero_gugunek_replic_5'] not in self.dialog.hero_answers:
+            self.story = 3
+            self.hero.gugunek_axe = False
+            self.hero.keys += 1
