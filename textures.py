@@ -129,3 +129,9 @@ class Textures:
         money3 = arcade.load_texture(f'assets/textures/GUI/Money3.png')
         money5 = arcade.load_texture(f'assets/textures/GUI/Money5.png')
         Textures.gui = {'Heart': heart, 'Unheart': unheart, 'Money1': money1, 'Money3': money3, 'Money5': money5}
+
+    @staticmethod
+    def texture_objects():
+        book = arcade.load_texture('assets/textures/Book.png')
+        bell = arcade.load_texture('assets/textures/bell.png')
+        Textures.objects = {'Book': book, 'Bell': bell}

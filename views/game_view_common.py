@@ -43,6 +43,7 @@ class GameView_common(arcade.View):
         if self.__class__.__name__ not in self.hero.chests_open_coord:
             self.hero.chests_open_coord[self.__class__.__name__] = []
         Textures.texture_gui()
+        Textures.texture_objects()
         self.emitter_trace = {}
         self.emitter_clouds = {}
         self.reborn_point = (200, 200)

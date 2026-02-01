@@ -1,6 +1,8 @@
 import arcade
 from math import sqrt
 
+from texts import text_d
+
 from NPC.nikshulp import Nikshulp
 from camera_for_hero import CameraForHero
 from textures import Textures
@@ -32,6 +34,8 @@ class GameView_ma_level_3(GameView_common):
         self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
         self.decor_list_b_b = self.tile_map.sprite_lists['Decor_back_b']
         self.decor_list_f = self.tile_map.sprite_lists['Decor_forw']
+        self.book_pos = self.tile_map.sprite_lists['Book']
+        self.bell_pos = self.tile_map.sprite_lists['Bell']
 
         self.thorns_list = self.tile_map.sprite_lists['Thorns']
 
@@ -43,6 +47,21 @@ class GameView_ma_level_3(GameView_common):
         self.background_list = self.tile_map.sprite_lists['Background']
 
         self.ladders_list = self.tile_map.sprite_lists['Ladders']
+
+        self.book_list = arcade.SpriteList()
+        if not self.hero.book:
+            self.book = arcade.Sprite(Textures.objects['Book'], SCALE * 3, *self.book_pos[0].position)
+            self.book_list.append(self.book)
+
+        self.bell_list = arcade.SpriteList()
+        if not self.hero.dash_b:
+            self.bell = arcade.Sprite(Textures.objects['Bell'], SCALE * 3, *self.bell_pos[0].position)
+            self.bell_list.append(self.bell)
+
+        self.text_book = arcade.Text(text_d['o_to_take'],
+                                     SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                     30 * SCALE)
+        self.text_book.position = (SCREEN_WIDTH - self.text_save.content_width - 50 * SCALE, 36 * SCALE)
 
         self.hero.level = self
         if level_p:
@@ -67,7 +86,7 @@ class GameView_ma_level_3(GameView_common):
         )
         self.hero.engine = self.engine
 
-        self.nikshulp = Nikshulp(*self.tile_map.sprite_lists['Nikshulp'][0].position)
+        self.nikshulp = Nikshulp(self.hero, *self.tile_map.sprite_lists['Nikshulp'][0].position)
         self.npc.append(self.nikshulp)
 
         for npc in self.npc:
@@ -92,6 +111,8 @@ class GameView_ma_level_3(GameView_common):
         self.ladders_list.draw(pixelated=True)
 
         self.thorns_list.draw(pixelated=True)
+        self.book_list.draw(pixelated=True)
+        self.bell_list.draw(pixelated=True)
 
         self.d_list.draw(pixelated=True)
 
@@ -127,3 +148,20 @@ class GameView_ma_level_3(GameView_common):
 
         for npc in self.npc:
             npc.update_animation(delta_time)
+
+    def on_key_press(self, key, modifiers):
+        super().on_key_press(key, modifiers)
+        if key == arcade.key.O :
+            if self.hero.collides_with_list(self.book_pos) and not self.hero.book:
+                self.hero.book = 1
+                self.book_list = arcade.SpriteList()
+
+            if self.hero.collides_with_list(self.bell_pos) and not self.hero.dash_b:
+                self.hero.dash_b = True
+                self.bell_list = arcade.SpriteList()
+
+    def gui(self):
+        super().gui()
+        if (not self.hero.book and self.hero.collides_with_list(self.book_pos)) or (not self.hero.dash_b and self.hero.collides_with_list(self.bell_pos)):
+            self.text_field(self.text_book)
+            self.text_book.draw()

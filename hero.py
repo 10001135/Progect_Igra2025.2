@@ -29,6 +29,7 @@ class Hero(arcade.Sprite):
 
         self.gugunek_axe = False
         self.pearl_of_moira = False
+        self.book = 0
         self.keys = 0
 
         self.left_hero = False
@@ -38,6 +39,7 @@ class Hero(arcade.Sprite):
 
         self.run = False
         self.dash = False
+        self.dash_b = False
         self.dash_size = DASH_SIZE
         self.dash_time = 0
         self.dash_light = (True, False)
@@ -99,7 +101,7 @@ class Hero(arcade.Sprite):
         if key == arcade.key.LSHIFT:
             self.run = True
 
-        if key == arcade.key.X and self.dash_time <= 0:
+        if key == arcade.key.X and self.dash_time <= 0 and self.dash_b:
             self.dash = True
             self.dash_time = DASH_TIME
             self.dash_light = (False, False)
