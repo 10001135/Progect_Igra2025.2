@@ -89,11 +89,20 @@ class MusicPopup:
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.visible:
-            self.manager.on_mouse_press(x, y, button, modifiers)
+            return self.manager.on_mouse_press(x, y, button, modifiers)
+        return False
 
     def on_mouse_release(self, x, y, button, modifiers):
         if self.visible:
-            self.manager.on_mouse_release(x, y, button, modifiers)
+            return self.manager.on_mouse_release(x, y, button, modifiers)
+        return False
+
+    def on_key_press(self, key, modifiers):
+        if self.visible:
+            if key == arcade.key.ESCAPE:
+                self.close()
+                return True
+        return False
 
     def resize_positihon(self):
         if not self.music_buttons:
@@ -141,6 +150,8 @@ class MusicPopup:
     def close(self, event=None):
         self.visible = False
         self.manager.disable()
+        if self.on_back_to_settings:
+            self.on_back_to_settings()
 
     def draw(self):
         if not self.visible:

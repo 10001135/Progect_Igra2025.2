@@ -67,8 +67,6 @@ class SettingsPopup:
         if self.music_popup_visible:
             if key == arcade.key.ESCAPE:
                 self.music_popup.close()
-                self.music_popup_visible = False
-                self.show()
         elif self.visible:
             if key == arcade.key.ESCAPE:
                 self.close()
@@ -93,25 +91,26 @@ class SettingsPopup:
     def show(self):
         self.setup_ui()
         self.visible = True
-        self.manager.enable()
         self.music_popup_visible = False
+        self.manager.enable()
         self.resize_positihon()
 
     def on_back_from_music(self):
         self.music_popup_visible = False
-        self.show()
+
+        self.manager.enable()
 
     def close(self, event=None):
         self.visible = False
-        self.manager.disable()
         self.music_popup_visible = False
 
-    def draw(self):
-        if not self.visible and not self.music_popup_visible:
-            return
+        self.manager.disable()
 
-        if self.music_popup_visible:
-            self.music_popup.draw()
+        if hasattr(self.music_popup, 'visible') and self.music_popup.visible:
+            self.music_popup.close()
+
+    def draw(self):
+        if not self.visible:
             return
 
         settings_width = SCREEN_WIDTH * 0.6
@@ -150,6 +149,9 @@ class SettingsPopup:
             anchor_y="center")
 
         self.manager.draw()
+
+        if self.music_popup_visible:
+            self.music_popup.draw()
 
     def on_resize(self, width, height):
         self.resize_positihon()
