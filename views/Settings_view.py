@@ -11,10 +11,12 @@ class SettingsPopup:
         self.visible = False
         self.vki_music = True
         self.manager = UIManager()
-        self.setup_ui()
 
         self.music_popup = MusicPopup(parent_view)
         self.music_popup_visible = False
+        self.music_popup.on_back_to_settings = self.on_back_from_music
+
+        self.setup_ui()
 
     def setup_ui(self):
         self.manager.clear()
@@ -67,13 +69,18 @@ class SettingsPopup:
                 self.music_popup.close()
                 self.music_popup_visible = False
                 self.show()
+        elif self.visible:
+            if key == arcade.key.ESCAPE:
+                self.close()
 
     def resize_positihon(self):
-        self.music_button.center_x = SCREEN_WIDTH // 2
-        self.music_button.center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
+        if hasattr(self, 'music_button') and self.music_button:
+            self.music_button.center_x = SCREEN_WIDTH // 2
+            self.music_button.center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
 
-        self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
+        if hasattr(self, 'close_button') and self.close_button:
+            self.close_button.center_x = SCREEN_WIDTH // 2
+            self.close_button.center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
 
     def saves(self, event=None):
         print("Будет отдельное окно с сохранениями")
@@ -85,16 +92,20 @@ class SettingsPopup:
         self.music_popup_visible = True
 
     def show(self):
+        self.setup_ui()
         self.visible = True
         self.manager.enable()
         self.music_popup_visible = False
         self.resize_positihon()
 
+    def on_back_from_music(self):
+        self.music_popup_visible = False
+        self.show()
+
     def close(self, event=None):
         self.visible = False
         self.manager.disable()
         self.music_popup_visible = False
-        self.music_popup.close()
 
     def draw(self):
         if not self.visible and not self.music_popup_visible:

@@ -22,6 +22,8 @@ class MusicPopup:
                            "assets/music/music4.mp3", "assets/music/standart(cyber).ogg",
                            "assets/music/music6.ogg", "assets/music/music7.ogg", "assets/music/music8.ogg"]
 
+        self.on_back_to_settings = None
+
         self.setup_ui()
 
     def setup_ui(self):
@@ -133,8 +135,8 @@ class MusicPopup:
         self.visible = False
         self.manager.disable()
 
-        if self.parent_view and hasattr(self.parent_view, 'open_settings_from_music'):
-            self.parent_view.open_settings_from_music()
+        if self.on_back_to_settings:
+            self.on_back_to_settings()
 
     def draw(self):
         if not self.visible:
