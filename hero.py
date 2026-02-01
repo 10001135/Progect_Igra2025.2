@@ -29,6 +29,7 @@ class Hero(arcade.Sprite):
 
         self.gugunek_axe = False
         self.pearl_of_moira = False
+        self.keys = 0
 
         self.left_hero = False
         self.right_hero = False

@@ -67,7 +67,7 @@ class GameView_ma_level_2(GameView_common):
 
         self.king = KingWithoutKindom(self.hero, *self.tile_map.sprite_lists['King'][0].position)
         self.npc.append(self.king)
-        self.gugunek = Gugunek(*self.tile_map.sprite_lists['Gugunek'][0].position)
+        self.gugunek = Gugunek(self.hero, *self.tile_map.sprite_lists['Gugunek'][0].position)
         self.npc.append(self.gugunek)
 
         for npc in self.npc:
