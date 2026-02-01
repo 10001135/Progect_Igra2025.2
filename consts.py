@@ -1,6 +1,6 @@
 from arcade.gui import UITextureButtonStyle
 
-SCALE = 1.35
+SCALE = 1
 SCREEN_WIDTH = int(1920 * SCALE)
 SCREEN_HEIGHT = int(1080 * SCALE)
 
@@ -12,6 +12,7 @@ JUMP_SPEED = 85 * SCALE
 DASH_SIZE = 60 * SCALE
 DASH_TIME = 2
 LIGHT_TIME = 0.5
+TIME_DAMAGE = 1.5
 
 CAMERA_LERP = 0.7
 

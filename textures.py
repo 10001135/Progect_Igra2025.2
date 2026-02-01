@@ -76,14 +76,18 @@ class Textures:
         Textures.map_future_level_1 = "assets/levels/Fut_Level_1.tmx"
         Textures.tile_map_future_level_1 = arcade.load_tilemap(Textures.map_future_level_1, scaling=3 * SCALE)
         Textures.cosmo_bg = arcade.load_texture("assets/textures/cosmobg.png")
-        Textures.bullet = arcade.load_texture(":resources:/images/space_shooter/laserBlue01.png")
+        Textures.bullet = arcade.load_texture("assets/levels/DawnLike/Objects/coluchka.png")
 
     @staticmethod
     def textures_future_level_2():
         Textures.map_future_level_2 = "assets/levels/Fut_Level_2.tmx"
+        Textures.cosmo_bg = arcade.load_texture("assets/textures/cosmobg.png")
         Textures.tile_map_future_level_2 = arcade.load_tilemap(Textures.map_future_level_2, scaling=3 * SCALE)
         visor = [arcade.load_texture(f'bosses/visor/visor{i}.png') for i in range(3)]
+        Textures.visor_attach = arcade.load_texture(f'bosses/visor/visor_attach.png')
+        Textures.visor_damage = arcade.load_texture(f'bosses/visor/visor_damage.png')
         Textures.visor = {'Visor': visor}
+        Textures.razor = arcade.load_texture('assets/levels/DawnLike/Objects/razor.png')
 
     @staticmethod
     def textures_ma_level_3():
@@ -148,11 +152,13 @@ class Textures:
     @staticmethod
     def texture_gui():
         heart = arcade.load_texture(f'assets/textures/GUI/Heart.png')
+        boss_heart = arcade.load_texture(f'assets/textures/GUI/HeartBoss.png')
         unheart = arcade.load_texture(f'assets/textures/GUI/Unheart.png')
+
         money1 = arcade.load_texture(f'assets/textures/GUI/Money1.png')
         money3 = arcade.load_texture(f'assets/textures/GUI/Money3.png')
         money5 = arcade.load_texture(f'assets/textures/GUI/Money5.png')
-        Textures.gui = {'Heart': heart, 'Unheart': unheart, 'Money1': money1, 'Money3': money3, 'Money5': money5}
+        Textures.gui = {'Heart': heart, 'HeartBoss': boss_heart, 'Unheart': unheart, 'Money1': money1, 'Money3': money3, 'Money5': money5}
 
     @staticmethod
     def texture_objects():

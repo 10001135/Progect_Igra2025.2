@@ -17,6 +17,7 @@ from views.game_levels.Middle_Ages.ma_level_5 import GameView_ma_level_5
 from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
 from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
 
+from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
 
 
 class BgPart(arcade.Sprite):
