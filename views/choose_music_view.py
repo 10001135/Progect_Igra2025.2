@@ -2,7 +2,6 @@ import arcade
 from consts import *
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
-from views.Settings_view import SettingsPopup
 
 
 class MusicPopup:
@@ -15,14 +14,8 @@ class MusicPopup:
         self.music_player = None
         self.manager = UIManager()
 
-        self.music1 = None
-        self.music2 = None
-        self.music3 = None
-        self.music4 = None
-        self.music5 = None
-        self.music6 = None
-        self.music7 = None
-        self.music8 = None
+        self.music_buttons = []
+        self.music_s = None
         self.close_button = None
 
         self.music_list = ["assets/music/music2.mp3", "assets/music/music3.mp3", "assets/music/music4.mp3",
@@ -38,77 +31,20 @@ class MusicPopup:
 
         buttons_textures = Textures.textures_in_menu['buttons']['style1']
 
-        self.music1 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="1",
-            style=BUTTON_STYLE1)
+        for i in range(8):
+            btn = UITextureButton(
+                texture=buttons_textures['normal'],
+                texture_hovered=buttons_textures['hovered'],
+                texture_pressed=buttons_textures['pressed'],
+                width=250 * SCALE,
+                height=65 * SCALE,
+                text=str(i + 1),
+                style=BUTTON_STYLE1)
 
-        self.music2 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="2",
-            style=BUTTON_STYLE1)
+            btn.on_click = lambda event, idx=i: self.music_pla(idx)
 
-        self.music3 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="3",
-            style=BUTTON_STYLE1)
-
-        self.music4 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="4",
-            style=BUTTON_STYLE1)
-
-        self.music5 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="5",
-            style=BUTTON_STYLE1)
-
-        self.music6 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="6",
-            style=BUTTON_STYLE1)
-
-        self.music7 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="7",
-            style=BUTTON_STYLE1)
-
-        self.music8 = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
-            height=65 * SCALE,
-            text="8",
-            style=BUTTON_STYLE1)
+            self.music_buttons.append(btn)
+            self.manager.add(btn)
 
         self.music_s = UITextureButton(
             texture=buttons_textures['normal'],
@@ -118,6 +54,7 @@ class MusicPopup:
             height=65 * SCALE,
             text="Stop",
             style=BUTTON_STYLE1)
+        self.music_s.on_click = self.music_st
 
         self.close_button = UITextureButton(
             texture=buttons_textures['normal'],
@@ -127,26 +64,8 @@ class MusicPopup:
             height=65 * SCALE,
             text="Back",
             style=BUTTON_STYLE1)
-
-        self.music1.on_click = lambda event: self.music_pla(0)
-        self.music2.on_click = lambda event: self.music_pla(1)
-        self.music3.on_click = lambda event: self.music_pla(2)
-        self.music4.on_click = lambda event: self.music_pla(3)
-        self.music5.on_click = lambda event: self.music_pla(4)
-        self.music6.on_click = lambda event: self.music_pla(5)
-        self.music7.on_click = lambda event: self.music_pla(6)
-        self.music8.on_click = lambda event: self.music_pla(7)
-        self.music_s.on_click = self.music_st
         self.close_button.on_click = lambda event: self.close()
 
-        self.manager.add(self.music1)
-        self.manager.add(self.music2)
-        self.manager.add(self.music3)
-        self.manager.add(self.music4)
-        self.manager.add(self.music5)
-        self.manager.add(self.music6)
-        self.manager.add(self.music7)
-        self.manager.add(self.music8)
         self.manager.add(self.music_s)
         self.manager.add(self.close_button)
 
@@ -160,7 +79,8 @@ class MusicPopup:
         self.music_player = self.music_play.play(volume=0.2)
 
     def music_st(self, event=None):
-        self.music_play.stop(self.music_player)
+        if self.music_player:
+            self.music_play.stop(self.music_player)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.visible:
@@ -171,32 +91,32 @@ class MusicPopup:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
     def resize_positihon(self):
-        if not self.music1:
+        if not self.music_buttons:
             return
 
-        self.music1.center_x = SCREEN_WIDTH // 2 - 200 * SCALE
-        self.music1.center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
+        self.music_buttons[0].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
+        self.music_buttons[0].center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
 
-        self.music2.center_x = SCREEN_WIDTH // 2 - 200 * SCALE
-        self.music2.center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
+        self.music_buttons[1].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
+        self.music_buttons[1].center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
 
-        self.music3.center_x = SCREEN_WIDTH // 2 - 200 * SCALE
-        self.music3.center_y = SCREEN_HEIGHT // 2
+        self.music_buttons[2].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
+        self.music_buttons[2].center_y = SCREEN_HEIGHT // 2
 
-        self.music4.center_x = SCREEN_WIDTH // 2 - 200 * SCALE
-        self.music4.center_y = SCREEN_HEIGHT // 2 - 75 * SCALE
+        self.music_buttons[3].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
+        self.music_buttons[3].center_y = SCREEN_HEIGHT // 2 - 75 * SCALE
 
-        self.music5.center_x = SCREEN_WIDTH // 2 + 200 * SCALE
-        self.music5.center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
+        self.music_buttons[4].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
+        self.music_buttons[4].center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
 
-        self.music6.center_x = SCREEN_WIDTH // 2 + 200 * SCALE
-        self.music6.center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
+        self.music_buttons[5].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
+        self.music_buttons[5].center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
 
-        self.music7.center_x = SCREEN_WIDTH // 2 + 200 * SCALE
-        self.music7.center_y = SCREEN_HEIGHT // 2
+        self.music_buttons[6].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
+        self.music_buttons[6].center_y = SCREEN_HEIGHT // 2
 
-        self.music8.center_x = SCREEN_WIDTH // 2 + 200 * SCALE
-        self.music8.center_y = SCREEN_HEIGHT // 2 - 75 * SCALE
+        self.music_buttons[7].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
+        self.music_buttons[7].center_y = SCREEN_HEIGHT // 2 - 75 * SCALE
 
         self.music_s.center_x = SCREEN_WIDTH // 2
         self.music_s.center_y = SCREEN_HEIGHT // 2 - 175 * SCALE
@@ -212,9 +132,9 @@ class MusicPopup:
     def close(self, event=None):
         self.visible = False
         self.manager.disable()
-        self.settings_popup_visible = True
-        self.settings_popup.show()
-        self.settings_popup.manager.enable()
+
+        if self.parent_view and hasattr(self.parent_view, 'open_settings_from_music'):
+            self.parent_view.open_settings_from_music()
 
     def draw(self):
         if not self.visible:
