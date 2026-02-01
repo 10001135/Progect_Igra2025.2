@@ -43,9 +43,6 @@ class GameView_common(arcade.View):
         ui_camera = Camera2D()
         ui_camera.use()
 
-        self.pause_popup.draw()
-        self.quest_popup.draw()
-
     def on_update(self, delta_time):
         for hero in self.hero_l:
             if hero.dash:
@@ -77,11 +74,8 @@ class GameView_common(arcade.View):
                 if e.can_reap():
                     self.emitter_trace[h].remove(e)
 
-        if self.pause_popup.visible:
-            return
-
-        if self.quest_popup.visible:
-            return
+        while self.pause_popup.visible:
+            pass
 
     def on_show_view(self):
         self.window.set_mouse_visible(True)
@@ -94,10 +88,7 @@ class GameView_common(arcade.View):
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
         if key == arcade.key.ESCAPE:
-            if self.pause_popup.visible:
-                self.pause_popup.close()
-            else:
-                self.pause_popup.show()
+            self.window.show_view(self.pause_popup)
 
         if key == arcade.key.O:
             if self.quest_popup.visible:

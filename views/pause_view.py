@@ -5,8 +5,9 @@ from arcade.gui import UIManager, UITextureButton
 from views.Settings_view import SettingsPopup
 
 
-class PausPopup:
+class PausPopup(arcade.View):
     def __init__(self, parent_view):
+        super().__init__()
         self.parent_view = parent_view
         self.visible = False
         self.manager = UIManager()
@@ -77,7 +78,6 @@ class PausPopup:
 
     def show(self):
         self.visible = True
-        self.manager.enable()
         self.settings_popup_visible = False
         self.resize_position()
         self.settings_popup.manager.disable()
@@ -87,45 +87,50 @@ class PausPopup:
         self.manager.disable()
         self.settings_popup_visible = False
         self.settings_popup.close()
+        self.window.show_view(self.parent_view)
 
-    def draw(self):
-        if self.visible:
-            settings_width = SCREEN_WIDTH * 0.6
-            settings_height = SCREEN_HEIGHT * 0.7
+    def on_draw(self):
+        self.parent_view.on_draw()
+        if not self.settings_popup.visible:
+            self.manager.enable()
+            print(23)
 
-            settings_width = max(300, settings_width)
-            settings_height = max(400, settings_height)
+        settings_width = SCREEN_WIDTH * 0.6
+        settings_height = SCREEN_HEIGHT * 0.7
 
-            window_left = SCREEN_WIDTH // 2 - settings_width // 2
-            window_right = window_left + settings_width
-            window_bottom = SCREEN_HEIGHT // 2 - settings_height // 2
-            window_top = window_bottom + settings_height
+        settings_width = max(300, settings_width)
+        settings_height = max(400, settings_height)
 
-            arcade.draw_lrbt_rectangle_filled(
-                left=window_left,
-                right=window_right,
-                top=window_top,
-                bottom=window_bottom,
-                color=(0, 0, 0, 200))
+        window_left = SCREEN_WIDTH // 2 - settings_width // 2
+        window_right = window_left + settings_width
+        window_bottom = SCREEN_HEIGHT // 2 - settings_height // 2
+        window_top = window_bottom + settings_height
 
-            arcade.draw_lrbt_rectangle_outline(
-                left=window_left,
-                right=window_right,
-                top=window_top,
-                bottom=window_bottom,
-                color=arcade.color.PINK,
-                border_width=3)
+        arcade.draw_lrbt_rectangle_filled(
+            left=window_left,
+            right=window_right,
+            top=window_top,
+            bottom=window_bottom,
+            color=(0, 0, 0, 200))
 
-            arcade.draw_text(
-                "Пауза",
-                SCREEN_WIDTH // 2,
-                window_top - 50,
-                arcade.color.WHITE,
-                font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-                anchor_x="center",
-                anchor_y="center")
+        arcade.draw_lrbt_rectangle_outline(
+            left=window_left,
+            right=window_right,
+            top=window_top,
+            bottom=window_bottom,
+            color=arcade.color.PINK,
+            border_width=3)
 
-            self.manager.draw()
+        arcade.draw_text(
+            "Pause",
+            SCREEN_WIDTH // 2,
+            window_top - 50,
+            arcade.color.WHITE,
+            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+            anchor_x="center",
+            anchor_y="center")
+
+        self.manager.draw()
 
         if self.settings_popup_visible:
             self.settings_popup.draw()
