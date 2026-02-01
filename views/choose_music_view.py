@@ -9,6 +9,7 @@ class MusicPopup:
         self.parent_view = parent_view
         self.visible = False
         self.music = True
+        self.stop = False
         self.music_play = arcade.Sound("assets/music/standart.mp3", streaming=True)
         self.mus_p = 0
         self.music_player = None
@@ -74,6 +75,7 @@ class MusicPopup:
         self.resize_positihon()
 
     def music_pla(self, i):
+        self.stop = True
         self.mus_p = i
         if self.music_player:
             self.music_play.stop(self.music_player)
@@ -81,6 +83,7 @@ class MusicPopup:
         self.music_player = self.music_play.play(volume=0.2)
 
     def music_st(self, event=None):
+        self.stop = False
         if self.music_player:
             self.music_play.stop(self.music_player)
 
@@ -96,35 +99,39 @@ class MusicPopup:
         if not self.music_buttons:
             return
 
-        self.music_buttons[0].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
+        y = 100 * SCALE
+        x = 400 * SCALE
+
+        self.music_buttons[0].center_x = SCREEN_WIDTH // 2 - x // 2
         self.music_buttons[0].center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
 
-        self.music_buttons[1].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
-        self.music_buttons[1].center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
+        self.music_buttons[1].center_x = SCREEN_WIDTH // 2 - x // 2
+        self.music_buttons[1].center_y = SCREEN_HEIGHT // 2 + 50 * SCALE
 
-        self.music_buttons[2].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
-        self.music_buttons[2].center_y = SCREEN_HEIGHT // 2
+        self.music_buttons[2].center_x = SCREEN_WIDTH // 2 - x // 2
+        self.music_buttons[2].center_y = SCREEN_HEIGHT // 2 - 50 * SCALE
 
-        self.music_buttons[3].center_x = SCREEN_WIDTH // 2 - 200 * SCALE
-        self.music_buttons[3].center_y = SCREEN_HEIGHT // 2 - 75 * SCALE
+        self.music_buttons[3].center_x = SCREEN_WIDTH // 2 - x // 2
+        self.music_buttons[3].center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
 
-        self.music_buttons[4].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
+        # Правая колонка
+        self.music_buttons[4].center_x = SCREEN_WIDTH // 2 + x // 2
         self.music_buttons[4].center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
 
-        self.music_buttons[5].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
-        self.music_buttons[5].center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
+        self.music_buttons[5].center_x = SCREEN_WIDTH // 2 + x // 2
+        self.music_buttons[5].center_y = SCREEN_HEIGHT // 2 + 50 * SCALE
 
-        self.music_buttons[6].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
-        self.music_buttons[6].center_y = SCREEN_HEIGHT // 2
+        self.music_buttons[6].center_x = SCREEN_WIDTH // 2 + x // 2
+        self.music_buttons[6].center_y = SCREEN_HEIGHT // 2 - 50 * SCALE
 
-        self.music_buttons[7].center_x = SCREEN_WIDTH // 2 + 200 * SCALE
-        self.music_buttons[7].center_y = SCREEN_HEIGHT // 2 - 75 * SCALE
+        self.music_buttons[7].center_x = SCREEN_WIDTH // 2 + x // 2
+        self.music_buttons[7].center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
 
         self.music_s.center_x = SCREEN_WIDTH // 2
-        self.music_s.center_y = SCREEN_HEIGHT // 2 - 175 * SCALE
+        self.music_s.center_y = SCREEN_HEIGHT // 2 - 275 * SCALE
 
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 250 * SCALE
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 350 * SCALE
 
     def show(self):
         self.visible = True
@@ -135,23 +142,20 @@ class MusicPopup:
         self.visible = False
         self.manager.disable()
 
-        if self.on_back_to_settings:
-            self.on_back_to_settings()
-
     def draw(self):
         if not self.visible:
             return
 
         settings_width = SCREEN_WIDTH * 0.6
-        settings_hieg = SCREEN_HEIGHT * 0.7
+        settings_height = SCREEN_HEIGHT * 0.7
 
         settings_width = max(300, settings_width)
-        settings_hieg = max(400, settings_hieg)
+        settings_height = max(400, settings_height)
 
         window_left = SCREEN_WIDTH // 2 - settings_width // 2
         window_right = window_left + settings_width
-        window_bottom = SCREEN_HEIGHT // 2 - settings_hieg // 2
-        window_top = window_bottom + settings_hieg
+        window_bottom = SCREEN_HEIGHT // 2 - settings_height // 2
+        window_top = window_bottom + settings_height
 
         arcade.draw_lrbt_rectangle_filled(
             left=window_left,
@@ -171,21 +175,22 @@ class MusicPopup:
         arcade.draw_text(
             "Music",
             SCREEN_WIDTH // 2,
-            window_top - 50,
+            window_top - 70 * SCALE,
             arcade.color.WHITE,
-            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+            font_size=min(30, int(SCREEN_WIDTH * 0.04)),
             anchor_x="center",
             anchor_y="center")
 
         self.manager.draw()
 
-        if self.music_player is not None:
-            if not self.music_play.is_playing(self.music_player):
-                if self.mus_p == 7:
-                    self.mus_p = 0
-                else:
-                    self.mus_p += 1
-                self.music_pla(self.mus_p)
+        if self.stop:
+            if self.music_player is not None:
+                if not self.music_play.is_playing(self.music_player):
+                    if self.mus_p == 7:
+                        self.mus_p = 0
+                    else:
+                        self.mus_p += 1
+                    self.music_pla(self.mus_p)
 
     def on_resize(self, width, height):
         self.resize_positihon()

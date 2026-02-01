@@ -86,7 +86,6 @@ class SettingsPopup:
         print("Будет отдельное окно с сохранениями")
 
     def music(self, event=None):
-        self.visible = False
         self.manager.disable()
         self.music_popup.show()
         self.music_popup_visible = True

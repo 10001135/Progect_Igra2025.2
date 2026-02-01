@@ -71,6 +71,7 @@ class PausPopup(arcade.View):
         self.settings_popup_visible = True
         self.settings_popup.show()
         self.settings_popup.manager.enable()
+        self.manager.disable()
 
     def close_pause_only(self):
         self.visible = False
@@ -93,7 +94,6 @@ class PausPopup(arcade.View):
         self.parent_view.on_draw()
         if not self.settings_popup.visible:
             self.manager.enable()
-            print(23)
 
         settings_width = SCREEN_WIDTH * 0.6
         settings_height = SCREEN_HEIGHT * 0.7
