@@ -87,6 +87,11 @@ class Textures:
         Textures.tile_map_ma_level_6 = arcade.load_tilemap(Textures.map_ma_level_6, scaling=3 * SCALE)
 
     @staticmethod
+    def textures_ma_level_7():
+        Textures.map_ma_level_7 = "assets/levels/MA_Level_7.tmx"
+        Textures.tile_map_ma_level_7 = arcade.load_tilemap(Textures.map_ma_level_7, scaling=3 * SCALE)
+
+    @staticmethod
     def texture_hero_1():
         hero = {'to_us': arcade.load_texture('assets/textures/Hero/Engineer.png'), 'walk': [],
                 'in_air': arcade.load_texture('assets/textures/Hero/Engineer_Walk_4.png'),
@@ -120,4 +125,7 @@ class Textures:
     def texture_gui():
         heart = arcade.load_texture(f'assets/textures/GUI/Heart.png')
         unheart = arcade.load_texture(f'assets/textures/GUI/Unheart.png')
-        Textures.gui = {'Heart': heart, 'Unheart': unheart}
+        money1 = arcade.load_texture(f'assets/textures/GUI/Money1.png')
+        money3 = arcade.load_texture(f'assets/textures/GUI/Money3.png')
+        money5 = arcade.load_texture(f'assets/textures/GUI/Money5.png')
+        Textures.gui = {'Heart': heart, 'Unheart': unheart, 'Money1': money1, 'Money3': money3, 'Money5': money5}

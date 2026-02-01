@@ -290,6 +290,19 @@ class GameView_common(arcade.View):
                                                  SCREEN_HEIGHT - 40 * SCALE))
         self.hearts.draw(pixelated=True)
 
+        self.money = arcade.SpriteList()
+        if 0 < self.hero.gold < 3:
+            self.money.append(arcade.Sprite(Textures.gui['Money1'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50, SCREEN_HEIGHT - 40 * SCALE))
+        elif 3 <= self.hero.gold < 5:
+            self.money.append(arcade.Sprite(Textures.gui['Money3'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50, SCREEN_HEIGHT - 40 * SCALE))
+        elif 5 <= self.hero.gold:
+            self.money.append(arcade.Sprite(Textures.gui['Money5'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50, SCREEN_HEIGHT - 40 * SCALE))
+        self.money.draw(pixelated=True)
+        if self.hero.gold > 0:
+            self.text_money = arcade.Text(str(self.hero.gold), SCREEN_WIDTH - SCALE * 100, SCREEN_HEIGHT - 55 * SCALE, (230, 230, 245), 30 * SCALE, font_name='Comic Sans MS pixel rus eng')
+            self.text_money.draw()
+
+
         if 'Reborn_bed' in self.tile_map.sprite_lists:
             if self.hero.collides_with_list(self.reborn_bed_list):
                 self.text_field(self.text_save)
