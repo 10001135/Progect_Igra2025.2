@@ -67,7 +67,7 @@ class GameView_ma_level_5(GameView_common):
         )
         self.hero.engine = self.engine
 
-        self.fara = Fara(*self.tile_map.sprite_lists['Fara'][0].position)
+        self.fara = Fara(self.hero, *self.tile_map.sprite_lists['Fara'][0].position)
         self.npc.append(self.fara)
 
         for npc in self.npc:

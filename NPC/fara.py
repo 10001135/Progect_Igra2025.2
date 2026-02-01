@@ -7,7 +7,7 @@ from texts import text_d
 
 
 class Fara(arcade.Sprite):
-    def __init__(self, x, y, story=0):
+    def __init__(self, hero, x, y, story=0):
         super().__init__()
         Textures.texture_fara()
         self.textures = Textures.fara['Fara']
@@ -16,6 +16,7 @@ class Fara(arcade.Sprite):
         self.texture_change_delay = 1
         self.current_texture = 0
         self.name = text_d['fara_name']
+        self.hero = hero
 
         self.position = (x, y + 8 * 3 * SCALE)
         self.scale = SCALE * 4
@@ -35,22 +36,39 @@ class Fara(arcade.Sprite):
 
     def story_change(self):
         if self.story == 0:
-            self.dialog = Dialog(text_d['king_replic_1'],
-                                 {text_d['hero_king_replic_1']:
-                                      text_d['king_replic_2'],
-                                  text_d['hero_king_replic_2']:
-                                      text_d['king_replic_3'],
-                                  text_d['hero_king_replic_3']:
-                                      text_d['king_replic_4'],
+            self.dialog = Dialog(text_d['fara_replic_1'],
+                                 {text_d['hero_fara_replic_1']:
+                                      text_d['fara_replic_2'],
+                                  text_d['hero_fara_replic_2']:
+                                      {text_d['fara_replic_3']:
+                                           {text_d['hero_fara_replic_3']:
+                                                text_d['fara_replic_4']}},
+                                  text_d['hero_fara_replic_4']:
+                                      text_d['fara_replic_5'],
                                   text_d['hero_replic_bye']: 0},
                                  'Fara/fara_dialog.png', Textures.hero['Dialog'], self, self.name)
 
         if self.story != 0:
             self.dialog = Dialog(text_d[self.greeting],
-                   self.dialog.hero_answers,
-                   'Fara/fara_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 self.dialog.hero_answers,
+                                 'Fara/fara_dialog.png', Textures.hero['Dialog'], self, self.name)
+
+            if self.story == 2 and self.hero.pearl_of_moira:
+                self.dialog.hero_answers[text_d['hero_fara_replic_5']] = text_d['fara_replic_7']
+                self.dialog = Dialog(text_d[self.greeting],
+                                     self.dialog.hero_answers,
+                                     'Fara/fara_dialog.png', Textures.hero['Dialog'], self, self.name)
+                self.story = 31
 
     def dialog_end(self):
         if self.story == 0:
             self.story = 1
-            self.greeting = 'king_replic_5'
+            self.greeting = 'fara_replic_6'
+
+        if self.story == 1 and text_d['hero_fara_replic_2'] not in self.dialog.hero_answers:
+            self.story = 2
+
+        if self.story == 31 and text_d['hero_fara_replic_5'] not in self.dialog.hero_answers:
+            self.story = 3
+            self.hero.pearl_of_moira = False
+            self.hero.keys += 1
