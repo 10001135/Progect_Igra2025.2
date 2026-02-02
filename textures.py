@@ -85,4 +85,5 @@ class Textures:
             'astenie': arcade.load_texture('assets/items/rastene.png'),
             'not1': arcade.load_texture('assets/items/nota1.png'),
             'not2': arcade.load_texture('assets/items/nota2.png'),
+            'settings': arcade.load_texture('assets/items/settin.png'),
         }

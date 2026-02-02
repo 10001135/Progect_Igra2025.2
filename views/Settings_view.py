@@ -16,12 +16,19 @@ class SettingsPopup:
         self.music_popup_visible = False
         self.music_popup.on_back_to_settings = self.on_back_from_music
 
+        self.settings_icon = None
+
         self.setup_ui()
 
     def setup_ui(self):
         self.manager.clear()
 
         Textures.textures_main_menu()
+
+        Textures.decor_textures(Textures)
+        self.decor_textures = getattr(Textures, 'decor', {})
+
+        self.settings_icon = self.decor_textures.get('settings')
 
         buttons_textures = Textures.textures_in_menu['buttons']['style1']
 
@@ -43,11 +50,19 @@ class SettingsPopup:
             text="Back to game",
             style=BUTTON_STYLE1)
 
+        self.shesterna = UITextureButton(
+            texture=self.settings_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
         self.music_button.on_click = self.music
         self.close_button.on_click = self.close
 
         self.manager.add(self.music_button)
         self.manager.add(self.close_button)
+        self.manager.add(self.shesterna)
 
         self.resize_positihon()
 
@@ -72,13 +87,14 @@ class SettingsPopup:
                 self.close()
 
     def resize_positihon(self):
-        if hasattr(self, 'music_button') and self.music_button:
-            self.music_button.center_x = SCREEN_WIDTH // 2
-            self.music_button.center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
+        self.music_button.center_x = SCREEN_WIDTH // 2
+        self.music_button.center_y = SCREEN_HEIGHT // 2 + 75 * SCALE
 
-        if hasattr(self, 'close_button') and self.close_button:
-            self.close_button.center_x = SCREEN_WIDTH // 2
-            self.close_button.center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
+        self.close_button.center_x = SCREEN_WIDTH // 2
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
+
+        self.shesterna.center_x = SCREEN_WIDTH // 2 + 275 * SCALE
+        self.shesterna.center_y = SCREEN_HEIGHT // 2 + 300 * SCALE
 
     def saves(self, event=None):
         print("Будет отдельное окно с сохранениями")
@@ -97,13 +113,11 @@ class SettingsPopup:
 
     def on_back_from_music(self):
         self.music_popup_visible = False
-
         self.manager.enable()
 
     def close(self, event=None):
         self.visible = False
         self.music_popup_visible = False
-
         self.manager.disable()
 
         if hasattr(self.music_popup, 'visible') and self.music_popup.visible:
