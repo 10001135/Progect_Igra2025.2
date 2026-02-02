@@ -120,8 +120,7 @@ class SettingsPopup:
         self.music_popup_visible = False
         self.manager.disable()
 
-        if hasattr(self.music_popup, 'visible') and self.music_popup.visible:
-            self.music_popup.close()
+        self.music_popup.close()
 
     def draw(self):
         if not self.visible:
