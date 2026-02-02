@@ -57,6 +57,11 @@ class Textures:
         Textures.chestg_opened = {'ChestG_opened': chest_openedg}
 
     @staticmethod
+    def texture_key_opened():
+        key_open = arcade.load_texture(f'assets/textures/key_on.png')
+        Textures.key_open = {'Key_open': key_open}
+
+    @staticmethod
     def textures_ma_level_1():
         Textures.map_ma_level_1 = "assets/levels/MA_Level_1.tmx"
         Textures.tile_map_ma_level_1 = arcade.load_tilemap(Textures.map_ma_level_1, scaling=3 * SCALE)
