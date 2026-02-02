@@ -19,6 +19,11 @@ class MusicPopup:
         self.music_s = None
         self.close_button = None
 
+        self.not1_icon = None
+        self.not2_icon = None
+        self.not1 = None
+        self.not2 = None
+
         self.music_list = ["assets/music/music2.mp3", "assets/music/music3.mp3", "assets/music/music4.mp3",
                            "assets/music/music4.mp3", "assets/music/standart(cyber).ogg",
                            "assets/music/music6.ogg", "assets/music/music7.ogg", "assets/music/music8.ogg"]
@@ -32,7 +37,14 @@ class MusicPopup:
 
         Textures.textures_main_menu()
 
+        Textures.decor_textures(Textures)
+        self.decor_textures = getattr(Textures, 'decor', {})
+
         buttons_textures = Textures.textures_in_menu['buttons']['style1']
+
+        if self.decor_textures:
+            self.not1_icon = self.decor_textures.get('not1')
+            self.not2_icon = self.decor_textures.get('not2')
 
         for i in range(8):
             btn = UITextureButton(
@@ -69,8 +81,27 @@ class MusicPopup:
             style=BUTTON_STYLE1)
         self.close_button.on_click = lambda event: self.close()
 
+        self.not1 = UITextureButton(
+            texture=self.not1_icon,
+            width=200 * SCALE,
+            height=200 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        self.not2 = UITextureButton(
+            texture=self.not2_icon,
+            width=200 * SCALE,
+            height=200 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
         self.manager.add(self.music_s)
         self.manager.add(self.close_button)
+
+        if self.not1:
+            self.manager.add(self.not1)
+        if self.not2:
+            self.manager.add(self.not2)
 
         self.resize_positihon()
 
@@ -123,7 +154,6 @@ class MusicPopup:
         self.music_buttons[3].center_x = SCREEN_WIDTH // 2 - x // 2
         self.music_buttons[3].center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
 
-        # Правая колонка
         self.music_buttons[4].center_x = SCREEN_WIDTH // 2 + x // 2
         self.music_buttons[4].center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
 
@@ -141,6 +171,12 @@ class MusicPopup:
 
         self.close_button.center_x = SCREEN_WIDTH // 2
         self.close_button.center_y = SCREEN_HEIGHT // 2 - 350 * SCALE
+
+        self.not1.center_x = SCREEN_WIDTH // 2 - 400 * SCALE
+        self.not1.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE
+
+        self.not2.center_x = SCREEN_WIDTH // 2 + 400 * SCALE
+        self.not2.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE
 
     def show(self):
         self.visible = True

@@ -83,4 +83,6 @@ class Textures:
             'robot2': arcade.load_texture('assets/items/robot.png'),
             'igrok': arcade.load_texture('assets/textures/Hero/Engineer.png'),
             'astenie': arcade.load_texture('assets/items/rastene.png'),
+            'not1': arcade.load_texture('assets/items/nota1.png'),
+            'not2': arcade.load_texture('assets/items/nota2.png'),
         }

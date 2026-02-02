@@ -1,4 +1,5 @@
 import arcade
+import sys
 from consts import *
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
@@ -30,6 +31,15 @@ class PausPopup(arcade.View):
             text="Settings",
             style=BUTTON_STYLE1)
 
+        self.main_button = UITextureButton(
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=250 * SCALE,
+            height=65 * SCALE,
+            text="Main_menu",
+            style=BUTTON_STYLE1)
+
         self.close_button = UITextureButton(
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
@@ -40,9 +50,11 @@ class PausPopup(arcade.View):
             style=BUTTON_STYLE1)
 
         self.saves_button.on_click = self.saves
+        self.main_button.on_click = self.main_menu
         self.close_button.on_click = self.close
 
         self.manager.add(self.saves_button)
+        self.manager.add(self.main_button)
         self.manager.add(self.close_button)
 
         self.resize_position()
@@ -59,12 +71,23 @@ class PausPopup(arcade.View):
         elif self.visible:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
+    def main_menu(self, event=None):
+        del sys.modules['views.main_menu_view']
+
+        from views.main_menu_view import MainMenuView
+
+        main_menu_view = MainMenuView()
+        self.window.show_view(main_menu_view)
+
     def resize_position(self):
         self.saves_button.center_x = SCREEN_WIDTH // 2
-        self.saves_button.center_y = SCREEN_HEIGHT // 2
+        self.saves_button.center_y = SCREEN_HEIGHT // 2 + 100 * SCALE
+
+        self.main_button.center_x = SCREEN_WIDTH // 2
+        self.main_button.center_y = SCREEN_HEIGHT // 2
 
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 250 * SCALE
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 100 * SCALE
 
     def saves(self, event=None):
         self.close_pause_only()
