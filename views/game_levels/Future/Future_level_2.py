@@ -1,5 +1,6 @@
 import arcade
 from math import sqrt
+from laser import Laser
 
 from bosses.visor.visor import Visor
 from bullet_generator import BulletGenerator
@@ -24,20 +25,26 @@ class GameView_fut_level_2(GameView_common):
         self.hero.level = self
         self.damage_timer = 0
         self.move_timer = 0
+        self.a = hero
 
         self.start_attack_series = False
+        self.second_attach_end = False
 
         self.boss_attach_time = 0
         self.first_attach_time = 10
         self.second_attach_delay = 0
+        self.third_attach_delay = 0
         self.do_first_attach = False
         self.do_second_attach = False
+        self.do_third_attach = False
         self.return_map_from_first = False
+        self.third_attach_end = False
 
         self.hook_points_draw = False
         self.hook_points_decor_draw = False
 
         self.tile_map = Textures.tile_map_future_level_2
+        self.lad = self.tile_map.sprite_lists['Ladders']
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
@@ -50,6 +57,19 @@ class GameView_fut_level_2(GameView_common):
         self.hook_decor = self.tile_map.sprite_lists['Hook_decor']
         self.generator_decor = self.tile_map.sprite_lists['Generator_decor']
         self.razor_spawn = self.tile_map.sprite_lists['Razor']
+        self.laser_decor = self.tile_map.sprite_lists['Lasers_decor']
+
+        self.laser_list = []
+        if 'Lasers' in self.tile_map.sprite_lists:
+            lasers = self.tile_map.sprite_lists['Lasers']
+            for i in range(0, len(lasers), 2):
+                if i + 1 < len(lasers):
+                    laser = Laser(
+                        lasers[i].center_x,
+                        lasers[i].center_y,
+                        lasers[i + 1].center_x
+                    )
+                    self.laser_list.append(laser)
 
         self.generators = []
         for i in range(len(self.tile_map.sprite_lists['Generator'])):
@@ -75,14 +95,12 @@ class GameView_fut_level_2(GameView_common):
                 razor = Razor(self.razor_spawn[0].left, self.razor_spawn[0].bottom, direction)
             self.razors.append(razor)
             self.razor_list.append(razor)
-
-        # self.thorns_list = self.tile_map.sprite_lists['Thorns']
         self.walls_list_p = arcade.SpriteList()
         for wall in self.walls_list:
             self.walls_list_p.append(wall)
 
         self.background_list = self.tile_map.sprite_lists['Background']
-        self.ladders_list = self.tile_map.sprite_lists['Ladders']
+        self.ladders_list = self.lad
 
         self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
@@ -156,43 +174,30 @@ class GameView_fut_level_2(GameView_common):
             self.draw_hook()
             self.ladders_list.draw(pixelated=True)
             self.hero_l.draw(pixelated=True)
-            # self.thorns_list.draw(pixelated=True)
             self.d_list.draw()
             self.boss_l.draw(pixelated=True)
-            # self.hook_decor.draw(pixelated=True)
-            # self.hook_points_list.draw(pixelated=True)
-            # self.generator.on_draw()
-            # self.generator_decor.draw(pixelated=True)
-            # self.electro_list.draw(pixelated=True)
             self.update_darkness()
 
         if self.do_first_attach and not self.return_map_from_first:
             self.decor_list.draw(pixelated=True)
             self.draw_hook()
-            # self.ladders_list.draw(pixelated=True)
             self.hero_l.draw(pixelated=True)
-            # self.thorns_list.draw(pixelated=True)
             self.d_list.draw()
             self.boss_l.draw(pixelated=True)
-            # self.hook_decor.draw(pixelated=True)
-            # self.hook_points_list.draw(pixelated=True)
             for i in self.generators:
                 i.on_draw()
             self.generator_decor.draw(pixelated=True)
-            # self.electro_list.draw(pixelated=True)
             self.update_darkness()
 
         if self.return_map_from_first:
             self.decor_list.draw(pixelated=True)
-            self.draw_hook()
             self.ladders_list.draw(pixelated=True)
+            self.draw_hook()
             self.hero_l.draw(pixelated=True)
-            # self.thorns_list.draw(pixelated=True)
             self.d_list.draw()
             self.boss_l.draw(pixelated=True)
             self.hook_decor.draw(pixelated=True)
             self.hook_points_list.draw(pixelated=True)
-            # self.electro_list.draw(pixelated=True)
             self.update_darkness()
 
         if self.do_second_attach:
@@ -204,6 +209,22 @@ class GameView_fut_level_2(GameView_common):
             self.razor_list.draw(pixelated=True)
             self.update_darkness()
 
+        if self.do_third_attach:
+            self.decor_list.draw(pixelated=True)
+            self.hero_l.draw(pixelated=True)
+            self.d_list.draw()
+            self.boss_l.draw(pixelated=True)
+            self.laser_decor.draw(pixelated=True)
+            for laser in self.laser_list:
+                laser.draw()
+
+            self.update_darkness()
+
+        if self.third_attach_end:
+            self.decor_list.draw(pixelated=True)
+            self.hero_l.draw(pixelated=True)
+            self.d_list.draw()
+
         self.boss.draw_hearts()
         self.gui_camera.use()
         self.gui()
@@ -213,6 +234,15 @@ class GameView_fut_level_2(GameView_common):
         self.boss_l.update(delta_time)
         self.boss_l.update_animation(delta_time)
         self.boss_attach_time += delta_time
+
+        if self.hero.health <= 0:
+            self.hero.health = 3
+            self.hero.is_hooked = False
+            self.hero.change_x = 0
+            self.hero.change_y = 0
+            new_view = GameView_fut_level_2(self.hero)
+            self.window.show_view(new_view)
+            return
 
         if self.boss_attach_time > 5 and not self.start_attack_series:
             self.boss.attack_state()
@@ -245,7 +275,7 @@ class GameView_fut_level_2(GameView_common):
             for wall in self.new_walls:
                 self.walls_list_p.remove(wall)
 
-        if self.return_map_from_first:
+        if self.return_map_from_first and self.do_first_attach:
             if not self.boss.is_damaging:
                 self.boss.damage_state()
             if self.hero.is_hooked and self.hero.collides_with_list(self.boss_l):
@@ -253,9 +283,12 @@ class GameView_fut_level_2(GameView_common):
                 self.hook_engine.space.remove(self.hero.joint)
                 self.hero.is_hooked = False
                 self.do_second_attach = True
+                self.do_first_attach = False
 
         if self.do_second_attach:
             self.second_attach_delay += delta_time
+            self.ladders_list = arcade.SpriteList()
+            self.engine.ladders = self.ladders_list
             if self.second_attach_delay >= 3:
                 self.razor_list.update(delta_time)
                 self.boss.attack_state()
@@ -266,7 +299,49 @@ class GameView_fut_level_2(GameView_common):
                 if self.hero.collides_with_list(self.razor_list):
                     self.hero.health -= 1
                 if len(self.razor_list) == 0:
+                    self.ladders_list = self.lad
+                    self.engine.ladders = self.ladders_list
                     self.boss.damage_state()
+                    self.do_second_attach = False
+                    self.second_attach_end = True
+
+        if not self.do_second_attach and self.second_attach_end:
+            if not self.boss.is_damaging:
+                self.boss.damage_state()
+                self.ladders_list = self.lad
+                self.engine.ladders = self.ladders_list
+            if self.hero.is_hooked and self.hero.collides_with_list(self.boss_l):
+                self.boss.health -= 1
+                self.hook_engine.space.remove(self.hero.joint)
+                self.hero.is_hooked = False
+                self.do_third_attach = True
+
+        if self.do_third_attach and self.third_attach_delay < 2:
+            self.third_attach_delay += delta_time
+
+        if self.do_third_attach and self.third_attach_delay < 2:
+            self.third_attach_delay += delta_time
+
+        if self.do_third_attach and self.third_attach_delay >= 2:
+            self.boss.attack_state()
+            self.ladders_list = arcade.SpriteList()
+            self.engine.ladders = self.ladders_list
+            all_lasers_finished = all(laser.cycle_count >= laser.max_cycles for laser in self.laser_list)
+
+            if not all_lasers_finished:
+                for laser in self.laser_list:
+                    laser.update(delta_time)
+
+                    if laser.is_active:
+                        if (self.hero.left < laser.x2 and self.hero.right > laser.x1 and
+                                abs(self.hero.center_y - laser.y) < self.hero.height / 2):
+                            self.hero.health = 0
+            else:
+                self.ladders_list = self.lad
+                self.engine.ladders = self.ladders_list
+                self.third_attach_end = True
+                self.do_third_attach = False
+                self.boss.damage_state()
 
         if self.damage_timer > 0:
             self.damage_timer -= delta_time

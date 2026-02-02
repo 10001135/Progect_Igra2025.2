@@ -88,6 +88,7 @@ class Textures:
         Textures.visor_damage = arcade.load_texture(f'bosses/visor/visor_damage.png')
         Textures.visor = {'Visor': visor}
         Textures.razor = arcade.load_texture('assets/levels/DawnLike/Objects/razor.png')
+        Textures.laser = arcade.load_texture('assets/levels/DawnLike/Objects/laser.png')
 
     @staticmethod
     def textures_ma_level_3():
