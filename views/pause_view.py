@@ -26,7 +26,7 @@ class PausPopup(arcade.View):
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
+            width=300 * SCALE,
             height=65 * SCALE,
             text="Settings",
             style=BUTTON_STYLE1)
@@ -35,16 +35,16 @@ class PausPopup(arcade.View):
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
-            width=250 * SCALE,
+            width=300 * SCALE,
             height=65 * SCALE,
-            text="Main_menu",
+            text="To_Menu",
             style=BUTTON_STYLE1)
 
         self.close_button = UITextureButton(
             texture=buttons_textures['normal'],
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
-            width=280 * SCALE,
+            width=300 * SCALE,
             height=65 * SCALE,
             text="Continue",
             style=BUTTON_STYLE1)

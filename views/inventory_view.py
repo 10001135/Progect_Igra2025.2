@@ -117,24 +117,24 @@ class InventoryPopup:
 
         self.igrok = UITextureButton(
             texture=self.player_icon,
-            width=100 * SCALE,
-            height=100 * SCALE,
-            text="",
-            style=BUTTON_STYLE1)
-
-        self.robot = UITextureButton(
-            texture=self.robot2_icon,
             width=200 * SCALE,
             height=200 * SCALE,
             text="",
             style=BUTTON_STYLE1)
 
-        self.rastenie = UITextureButton(
-            texture=self.rastenie_icon,
-            width=175 * SCALE,
-            height=175 * SCALE,
-            text="",
-            style=BUTTON_STYLE1)
+        # self.robot = UITextureButton(
+        #     texture=self.robot2_icon,
+        #     width=200 * SCALE,
+        #     height=200 * SCALE,
+        #     text="",
+        #     style=BUTTON_STYLE1)
+
+        # self.rastenie = UITextureButton(
+        #     texture=self.rastenie_icon,
+        #     width=175 * SCALE,
+        #     height=175 * SCALE,
+        #     text="",
+        #     style=BUTTON_STYLE1)
 
         self.close_button.on_click = self.close
         self.climb_button.on_click = self.climb
@@ -149,8 +149,8 @@ class InventoryPopup:
         self.manager.add(self.hook_button)
         self.manager.add(self.dash_button)
         self.manager.add(self.igrok)
-        self.manager.add(self.robot)
-        self.manager.add(self.rastenie)
+    #    self.manager.add(self.robot)
+    #    self.manager.add(self.rastenie)
 
         self.resize_positihon()
 
@@ -181,11 +181,11 @@ class InventoryPopup:
         self.igrok.center_x = SCREEN_WIDTH // 2
         self.igrok.center_y = SCREEN_HEIGHT // 2 + 50
 
-        self.robot.center_x = SCREEN_WIDTH // 2 + 150
-        self.robot.center_y = SCREEN_HEIGHT // 2 - 150
+    #    self.robot.center_x = SCREEN_WIDTH // 2 + 150
+    #    self.robot.center_y = SCREEN_HEIGHT // 2 - 150
 
-        self.rastenie.center_x = SCREEN_WIDTH // 2 - 150
-        self.rastenie.center_y = SCREEN_HEIGHT // 2 - 150
+    #    self.rastenie.center_x = SCREEN_WIDTH // 2 - 150
+    #    self.rastenie.center_y = SCREEN_HEIGHT // 2 - 150
 
     def show(self):
         self.icons()

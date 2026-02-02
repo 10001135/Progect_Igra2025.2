@@ -80,7 +80,7 @@ class MusicPopup:
             text="Back",
             style=BUTTON_STYLE1)
 
-        self.close_button.on_click = self.close()
+        self.close_button.on_click = self.close
 
         self.not1 = UITextureButton(
             texture=self.not1_icon,
@@ -90,7 +90,7 @@ class MusicPopup:
             style=BUTTON_STYLE1)
 
         self.not2 = UITextureButton(
-            texture=self.not2_icon,
+            texture=self.not1_icon,
             width=200 * SCALE,
             height=200 * SCALE,
             text="",
@@ -177,7 +177,7 @@ class MusicPopup:
         self.not1.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE
 
         self.not2.center_x = SCREEN_WIDTH // 2 + 400 * SCALE
-        self.not2.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE
+        self.not2.center_y = SCREEN_HEIGHT // 2 + 125 * SCALE
 
     def show(self):
         self.visible = True

@@ -80,12 +80,13 @@ class QuestPopup:
             'pressed': None})
 
         self.close_button = UITextureButton(
-            texture=buttons_textures.get('normal'),
-            texture_hovered=buttons_textures.get('hovered'),
-            texture_pressed=buttons_textures.get('pressed'),
-            width=200 * SCALE,
-            height=75 * SCALE,
-            text="Закрыть")
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=300 * SCALE,
+            height=65 * SCALE,
+            text="Continue",
+            style=BUTTON_STYLE1)
 
         self.close_button.on_click = self.close
 

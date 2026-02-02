@@ -81,7 +81,7 @@ class Textures:
             'robot': arcade.load_texture('assets/items/obot.png'),
             'liana': arcade.load_texture('assets/items/lianu.png'),
             'robot2': arcade.load_texture('assets/items/robot.png'),
-            'igrok': arcade.load_texture('assets/textures/Hero/Engineer.png'),
+            'igrok': arcade.load_texture('assets/items/igrok.png'),
             'astenie': arcade.load_texture('assets/items/rastene.png'),
             'not1': arcade.load_texture('assets/items/nota1.png'),
             'not2': arcade.load_texture('assets/items/nota2.png'),
