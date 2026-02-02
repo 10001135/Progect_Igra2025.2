@@ -4,6 +4,7 @@ from consts import *
 from arcade.camera import Camera2D
 from views.pause_view import PausPopup
 from views.quest_view import QuestPopup
+from views.inventory_view import InventoryPopup
 
 
 def make_trace(hero):
@@ -24,10 +25,15 @@ class GameView_common(arcade.View):
         super().__init__()
         self.emitter_trace = {}
         self.reborn_point = (200, 200)
+
         self.pause_popup = PausPopup(self)
         self.quest_popup = QuestPopup(self)
+
         self.pause_popup.setup_ui()
         self.quest_popup.setup_ui()
+
+        self.inventory_popup = InventoryPopup(self)
+        self.inventory_popup.setup_ui()
 
     def on_draw(self):
         self.clear()
@@ -39,6 +45,8 @@ class GameView_common(arcade.View):
                 e.draw()
 
         self.hero_l.draw(pixelated=True)
+
+        self.inventory_popup.draw()
 
         ui_camera = Camera2D()
         ui_camera.use()
@@ -85,6 +93,9 @@ class GameView_common(arcade.View):
         if hasattr(self, 'quest_popup'):
             self.quest_popup.setup_ui()
 
+        if hasattr(self, 'pause_popup'):
+            self.inventory_popup.setup_ui()
+
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
         if key == arcade.key.ESCAPE:
@@ -95,6 +106,12 @@ class GameView_common(arcade.View):
                 self.quest_popup.close()
             else:
                 self.quest_popup.show()
+
+        if key == arcade.key.P:
+            if self.inventory_popup.visible:
+                self.inventory_popup.close()
+            else:
+                self.inventory_popup.show()
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
