@@ -14,6 +14,7 @@ from views.game_levels.Middle_Ages.ma_level_3 import GameView_ma_level_3
 from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
 from views.game_levels.Middle_Ages.ma_level_5 import GameView_ma_level_5
 from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
+from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
 
 
 
@@ -179,7 +180,7 @@ class MainMenuView(arcade.View):
 
         play_button.on_click = lambda event: (Textures.texture_hero_1(),
                                               self.manager.disable(),
-                                              self.window.show_view(LoadView(Hero(), None, GameView_ma_level_5)))
+                                              self.window.show_view(LoadView(Hero(), 62, GameView_ma_level_7)))
 
         self.box_layout.add(play_button)
         self.box_layout.add(setting_button)

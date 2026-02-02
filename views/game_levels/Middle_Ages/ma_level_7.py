@@ -2,18 +2,33 @@ import arcade
 from math import sqrt
 
 from camera_for_hero import CameraForHero
+from texts import text_d
 from textures import Textures
 from consts import *
 from views.game_view_common import GameView_common
 from views.load_view import LoadView
+from random import uniform
+from arcade.particles import Emitter, EmitBurst, FadeParticle
 
+
+def make_cloud_for_hero(hero):
+    return [Emitter(
+        center_xy=(hero.center_x + uniform(-hero.width // 2, hero.width // 2), hero.bottom + uniform(0, 5 * SCALE)),
+        emit_controller=EmitBurst(1),
+        particle_factory=lambda e: FadeParticle(
+            filename_or_texture=arcade.texture.make_soft_circle_texture(4, arcade.color.WHITE),
+            change_xy=(0, 0),
+            lifetime=0.2,
+            start_alpha=220, end_alpha=0,
+            scale=uniform(2.5 * SCALE, 18.5 * SCALE)
+        ),
+    ) for _ in range(15)]
 
 class GameView_ma_level_7(GameView_common):
     def __init__(self, hero, level_p=None):
         super().__init__(hero)
         Textures.textures_ma_level_7()
-        Textures.texture_chests_opened_1()
-        Textures.texture_chestsg_opened_1()
+        Textures.texture_key_opened()
         arcade.set_background_color(arcade.color.FRENCH_SKY_BLUE)
 
         self.tile_map = Textures.tile_map_ma_level_7
@@ -24,15 +39,33 @@ class GameView_ma_level_7(GameView_common):
         self.darkness_list = self.tile_map.sprite_lists['Darkness']
         self.light_list = self.tile_map.sprite_lists['Light']
 
+        self.enter_b = False
+
+        self.keys_place = self.tile_map.sprite_lists['Keys_place']
+        self.enter_place = self.tile_map.sprite_lists['ENTER']
+
         self.decor_list_b = self.tile_map.sprite_lists['Decor_back']
         self.decor_list_b_b = self.tile_map.sprite_lists['Decor_back_b']
         self.decor_list_b_b_f = self.tile_map.sprite_lists['Decor_back_b_f']
 
         self.thorns_list = self.tile_map.sprite_lists['Thorns']
+        self.barrier_keys = self.tile_map.sprite_lists['Barrier_keys']
 
-        self.walls_list_p = self.walls_list
+        self.walls_list_p = arcade.SpriteList()
+        for wall in (*self.walls_list, *self.barrier_keys):
+            self.walls_list_p.append(wall)
 
         self.background_list = self.tile_map.sprite_lists['Background']
+
+        self.text_insert = arcade.Text(text_d['o_to_open'],
+                                     SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                     30 * SCALE)
+        self.text_insert.position = (SCREEN_WIDTH - self.text_insert.content_width - 50 * SCALE, 36 * SCALE)
+
+        self.text_enter = arcade.Text(text_d['e_to_activate'],
+                                       SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                       30 * SCALE)
+        self.text_enter.position = (SCREEN_WIDTH - self.text_enter.content_width - 50 * SCALE, 36 * SCALE)
 
         self.hero.level = self
         if level_p:
@@ -73,6 +106,9 @@ class GameView_ma_level_7(GameView_common):
         self.npc.draw(pixelated=True)
 
         self.thorns_list.draw(pixelated=True)
+        self.enter_place.draw(pixelated=True)
+        self.keys_place.draw(pixelated=True)
+        self.barrier_keys.draw(pixelated=True)
 
         self.d_list.draw(pixelated=True)
 
@@ -111,5 +147,54 @@ class GameView_ma_level_7(GameView_common):
             from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
             self.window.show_view(LoadView(self.hero, 72, GameView_ma_level_6))
 
+        if self.enter_b:
+            from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1  # Заглушка. Будет переносить в будущее.
+            self.window.show_view(LoadView(self.hero, None, GameView_ma_level_1))
+
+        for key_p in self.keys_place:
+            if key_p.position in self.hero.chests_open_coord[self.__class__.__name__]:
+                key_p.texture = Textures.key_open['Key_open']
+
         for npc in self.npc:
             npc.update_animation(delta_time)
+
+        if self.hero.insert_keys >= 3:
+            for b in self.barrier_keys:
+                if b not in self.emitter_clouds:
+                    self.emitter_clouds[b] = [*make_cloud_for_hero(b)]
+                else:
+                    em = make_cloud_for_hero(b)
+                    for i in em:
+                        self.emitter_clouds[b].append(i)
+                self.walls_list_p.remove(b)
+            self.barrier_keys = arcade.SpriteList()
+
+        self.enter_b = False
+
+    def on_key_press(self, key, modifiers):
+        super().on_key_press(key, modifiers)
+        if key == arcade.key.O:
+            for key_p in self.hero.collides_with_list(self.keys_place):
+                if key_p.position not in self.hero.chests_open_coord[self.__class__.__name__]:
+                    if self.hero.keys > 0:
+                        self.hero.chests_open_coord[self.__class__.__name__].append(key_p.position)
+                        self.hero.keys -= 1
+                        self.hero.insert_keys += 1
+
+        if key == arcade.key.E:
+            if self.hero.collides_with_list(self.enter_place):
+                self.enter_b = True
+
+
+    def gui(self):
+        super().gui()
+        if self.hero.collides_with_list(self.keys_place):
+            if self.hero.collides_with_list(self.keys_place)[0].position not in self.hero.chests_open_coord[
+                self.__class__.__name__]:
+                if self.hero.keys > 0:
+                    self.text_field(self.text_insert)
+                    self.text_insert.draw()
+
+        if self.hero.collides_with_list(self.enter_place):
+            self.text_field(self.text_enter)
+            self.text_enter.draw()

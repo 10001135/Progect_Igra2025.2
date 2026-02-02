@@ -30,7 +30,8 @@ class Hero(arcade.Sprite):
         self.gugunek_axe = False
         self.pearl_of_moira = False
         self.book = 0
-        self.keys = 0
+        self.keys = 3
+        self.insert_keys = 3
 
         self.left_hero = False
         self.right_hero = False
@@ -46,8 +47,8 @@ class Hero(arcade.Sprite):
         self.light_time = 0
 
         self.climb = False
-        self.climb_b = False
-        self.double_jump = False
+        self.climb_b = True
+        self.double_jump = True
 
         self.jump_pressed = False
         self.world_camera = arcade.camera.Camera2D()
