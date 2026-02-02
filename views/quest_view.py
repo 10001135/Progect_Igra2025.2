@@ -12,7 +12,7 @@ class QuestPopup:
         Textures.quest_textures(Textures)
         self.textures = getattr(Textures, 'quest_icons', {})
 
-        self.manager = UIManager()
+        self.manager = UIManager(self.parent_view.window)
 
         self.settings_width = SCREEN_WIDTH * 0.6
         self.settings_height = SCREEN_HEIGHT * 0.7
@@ -30,6 +30,13 @@ class QuestPopup:
         self.all_items_actions = []
         self.item_buttons = []
 
+        self.initialize_quest_items()
+
+        self.text = "Нажмите на предмет, чтобы увидеть описание"
+
+        self.setup_ui()
+
+    def initialize_quest_items(self):
         if KEY1:
             self.all_items.append("key1")
             key1_icon = self.textures.get('key1_icon')
@@ -60,13 +67,9 @@ class QuestPopup:
             self.all_items_icons.append(gugunek_axe_icon)
             self.all_items_actions.append(self.gugunek_axe_show)
 
-        self.setup_ui()
-
     def setup_ui(self):
         self.manager.clear()
         self.item_buttons.clear()
-
-        self.text = "Нажмите на предмет, чтобы увидеть описание"
 
         Textures.textures_main_menu()
         menu_textures = getattr(Textures, 'textures_in_menu', {})
@@ -74,17 +77,17 @@ class QuestPopup:
         buttons_textures = menu_textures.get('buttons', {}).get('style1', {
             'normal': None,
             'hovered': None,
-            'pressed': None
-        })
+            'pressed': None})
 
         self.close_button = UITextureButton(
-            texture=buttons_textures['normal'],
-            texture_hovered=buttons_textures['hovered'],
-            texture_pressed=buttons_textures['pressed'],
+            texture=buttons_textures.get('normal'),
+            texture_hovered=buttons_textures.get('hovered'),
+            texture_pressed=buttons_textures.get('pressed'),
             width=200 * SCALE,
             height=75 * SCALE,
-            text="Close",
-            style=BUTTON_STYLE1)
+            text="Закрыть")
+
+        self.close_button.on_click = self.close
 
         for i in range(len(self.all_items)):
             item_icon = self.all_items_icons[i]
@@ -95,17 +98,14 @@ class QuestPopup:
                     texture=item_icon,
                     width=100 * SCALE,
                     height=100 * SCALE,
-                    text="",
-                    style=BUTTON_STYLE1)
+                    text="")
 
                 button.on_click = item_action
 
                 self.manager.add(button)
                 self.item_buttons.append(button)
 
-        self.close_button.on_click = self.close
         self.manager.add(self.close_button)
-
         self.resize_position()
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -116,24 +116,28 @@ class QuestPopup:
         if self.visible:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
+    def on_mouse_motion(self, x, y, dx, dy):
+        if self.visible:
+            self.manager.on_mouse_motion(x, y, dx, dy)
+
     def resize_position(self):
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 350 * SCALE
-        start_x = SCREEN_WIDTH // 2 - 125
-        start_y = SCREEN_HEIGHT // 2 + 50
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - self.settings_height // 2 + 50 * SCALE
 
-        spacing_x = 150
-        spacing_y = 125
+        start_x = SCREEN_WIDTH // 2 - 125 * SCALE
+        start_y = SCREEN_HEIGHT // 2 + 50 * SCALE
+
+        spacing_x = 150 * SCALE
+        spacing_y = 125 * SCALE
 
         for i, button in enumerate(self.item_buttons):
             row = i // 2
             col = i % 2
 
-            button.center_x = start_x + (col * spacing_x) * SCALE
-            button.center_y = start_y - (row * spacing_y) * SCALE
+            button.center_x = start_x + (col * spacing_x)
+            button.center_y = start_y - (row * spacing_y)
 
     def show(self):
-        self.setup_ui()
         self.visible = True
         self.manager.enable()
         self.resize_position()
@@ -179,24 +183,24 @@ class QuestPopup:
         arcade.draw_text(
             "Квестовые предметы",
             SCREEN_WIDTH // 2,
-            self.window_top - 50,
+            self.window_top - 40,
             arcade.color.WHITE,
             font_size=min(24, int(SCREEN_WIDTH * 0.03)),
             anchor_x="center",
-            anchor_y="center")
+            anchor_y="center",
+            bold=True)
 
         arcade.draw_text(
             self.text,
             SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2 - 50,
+            SCREEN_HEIGHT // 2 - 100 * SCALE,
             arcade.color.WHITE,
             font_size=min(18, int(SCREEN_WIDTH * 0.02)),
             anchor_x="center",
             anchor_y="center",
             width=self.settings_width - 120,
             multiline=True,
-            align="center"
-        )
+            align="center")
 
         self.manager.draw()
 

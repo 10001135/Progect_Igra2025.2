@@ -46,10 +46,14 @@ class GameView_common(arcade.View):
 
         self.hero_l.draw(pixelated=True)
 
-        self.inventory_popup.draw()
-
         ui_camera = Camera2D()
         ui_camera.use()
+
+        if self.quest_popup.visible:
+            self.quest_popup.draw()
+
+        if self.inventory_popup.visible:
+            self.inventory_popup.draw()
 
     def on_update(self, delta_time):
         for hero in self.hero_l:
