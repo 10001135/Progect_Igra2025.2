@@ -12,6 +12,9 @@ class InventoryPopup:
         Textures.inventory_textures(Textures)
         self.textures = getattr(Textures, 'inventory_icons', {})
 
+        Textures.decor_textures(Textures)
+        self.decor_textures = getattr(Textures, 'decor', {})
+
         self.manager = UIManager()
 
         self.settings_width = SCREEN_WIDTH * 0.6
@@ -25,12 +28,13 @@ class InventoryPopup:
         self.window_bottom = SCREEN_HEIGHT // 2 - self.settings_hieg // 2
         self.window_top = self.window_bottom + self.settings_hieg
 
-        self.text = ''
-
         self.dash_icon = None
         self.climb_icon = None
         self.hook_icon = None
         self.jump_icon = None
+        self.player_icon = None
+        self.robot2_icon = None
+        self.rastenie_icon = None
 
         self.icons()
         self.setup_ui()
@@ -38,6 +42,8 @@ class InventoryPopup:
     def icons(self):
         if not self.textures:
             return
+
+        self.text = ''
 
         if DASH:
             self.dash_icon = self.textures.get('dash')
@@ -59,11 +65,15 @@ class InventoryPopup:
         else:
             self.jump_icon = self.textures.get('chto_eto')
 
+        if self.decor_textures:
+            self.player_icon = self.decor_textures.get('igrok')
+            self.robot2_icon = self.decor_textures.get('robot2')
+            self.rastenie_icon = self.decor_textures.get('astenie')
+
     def setup_ui(self):
         self.manager.clear()
 
         Textures.textures_main_menu()
-
         menu_textures = getattr(Textures, 'textures_in_menu', {})
         buttons_textures = menu_textures.get('buttons', {}).get('style1', {'normal': None, 'hovered': None,
                                                                            'pressed': None})
@@ -105,17 +115,42 @@ class InventoryPopup:
             text="",
             style=BUTTON_STYLE1)
 
+        self.igrok = UITextureButton(
+            texture=self.player_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        self.robot = UITextureButton(
+            texture=self.robot2_icon,
+            width=200 * SCALE,
+            height=200 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        self.rastenie = UITextureButton(
+            texture=self.rastenie_icon,
+            width=175 * SCALE,
+            height=175 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
         self.close_button.on_click = self.close
         self.climb_button.on_click = self.climb
         self.dobl_jump_button.on_click = self.dobl_jump
         self.hook_button.on_click = self.hook
         self.dash_button.on_click = self.dash
+        self.igrok.on_click = self.player_info
 
         self.manager.add(self.close_button)
         self.manager.add(self.climb_button)
         self.manager.add(self.dobl_jump_button)
         self.manager.add(self.hook_button)
         self.manager.add(self.dash_button)
+        self.manager.add(self.igrok)
+        self.manager.add(self.robot)
+        self.manager.add(self.rastenie)
 
         self.resize_positihon()
 
@@ -142,6 +177,15 @@ class InventoryPopup:
 
         self.climb_button.center_x = SCREEN_WIDTH // 2 + 150
         self.climb_button.center_y = SCREEN_HEIGHT // 2 + 100
+
+        self.igrok.center_x = SCREEN_WIDTH // 2
+        self.igrok.center_y = SCREEN_HEIGHT // 2 + 50
+
+        self.robot.center_x = SCREEN_WIDTH // 2 + 150
+        self.robot.center_y = SCREEN_HEIGHT // 2 - 150
+
+        self.rastenie.center_x = SCREEN_WIDTH // 2 - 150
+        self.rastenie.center_y = SCREEN_HEIGHT // 2 - 150
 
     def show(self):
         self.icons()
@@ -178,6 +222,9 @@ class InventoryPopup:
             self.text = "Странная металлическая лоза. Ей вы можете цепляться за уступы(они выглядят как чёрные круги)"
         else:
             self.text = 'Что это:('
+
+    def player_info(self, event=None):
+        self.text = "Это пасхалка поздравляю."
 
     def draw(self):
         if not self.visible:

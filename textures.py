@@ -74,3 +74,13 @@ class Textures:
             'kogti': arcade.load_texture('assets/items/Master_Ninja_Gear.png'),
             'chto_eto': arcade.load_texture('assets/items/chto_eto.png'),
         }
+
+    @staticmethod
+    def decor_textures(csl):
+        csl.decor = {
+            'robot': arcade.load_texture('assets/items/obot.png'),
+            'liana': arcade.load_texture('assets/items/lianu.png'),
+            'robot2': arcade.load_texture('assets/items/robot.png'),
+            'igrok': arcade.load_texture('assets/textures/Hero/Engineer.png'),
+            'astenie': arcade.load_texture('assets/items/rastene.png'),
+        }
