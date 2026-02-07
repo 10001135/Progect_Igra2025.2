@@ -20,15 +20,15 @@ DEAD_ZONE_W = int(SCREEN_WIDTH * 0.35)
 DEAD_ZONE_H = int(SCREEN_HEIGHT * 0.45)
 
 KEY1 = True
-KEY2 = False
-KEY3 = False
+KEY2 = True
+KEY3 = True
 GUGUNEK_AXE = True
-GROSBUCH = False
+GROSBUCH = True
 
 DASH = True
-DOBL_JUMP = False
-HOOK = False
-CLIMB = False
+DOBL_JUMP = True
+HOOK = True
+CLIMB = True
 
 
 BUTTON_STYLE1 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),

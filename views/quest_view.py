@@ -1,18 +1,23 @@
 import arcade
+import sys
 from consts import *
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
+from views.Settings_view import SettingsPopup
 
 
-class QuestPopup:
+class QuestPopup(arcade.View):
     def __init__(self, parent_view):
+        super().__init__()
         self.parent_view = parent_view
         self.visible = False
+        self.manager = UIManager()
+
+        self.settings_popup = SettingsPopup(parent_view)
+        self.settings_popup_visible = False
 
         Textures.quest_textures(Textures)
         self.textures = getattr(Textures, 'quest_icons', {})
-
-        self.manager = UIManager(self.parent_view.window)
 
         self.settings_width = SCREEN_WIDTH * 0.6
         self.settings_height = SCREEN_HEIGHT * 0.7
@@ -30,11 +35,9 @@ class QuestPopup:
         self.all_items_actions = []
         self.item_buttons = []
 
-        self.initialize_quest_items()
-
         self.text = "Нажмите на предмет, чтобы увидеть описание"
 
-        self.setup_ui()
+        self.initialize_quest_items()
 
     def initialize_quest_items(self):
         if KEY1:
@@ -110,42 +113,72 @@ class QuestPopup:
         self.resize_position()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if self.visible:
+        if self.settings_popup_visible:
+            self.settings_popup.on_mouse_press(x, y, button, modifiers)
+        elif self.visible:
             self.manager.on_mouse_press(x, y, button, modifiers)
 
     def on_mouse_release(self, x, y, button, modifiers):
-        if self.visible:
+        if self.settings_popup_visible:
+            self.settings_popup.on_mouse_release(x, y, button, modifiers)
+        elif self.visible:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
     def on_mouse_motion(self, x, y, dx, dy):
         if self.visible:
             self.manager.on_mouse_motion(x, y, dx, dy)
 
+    def main_menu(self, event=None):
+        del sys.modules['views.main_menu_view']
+
+        from views.main_menu_view import MainMenuView
+
+        main_menu_view = MainMenuView()
+        self.window.show_view(main_menu_view)
+
     def resize_position(self):
         self.close_button.center_x = SCREEN_WIDTH // 2
         self.close_button.center_y = SCREEN_HEIGHT // 2 - self.settings_height // 2 + 50 * SCALE
 
-        start_x = SCREEN_WIDTH // 2 - 125 * SCALE
-        start_y = SCREEN_HEIGHT // 2 + 50 * SCALE
+        start_x = SCREEN_WIDTH // 2 - 150 * SCALE
+        start_y = SCREEN_HEIGHT // 2 + 200 * SCALE
 
         spacing_x = 150 * SCALE
         spacing_y = 125 * SCALE
 
+        columns = 3
+
         for i, button in enumerate(self.item_buttons):
-            row = i // 2
-            col = i % 2
+            row = i // columns
+            col = i % columns
 
             button.center_x = start_x + (col * spacing_x)
             button.center_y = start_y - (row * spacing_y)
 
+    def saves(self, event=None):
+        self.close_pause_only()
+        self.settings_popup_visible = True
+        self.settings_popup.show()
+        self.settings_popup.manager.enable()
+        self.manager.disable()
+
+    def close_pause_only(self):
+        self.visible = False
+        self.manager.disable()
+
     def show(self):
         self.visible = True
-        self.manager.enable()
+        self.settings_popup_visible = False
         self.resize_position()
+        self.settings_popup.manager.disable()
+        self.manager.enable()
 
     def close(self, event=None):
         self.visible = False
         self.manager.disable()
+        self.settings_popup_visible = False
+        self.settings_popup.close()
+        self.window.show_view(self.parent_view)
 
     def key1_show(self, event=None):
         self.text = "Ключ как ключ. На вид очень старый"
@@ -162,9 +195,10 @@ class QuestPopup:
     def gugunek_axe_show(self, event=None):
         self.text = "Топор как топор. Явно не для рубки дров."
 
-    def draw(self):
-        if not self.visible:
-            return
+    def on_draw(self):
+        self.parent_view.on_draw()
+        if not self.settings_popup.visible:
+            self.manager.enable()
 
         arcade.draw_lrbt_rectangle_filled(
             left=self.window_left,
@@ -194,7 +228,7 @@ class QuestPopup:
         arcade.draw_text(
             self.text,
             SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2 - 100 * SCALE,
+            SCREEN_HEIGHT // 2 - 150 * SCALE,
             arcade.color.WHITE,
             font_size=min(18, int(SCREEN_WIDTH * 0.02)),
             anchor_x="center",
@@ -205,6 +239,9 @@ class QuestPopup:
 
         self.manager.draw()
 
+        if self.settings_popup_visible:
+            self.settings_popup.draw()
+
     def on_resize(self, width, height):
         self.settings_width = max(300, width * 0.6)
         self.settings_height = max(400, height * 0.7)
@@ -214,5 +251,8 @@ class QuestPopup:
         self.window_bottom = height // 2 - self.settings_height // 2
         self.window_top = self.window_bottom + self.settings_height
 
-        self.resize_position()
+        if self.visible:
+            self.resize_position()
+        if self.settings_popup_visible:
+            self.settings_popup.on_resize(width, height)
         

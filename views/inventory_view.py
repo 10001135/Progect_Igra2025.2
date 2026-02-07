@@ -1,13 +1,20 @@
 import arcade
+import sys
 from consts import *
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
+from views.Settings_view import SettingsPopup
 
 
-class InventoryPopup:
+class InventoryPopup(arcade.View):
     def __init__(self, parent_view):
+        super().__init__()
         self.parent_view = parent_view
         self.visible = False
+        self.manager = UIManager()
+
+        self.settings_popup = SettingsPopup(parent_view)
+        self.settings_popup_visible = False
 
         Textures.inventory_textures(Textures)
         self.textures = getattr(Textures, 'inventory_icons', {})
@@ -15,18 +22,16 @@ class InventoryPopup:
         Textures.decor_textures(Textures)
         self.decor_textures = getattr(Textures, 'decor', {})
 
-        self.manager = UIManager()
-
         self.settings_width = SCREEN_WIDTH * 0.6
-        self.settings_hieg = SCREEN_HEIGHT * 0.7
+        self.settings_height = SCREEN_HEIGHT * 0.7
 
         self.settings_width = max(300, self.settings_width)
-        self.settings_hieg = max(400, self.settings_hieg)
+        self.settings_height = max(400, self.settings_height)
 
         self.window_left = SCREEN_WIDTH // 2 - self.settings_width // 2
         self.window_right = self.window_left + self.settings_width
-        self.window_bottom = SCREEN_HEIGHT // 2 - self.settings_hieg // 2
-        self.window_top = self.window_bottom + self.settings_hieg
+        self.window_bottom = SCREEN_HEIGHT // 2 - self.settings_height // 2
+        self.window_top = self.window_bottom + self.settings_height
 
         self.dash_icon = None
         self.climb_icon = None
@@ -36,14 +41,12 @@ class InventoryPopup:
         self.robot2_icon = None
         self.rastenie_icon = None
 
+        self.text = ''
         self.icons()
-        self.setup_ui()
 
     def icons(self):
         if not self.textures:
             return
-
-        self.text = ''
 
         if DASH:
             self.dash_icon = self.textures.get('dash')
@@ -122,20 +125,6 @@ class InventoryPopup:
             text="",
             style=BUTTON_STYLE1)
 
-        # self.robot = UITextureButton(
-        #     texture=self.robot2_icon,
-        #     width=200 * SCALE,
-        #     height=200 * SCALE,
-        #     text="",
-        #     style=BUTTON_STYLE1)
-
-        # self.rastenie = UITextureButton(
-        #     texture=self.rastenie_icon,
-        #     width=175 * SCALE,
-        #     height=175 * SCALE,
-        #     text="",
-        #     style=BUTTON_STYLE1)
-
         self.close_button.on_click = self.close
         self.climb_button.on_click = self.climb
         self.dobl_jump_button.on_click = self.dobl_jump
@@ -149,20 +138,34 @@ class InventoryPopup:
         self.manager.add(self.hook_button)
         self.manager.add(self.dash_button)
         self.manager.add(self.igrok)
-    #    self.manager.add(self.robot)
-    #    self.manager.add(self.rastenie)
 
-        self.resize_positihon()
+        self.resize_position()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if self.visible:
+        if self.settings_popup_visible:
+            self.settings_popup.on_mouse_press(x, y, button, modifiers)
+        elif self.visible:
             self.manager.on_mouse_press(x, y, button, modifiers)
 
     def on_mouse_release(self, x, y, button, modifiers):
-        if self.visible:
+        if self.settings_popup_visible:
+            self.settings_popup.on_mouse_release(x, y, button, modifiers)
+        elif self.visible:
             self.manager.on_mouse_release(x, y, button, modifiers)
 
-    def resize_positihon(self):
+    def on_mouse_motion(self, x, y, dx, dy):
+        if self.visible:
+            self.manager.on_mouse_motion(x, y, dx, dy)
+
+    def main_menu(self, event=None):
+        del sys.modules['views.main_menu_view']
+
+        from views.main_menu_view import MainMenuView
+
+        main_menu_view = MainMenuView()
+        self.window.show_view(main_menu_view)
+
+    def resize_position(self):
         self.close_button.center_x = SCREEN_WIDTH // 2
         self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
 
@@ -181,22 +184,31 @@ class InventoryPopup:
         self.igrok.center_x = SCREEN_WIDTH // 2
         self.igrok.center_y = SCREEN_HEIGHT // 2 + 50
 
-    #    self.robot.center_x = SCREEN_WIDTH // 2 + 150
-    #    self.robot.center_y = SCREEN_HEIGHT // 2 - 150
+    def saves(self, event=None):
+        self.close_pause_only()
+        self.settings_popup_visible = True
+        self.settings_popup.show()
+        self.settings_popup.manager.enable()
+        self.manager.disable()
 
-    #    self.rastenie.center_x = SCREEN_WIDTH // 2 - 150
-    #    self.rastenie.center_y = SCREEN_HEIGHT // 2 - 150
+    def close_pause_only(self):
+        self.visible = False
+        self.manager.disable()
 
     def show(self):
+        self.visible = True
+        self.settings_popup_visible = False
         self.icons()
         self.setup_ui()
-        self.visible = True
+        self.settings_popup.manager.disable()
         self.manager.enable()
-        self.resize_positihon()
 
     def close(self, event=None):
         self.visible = False
         self.manager.disable()
+        self.settings_popup_visible = False
+        self.settings_popup.close()
+        self.window.show_view(self.parent_view)
 
     def dash(self, event=None):
         if DASH:
@@ -226,9 +238,10 @@ class InventoryPopup:
     def player_info(self, event=None):
         self.text = "Это пасхалка поздравляю."
 
-    def draw(self):
-        if not self.visible:
-            return
+    def on_draw(self):
+        self.parent_view.on_draw()
+        if not self.settings_popup.visible:
+            self.manager.enable()
 
         arcade.draw_lrbt_rectangle_filled(
             left=self.window_left,
@@ -268,5 +281,19 @@ class InventoryPopup:
 
         self.manager.draw()
 
+        if self.settings_popup_visible:
+            self.settings_popup.draw()
+
     def on_resize(self, width, height):
-        self.resize_positihon()
+        self.settings_width = max(300, width * 0.6)
+        self.settings_height = max(400, height * 0.7)
+
+        self.window_left = width // 2 - self.settings_width // 2
+        self.window_right = self.window_left + self.settings_width
+        self.window_bottom = height // 2 - self.settings_height // 2
+        self.window_top = self.window_bottom + self.settings_height
+
+        if self.visible:
+            self.resize_position()
+        if self.settings_popup_visible:
+            self.settings_popup.on_resize(width, height)
