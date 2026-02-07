@@ -176,7 +176,7 @@ class MainMenuView(arcade.View):
                                       style=BUTTON_STYLE1)
 
         setting_button = UITextureButton(texture=texture_normal,
-                                         position=(SCREEN_WIDTH // 6, SCREEN_HEIGHT - 200),
+                                         position=(SCREEN_WIDTH // 6, SCREEN_HEIGHT - 100),
                                          texture_hovered=texture_hovered,
                                          texture_pressed=texture_pressed,
                                          width=texture_normal.width * SCALE,
@@ -195,8 +195,8 @@ class MainMenuView(arcade.View):
             style=BUTTON_STYLE2)
 
         play_button.on_click = lambda event: (Textures.texture_hero_1(),
-                                              self.window.show_view(GameView_test_1()),
-                                              self.manager.disable())
+                                              self.manager.disable(),
+                                              self.window.show_view(LoadView(Hero(), 62, GameView_ma_level_7)))
 
         setting_button.on_click = lambda event: self.settings_popup.show()
 
