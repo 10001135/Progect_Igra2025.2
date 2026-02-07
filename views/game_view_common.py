@@ -8,7 +8,6 @@ from consts import *
 from textures import Textures
 from views.dialog import Dialog
 
-from arcade.camera import Camera2D
 from views.pause_view import PausPopup
 from views.quest_view import QuestPopup
 from views.inventory_view import InventoryPopup
@@ -150,15 +149,6 @@ class GameView_common(arcade.View):
                     e.draw()
 
         self.hero_l.draw(pixelated=True)
-
-        self.gui_camera.use()
-        self.gui()
-
-        if self.quest_popup.visible:
-            self.quest_popup.on_draw()
-
-        if self.inventory_popup.visible:
-            self.inventory_popup.draw()
 
     def on_update(self, delta_time):
         if self.pause_popup.visible:

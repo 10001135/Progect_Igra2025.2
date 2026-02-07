@@ -56,7 +56,7 @@ class MusicPopup:
                 text=str(i + 1),
                 style=BUTTON_STYLE1)
 
-            btn.on_click = lambda event: self.music_pla(i)
+            btn.on_click = lambda event, index=i: self.music_pla(index)
 
             self.music_buttons.append(btn)
             self.manager.add(btn)
@@ -69,6 +69,7 @@ class MusicPopup:
             height=65 * SCALE,
             text="Stop",
             style=BUTTON_STYLE1)
+
         self.music_s.on_click = self.music_st
 
         self.close_button = UITextureButton(
@@ -108,6 +109,7 @@ class MusicPopup:
 
     def music_pla(self, i):
         self.stop = True
+        self.music_st()
         self.mus_p = i
         if self.music_player:
             self.music_play.stop(self.music_player)
