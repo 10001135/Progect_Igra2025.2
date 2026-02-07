@@ -151,16 +151,19 @@ class GameView_common(arcade.View):
 
         self.hero_l.draw(pixelated=True)
 
-        ui_camera = Camera2D()
-        ui_camera.use()
+        self.gui_camera.use()
+        self.gui()
 
         if self.quest_popup.visible:
-            self.quest_popup.draw()
+            self.quest_popup.on_draw()
 
         if self.inventory_popup.visible:
             self.inventory_popup.draw()
 
     def on_update(self, delta_time):
+        if self.pause_popup.visible:
+            return
+
         for hero in self.hero_l:
             if hero.dash:
                 if hero not in self.emitter_trace:
@@ -249,9 +252,6 @@ class GameView_common(arcade.View):
                 if chestg.position in self.hero.chests_open_coord[self.__class__.__name__]:
                     chestg.texture = Textures.chestg_opened['ChestG_opened']
 
-        while self.pause_popup.visible:
-            pass
-
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
         if key == arcade.key.Q:
@@ -278,16 +278,10 @@ class GameView_common(arcade.View):
             self.window.show_view(self.pause_popup)
 
         if key == arcade.key.O:
-            if self.quest_popup.visible:
-                self.quest_popup.close()
-            else:
-                self.quest_popup.show()
+            self.window.show_view(self.quest_popup)
 
         if key == arcade.key.P:
-            if self.inventory_popup.visible:
-                self.inventory_popup.close()
-            else:
-                self.inventory_popup.show()
+            self.window.show_view(self.inventory_popup)
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
@@ -336,14 +330,19 @@ class GameView_common(arcade.View):
 
         self.money = arcade.SpriteList()
         if 0 < self.hero.gold < 3:
-            self.money.append(arcade.Sprite(Textures.gui['Money1'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50, SCREEN_HEIGHT - 40 * SCALE))
+            self.money.append(arcade.Sprite(Textures.gui['Money1'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50,
+                                            SCREEN_HEIGHT - 40 * SCALE))
         elif 3 <= self.hero.gold < 5:
-            self.money.append(arcade.Sprite(Textures.gui['Money3'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50, SCREEN_HEIGHT - 40 * SCALE))
+            self.money.append(arcade.Sprite(Textures.gui['Money3'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50,
+                                            SCREEN_HEIGHT - 40 * SCALE))
         elif 5 <= self.hero.gold:
-            self.money.append(arcade.Sprite(Textures.gui['Money5'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50, SCREEN_HEIGHT - 40 * SCALE))
+            self.money.append(arcade.Sprite(Textures.gui['Money5'], 4 * SCALE, SCREEN_WIDTH - SCALE * 50,
+                                            SCREEN_HEIGHT - 40 * SCALE))
         self.money.draw(pixelated=True)
         if self.hero.gold > 0:
-            self.text_money = arcade.Text(str(self.hero.gold), SCREEN_WIDTH - SCALE * 100, SCREEN_HEIGHT - 55 * SCALE, (230, 230, 245), 30 * SCALE, font_name='Comic Sans MS pixel rus eng')
+            self.text_money = arcade.Text(str(self.hero.gold), SCREEN_WIDTH - SCALE * 100, SCREEN_HEIGHT - 55 * SCALE,
+                                          (230, 230, 245), 30 * SCALE, font_name='Comic Sans MS pixel rus eng')
+
             self.text_money.draw()
 
         if 'Reborn_bed' in self.tile_map.sprite_lists:
