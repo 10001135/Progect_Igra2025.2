@@ -8,6 +8,11 @@ from consts import *
 from textures import Textures
 from views.dialog import Dialog
 
+from arcade.camera import Camera2D
+from views.pause_view import PausPopup
+from views.quest_view import QuestPopup
+from views.inventory_view import InventoryPopup
+
 
 def make_trace(hero):
     return Emitter(
@@ -64,6 +69,15 @@ class GameView_common(arcade.View):
                                      SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
                                      30 * SCALE)
         self.text_open.position = (SCREEN_WIDTH - self.text_open.content_width - 50 * SCALE, 36 * SCALE)
+
+        self.pause_popup = PausPopup(self)
+        self.quest_popup = QuestPopup(self)
+
+        self.pause_popup.setup_ui()
+        self.quest_popup.setup_ui()
+
+        self.inventory_popup = InventoryPopup(self)
+        self.inventory_popup.setup_ui()
 
     def draw_hook(self):
         if self.hero.is_hooked and self.hero.joint:
@@ -136,6 +150,15 @@ class GameView_common(arcade.View):
                     e.draw()
 
         self.hero_l.draw(pixelated=True)
+
+        ui_camera = Camera2D()
+        ui_camera.use()
+
+        if self.quest_popup.visible:
+            self.quest_popup.draw()
+
+        if self.inventory_popup.visible:
+            self.inventory_popup.draw()
 
     def on_update(self, delta_time):
         for hero in self.hero_l:
@@ -226,6 +249,9 @@ class GameView_common(arcade.View):
                 if chestg.position in self.hero.chests_open_coord[self.__class__.__name__]:
                     chestg.texture = Textures.chestg_opened['ChestG_opened']
 
+        while self.pause_popup.visible:
+            pass
+
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
         if key == arcade.key.Q:
@@ -247,6 +273,21 @@ class GameView_common(arcade.View):
                         self.hero.chests_open_coord[self.__class__.__name__].append(chestg.position)
                         self.hero.max_health += 1
                         self.hero.health = self.hero.max_health
+
+        if key == arcade.key.ESCAPE:
+            self.window.show_view(self.pause_popup)
+
+        if key == arcade.key.O:
+            if self.quest_popup.visible:
+                self.quest_popup.close()
+            else:
+                self.quest_popup.show()
+
+        if key == arcade.key.P:
+            if self.inventory_popup.visible:
+                self.inventory_popup.close()
+            else:
+                self.inventory_popup.show()
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
@@ -305,7 +346,6 @@ class GameView_common(arcade.View):
             self.text_money = arcade.Text(str(self.hero.gold), SCREEN_WIDTH - SCALE * 100, SCREEN_HEIGHT - 55 * SCALE, (230, 230, 245), 30 * SCALE, font_name='Comic Sans MS pixel rus eng')
             self.text_money.draw()
 
-
         if 'Reborn_bed' in self.tile_map.sprite_lists:
             if self.hero.collides_with_list(self.reborn_bed_list):
                 self.text_field(self.text_save)
@@ -324,3 +364,14 @@ class GameView_common(arcade.View):
                     self.__class__.__name__]:
                     self.text_field(self.text_open)
                     self.text_open.draw()
+
+    def on_show_view(self):
+        self.window.set_mouse_visible(True)
+        if hasattr(self, 'pause_popup'):
+            self.pause_popup.setup_ui()
+
+        if hasattr(self, 'quest_popup'):
+            self.quest_popup.setup_ui()
+
+        if hasattr(self, 'pause_popup'):
+            self.inventory_popup.setup_ui()

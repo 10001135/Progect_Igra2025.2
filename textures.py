@@ -174,3 +174,36 @@ class Textures:
         climb = arcade.load_texture('assets/textures/climb.png')
         cloud = arcade.load_texture('assets/textures/Cloud.png')
         Textures.objects = {'Book': book, 'Bell': bell, 'Climb': climb, 'Cloud': cloud}
+
+    @staticmethod
+    def quest_textures(csl):
+        csl.quest_icons = {
+            'key1_icon': arcade.load_texture('assets/items/dash_shild.png'),  # картинки затычки пока не пределаю в пнг
+            'key2_icon': arcade.load_texture('assets/items/kruck.png'),
+            'key3_icon': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
+            'grosbuch_icon': arcade.load_texture('assets/items/buch.jpg'),
+            'gugunek_axe_icon': arcade.load_texture('assets/items/axe.jpg'),
+        }
+
+    @staticmethod
+    def inventory_textures(csl):
+        csl.inventory_icons = {
+            'dash': arcade.load_texture('assets/items/dash_shild.png'),
+            'hook': arcade.load_texture('assets/items/kruck.png'),
+            'jump': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
+            'kogti': arcade.load_texture('assets/items/Master_Ninja_Gear.png'),
+            'chto_eto': arcade.load_texture('assets/items/chto_eto.png'),
+        }
+
+    @staticmethod
+    def decor_textures(csl):
+        csl.decor = {
+            'robot': arcade.load_texture('assets/items/obot.png'),
+            'liana': arcade.load_texture('assets/items/lianu.png'),
+            'robot2': arcade.load_texture('assets/items/robot.png'),
+            'igrok': arcade.load_texture('assets/items/igrok.png'),
+            'astenie': arcade.load_texture('assets/items/rastene.png'),
+            'not1': arcade.load_texture('assets/items/nota1.png'),
+            'not2': arcade.load_texture('assets/items/nota2.png'),
+            'settings': arcade.load_texture('assets/items/settin.png'),
+        }

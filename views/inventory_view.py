@@ -1,0 +1,272 @@
+import arcade
+from consts import *
+from textures import Textures
+from arcade.gui import UIManager, UITextureButton
+
+
+class InventoryPopup:
+    def __init__(self, parent_view):
+        self.parent_view = parent_view
+        self.visible = False
+
+        Textures.inventory_textures(Textures)
+        self.textures = getattr(Textures, 'inventory_icons', {})
+
+        Textures.decor_textures(Textures)
+        self.decor_textures = getattr(Textures, 'decor', {})
+
+        self.manager = UIManager()
+
+        self.settings_width = SCREEN_WIDTH * 0.6
+        self.settings_hieg = SCREEN_HEIGHT * 0.7
+
+        self.settings_width = max(300, self.settings_width)
+        self.settings_hieg = max(400, self.settings_hieg)
+
+        self.window_left = SCREEN_WIDTH // 2 - self.settings_width // 2
+        self.window_right = self.window_left + self.settings_width
+        self.window_bottom = SCREEN_HEIGHT // 2 - self.settings_hieg // 2
+        self.window_top = self.window_bottom + self.settings_hieg
+
+        self.dash_icon = None
+        self.climb_icon = None
+        self.hook_icon = None
+        self.jump_icon = None
+        self.player_icon = None
+        self.robot2_icon = None
+        self.rastenie_icon = None
+
+        self.icons()
+        self.setup_ui()
+
+    def icons(self):
+        if not self.textures:
+            return
+
+        self.text = ''
+
+        if DASH:
+            self.dash_icon = self.textures.get('dash')
+        else:
+            self.dash_icon = self.textures.get('chto_eto')
+
+        if CLIMB:
+            self.climb_icon = self.textures.get('cogti')
+        else:
+            self.climb_icon = self.textures.get('chto_eto')
+
+        if HOOK:
+            self.hook_icon = self.textures.get('hook')
+        else:
+            self.hook_icon = self.textures.get('chto_eto')
+
+        if DOBL_JUMP:
+            self.jump_icon = self.textures.get('jump')
+        else:
+            self.jump_icon = self.textures.get('chto_eto')
+
+        if self.decor_textures:
+            self.player_icon = self.decor_textures.get('igrok')
+            self.robot2_icon = self.decor_textures.get('robot2')
+            self.rastenie_icon = self.decor_textures.get('astenie')
+
+    def setup_ui(self):
+        self.manager.clear()
+
+        Textures.textures_main_menu()
+        menu_textures = getattr(Textures, 'textures_in_menu', {})
+        buttons_textures = menu_textures.get('buttons', {}).get('style1', {'normal': None, 'hovered': None,
+                                                                           'pressed': None})
+
+        self.close_button = UITextureButton(
+            texture=buttons_textures['normal'],
+            texture_hovered=buttons_textures['hovered'],
+            texture_pressed=buttons_textures['pressed'],
+            width=200 * SCALE,
+            height=90 * SCALE,
+            text="Close",
+            style=BUTTON_STYLE1)
+
+        self.dash_button = UITextureButton(
+            texture=self.dash_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        self.hook_button = UITextureButton(
+            texture=self.hook_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        self.dobl_jump_button = UITextureButton(
+            texture=self.jump_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        self.climb_button = UITextureButton(
+            texture=self.climb_icon,
+            width=100 * SCALE,
+            height=100 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        self.igrok = UITextureButton(
+            texture=self.player_icon,
+            width=200 * SCALE,
+            height=200 * SCALE,
+            text="",
+            style=BUTTON_STYLE1)
+
+        # self.robot = UITextureButton(
+        #     texture=self.robot2_icon,
+        #     width=200 * SCALE,
+        #     height=200 * SCALE,
+        #     text="",
+        #     style=BUTTON_STYLE1)
+
+        # self.rastenie = UITextureButton(
+        #     texture=self.rastenie_icon,
+        #     width=175 * SCALE,
+        #     height=175 * SCALE,
+        #     text="",
+        #     style=BUTTON_STYLE1)
+
+        self.close_button.on_click = self.close
+        self.climb_button.on_click = self.climb
+        self.dobl_jump_button.on_click = self.dobl_jump
+        self.hook_button.on_click = self.hook
+        self.dash_button.on_click = self.dash
+        self.igrok.on_click = self.player_info
+
+        self.manager.add(self.close_button)
+        self.manager.add(self.climb_button)
+        self.manager.add(self.dobl_jump_button)
+        self.manager.add(self.hook_button)
+        self.manager.add(self.dash_button)
+        self.manager.add(self.igrok)
+    #    self.manager.add(self.robot)
+    #    self.manager.add(self.rastenie)
+
+        self.resize_positihon()
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if self.visible:
+            self.manager.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        if self.visible:
+            self.manager.on_mouse_release(x, y, button, modifiers)
+
+    def resize_positihon(self):
+        self.close_button.center_x = SCREEN_WIDTH // 2
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
+
+        self.hook_button.center_x = SCREEN_WIDTH // 2 + 150
+        self.hook_button.center_y = SCREEN_HEIGHT // 2 + 50
+
+        self.dash_button.center_x = SCREEN_WIDTH // 2 - 150
+        self.dash_button.center_y = SCREEN_HEIGHT // 2 + 100
+
+        self.dobl_jump_button.center_x = SCREEN_WIDTH // 2 - 150
+        self.dobl_jump_button.center_y = SCREEN_HEIGHT // 2 + 50
+
+        self.climb_button.center_x = SCREEN_WIDTH // 2 + 150
+        self.climb_button.center_y = SCREEN_HEIGHT // 2 + 100
+
+        self.igrok.center_x = SCREEN_WIDTH // 2
+        self.igrok.center_y = SCREEN_HEIGHT // 2 + 50
+
+    #    self.robot.center_x = SCREEN_WIDTH // 2 + 150
+    #    self.robot.center_y = SCREEN_HEIGHT // 2 - 150
+
+    #    self.rastenie.center_x = SCREEN_WIDTH // 2 - 150
+    #    self.rastenie.center_y = SCREEN_HEIGHT // 2 - 150
+
+    def show(self):
+        self.icons()
+        self.setup_ui()
+        self.visible = True
+        self.manager.enable()
+        self.resize_positihon()
+
+    def close(self, event=None):
+        self.visible = False
+        self.manager.disable()
+
+    def dash(self, event=None):
+        if DASH:
+            self.text = "Странный щит с глазом по середине. Стоп что, глаз стал ртом? ААААААААА!! Почему меня перенесло\
+             вперёд? (даёт dash)"
+        else:
+            self.text = 'Что это:('
+
+    def dobl_jump(self, event=None):
+        if DOBL_JUMP:
+            self.text = "Облако в бутылке. Странно но оно твёрдое00? На нём можно прыгать!? ГДЕ ЗАКОНЫ ФИЗИКИ!!!!!"
+        else:
+            self.text = 'Что это:('
+
+    def climb(self, event=None):
+        if CLIMB:
+            self.text = "Это когти и шипы на ботинки. Ими вы можете цепляться за стены(они отличаются от обычных;)"
+        else:
+            self.text = 'Что это:('
+
+    def hook(self, event=None):
+        if HOOK:
+            self.text = "Странная металлическая лоза. Ей вы можете цепляться за уступы(они выглядят как чёрные круги)"
+        else:
+            self.text = 'Что это:('
+
+    def player_info(self, event=None):
+        self.text = "Это пасхалка поздравляю."
+
+    def draw(self):
+        if not self.visible:
+            return
+
+        arcade.draw_lrbt_rectangle_filled(
+            left=self.window_left,
+            right=self.window_right,
+            top=self.window_top,
+            bottom=self.window_bottom,
+            color=(0, 0, 0, 200))
+
+        arcade.draw_lrbt_rectangle_outline(
+            left=self.window_left,
+            right=self.window_right,
+            top=self.window_top,
+            bottom=self.window_bottom,
+            color=arcade.color.GOLD,
+            border_width=3)
+
+        arcade.draw_text(
+            "Инвентарь",
+            SCREEN_WIDTH // 2,
+            self.window_top - 50,
+            arcade.color.WHITE,
+            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
+            anchor_x="center",
+            anchor_y="center")
+
+        arcade.draw_text(
+            self.text,
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2 - 50,
+            arcade.color.WHITE,
+            font_size=min(18, int(SCREEN_WIDTH * 0.02)),
+            anchor_x="center",
+            anchor_y="center",
+            width=self.settings_width - 120,
+            multiline=True,
+            align="center")
+
+        self.manager.draw()
+
+    def on_resize(self, width, height):
+        self.resize_positihon()
