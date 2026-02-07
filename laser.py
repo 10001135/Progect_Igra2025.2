@@ -16,7 +16,7 @@ class Laser:
         self.height = 10 * SCALE
         self.scale = SCALE * 0.5
         self.time_accumulator = 0.0
-        self.blink_interval = 0.2
+        self.blink_interval = 0.3
         self.blink_count = 0
         self.max_blinks = 3
         self.is_active = False
@@ -28,7 +28,7 @@ class Laser:
 
     def draw(self):
         color = (255, 0, 0, self.alpha)
-        line_width = 3 * SCALE if self.is_active else 2 * SCALE
+        line_width = 5 * SCALE if self.is_active else 4 * SCALE
 
         arcade.draw_line(
             self.x1,

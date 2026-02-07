@@ -57,10 +57,10 @@ class Visor(arcade.Sprite):
         for h in range(self.max_health):
             if h <= self.health - 1:
                 self.hearts.append(
-                    arcade.Sprite(Textures.gui['HeartBoss'], 4 * SCALE, self.center_x - 65 * SCALE + (h * 65),
+                    arcade.Sprite(Textures.gui['HeartBoss'], 4 * SCALE, self.center_x - 65 * SCALE + (h * 65 * SCALE),
                                   self.top + 30 * SCALE))
             else:
                 self.hearts.append(
-                    arcade.Sprite(Textures.gui['Unheart'], 4 * SCALE, self.center_x - 65 * SCALE + (h * 65),
+                    arcade.Sprite(Textures.gui['Unheart'], 4 * SCALE, self.center_x - 65 * SCALE + (h * 65 * SCALE),
                                   self.top + 30 * SCALE))
         self.hearts.draw(pixelated=True)
