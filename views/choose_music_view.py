@@ -30,6 +30,16 @@ class MusicPopup:
 
         self.on_back_to_settings = None
 
+        self.text = arcade.Text(
+            "Music",
+            SCREEN_WIDTH // 2,
+            800 * SCALE,
+            arcade.color.WHITE,
+            font_size=min(30, int(SCREEN_WIDTH * 0.04)),
+            anchor_x="center",
+            anchor_y="center"
+        )
+
         self.setup_ui()
 
     def setup_ui(self):
@@ -222,14 +232,7 @@ class MusicPopup:
             color=arcade.color.GOLD,
             border_width=3)
 
-        arcade.draw_text(
-            "Music",
-            SCREEN_WIDTH // 2,
-            window_top - 70 * SCALE,
-            arcade.color.WHITE,
-            font_size=min(30, int(SCREEN_WIDTH * 0.04)),
-            anchor_x="center",
-            anchor_y="center")
+        self.text.draw()
 
         self.manager.draw()
 

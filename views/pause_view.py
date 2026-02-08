@@ -16,6 +16,16 @@ class PausPopup(arcade.View):
         self.settings_popup = SettingsPopup(parent_view)
         self.settings_popup_visible = False
 
+        self.text = arcade.Text(
+            "Pause",
+            SCREEN_WIDTH // 2,
+            800 * SCALE,
+            arcade.color.WHITE,
+            font_size=min(30, int(SCREEN_WIDTH * 0.04)),
+            anchor_x="center",
+            anchor_y="center"
+        )
+
     def setup_ui(self):
         self.manager.clear()
         Textures.textures_main_menu()
@@ -144,14 +154,7 @@ class PausPopup(arcade.View):
             color=arcade.color.PINK,
             border_width=3)
 
-        arcade.draw_text(
-            "Pause",
-            SCREEN_WIDTH // 2,
-            window_top - 50,
-            arcade.color.WHITE,
-            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-            anchor_x="center",
-            anchor_y="center")
+        self.text.draw()
 
         self.manager.draw()
 

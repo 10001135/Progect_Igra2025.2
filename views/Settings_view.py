@@ -18,6 +18,16 @@ class SettingsPopup:
 
         self.settings_icon = None
 
+        self.text = arcade.Text(
+            "Settings",
+            SCREEN_WIDTH // 2,
+            800 * SCALE,
+            arcade.color.WHITE,
+            font_size=min(30, int(SCREEN_WIDTH * 0.04)),
+            anchor_x="center",
+            anchor_y="center"
+        )
+
         self.setup_ui()
 
     def setup_ui(self):
@@ -152,14 +162,7 @@ class SettingsPopup:
             color=arcade.color.PURPLE,
             border_width=3)
 
-        arcade.draw_text(
-            "НАСТРОЙКИ",
-            SCREEN_WIDTH // 2,
-            window_top - 50,
-            arcade.color.WHITE,
-            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-            anchor_x="center",
-            anchor_y="center")
+        self.text.draw()
 
         self.manager.draw()
 

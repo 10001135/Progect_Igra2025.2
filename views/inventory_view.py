@@ -41,8 +41,33 @@ class InventoryPopup(arcade.View):
         self.robot2_icon = None
         self.rastenie_icon = None
 
+        self.texts = arcade.Text(
+            "Inventory",
+            SCREEN_WIDTH // 2,
+            800 * SCALE,
+            arcade.color.WHITE,
+            font_size=min(30, int(SCREEN_WIDTH * 0.04)),
+            anchor_x="center",
+            anchor_y="center")
+
         self.text = ''
+
+        self.texye = arcade.Text(
+            self.text,
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2 - 50,
+            arcade.color.WHITE,
+            font_size=min(18, int(SCREEN_WIDTH * 0.02)),
+            anchor_x="center",
+            anchor_y="center",
+            width=self.settings_width - 120,
+            multiline=True,
+            align="center")
+
         self.icons()
+
+    def update_description(self):
+        self.texye.text = self.text
 
     def icons(self):
         if not self.textures:
@@ -202,6 +227,8 @@ class InventoryPopup(arcade.View):
         self.setup_ui()
         self.settings_popup.manager.disable()
         self.manager.enable()
+        self.text = ''
+        self.update_description()
 
     def close(self, event=None):
         self.visible = False
@@ -212,31 +239,36 @@ class InventoryPopup(arcade.View):
 
     def dash(self, event=None):
         if DASH:
-            self.text = "Странный щит с глазом по середине. Стоп что, глаз стал ртом? ААААААААА!! Почему меня перенесло\
-             вперёд? (даёт dash)"
+            self.text = ("Странный щит с глазом по середине. Стоп что, глаз стал ртом? ААААААААА!! Почему"
+                         " меня перенесло вперёд? (даёт dash)")
         else:
             self.text = 'Что это:('
+        self.update_description()
 
     def dobl_jump(self, event=None):
         if DOBL_JUMP:
             self.text = "Облако в бутылке. Странно но оно твёрдое00? На нём можно прыгать!? ГДЕ ЗАКОНЫ ФИЗИКИ!!!!!"
         else:
             self.text = 'Что это:('
+        self.update_description()
 
     def climb(self, event=None):
         if CLIMB:
             self.text = "Это когти и шипы на ботинки. Ими вы можете цепляться за стены(они отличаются от обычных;)"
         else:
             self.text = 'Что это:('
+        self.update_description()
 
     def hook(self, event=None):
         if HOOK:
             self.text = "Странная металлическая лоза. Ей вы можете цепляться за уступы(они выглядят как чёрные круги)"
         else:
             self.text = 'Что это:('
+        self.update_description()
 
     def player_info(self, event=None):
         self.text = "Это пасхалка поздравляю."
+        self.update_description()
 
     def on_draw(self):
         self.parent_view.on_draw()
@@ -258,26 +290,9 @@ class InventoryPopup(arcade.View):
             color=arcade.color.GOLD,
             border_width=3)
 
-        arcade.draw_text(
-            "Инвентарь",
-            SCREEN_WIDTH // 2,
-            self.window_top - 50,
-            arcade.color.WHITE,
-            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-            anchor_x="center",
-            anchor_y="center")
+        self.texts.draw()
 
-        arcade.draw_text(
-            self.text,
-            SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2 - 50,
-            arcade.color.WHITE,
-            font_size=min(18, int(SCREEN_WIDTH * 0.02)),
-            anchor_x="center",
-            anchor_y="center",
-            width=self.settings_width - 120,
-            multiline=True,
-            align="center")
+        self.texye.draw()
 
         self.manager.draw()
 
