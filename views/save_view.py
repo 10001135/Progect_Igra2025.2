@@ -104,10 +104,9 @@ class SaveQt(QMainWindow, Ui_MainWindow):
         with open(f'saves/saves_files/{save[0]}.save', "rb") as file:
             hero = pickle.load(file)
             level = LEVELS_DICT[save[3]]
-            print(hero.health)
-            # Textures.texture_hero_1()
-            # self.self2.window.show_view(LoadView(hero, 993, level))
-            # self.close()
+            Textures.texture_hero_1()
+            self.self2.window.show_view(LoadView(hero, 993, level))
+            self.close()
 
     def close_w(self):
         self.con.close()

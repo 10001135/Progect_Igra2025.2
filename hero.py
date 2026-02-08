@@ -88,6 +88,18 @@ class Hero(arcade.Sprite):
         self.on_ladder = False
 
         self.story_npc = story_npc
+        self.pb = False
+        if self.story_npc:
+            for npc in self.story_npc:
+                if self.story_npc[npc][2].__class__ != Dialog:
+                    self.pb = True
+            if self.pb:
+                copyreg.pickle(Dialog, pickle_custom_dialog)
+                story_npc_2 = {}
+                for npc in self.story_npc:
+                    story_npc_2[npc] = (*self.story_npc[npc][:2], pickle.loads(self.story_npc[npc][2]))
+                self.story_npc = story_npc_2
+
         self.chests_open_coord = chests_open_coord
 
     def on_key_press(self, key, modifiers):
@@ -407,10 +419,12 @@ class Hero(arcade.Sprite):
         return Hero(max_health=self.max_health, health=self.health, gold=self.gold, gugunek_axe=self.gugunek_axe,
                     pearl_of_moira=self.pearl_of_moira, book=self.book, keys=self.keys, insert_keys=self.insert_keys,
                     climb_b=self.climb_b, dash_b=self.dash_b, double_jump=self.double_jump,
-                    story_npc=self.story_npc.copy(),
-                    chests_open_coord=self.chests_open_coord.copy())
+                    story_npc=self.story_npc.copy(), chests_open_coord=self.chests_open_coord.copy(),
+                    save_f=self.save_f, hook_claimed=self.hook_claimed, time=self.time,
+                    reborn_bed_pos=self.reborn_bed_pos)
 
     def save(self, level):
+        print(level)
         copyreg.pickle(Hero, pickle_custom_hero)
         copyreg.pickle(Dialog, pickle_custom_dialog)
 
@@ -429,9 +443,9 @@ class Hero(arcade.Sprite):
 
 
 def pickle_custom_hero(obj):
-    return Hero, (obj.max_health, obj.health, obj.gold, obj.gugunek_axe, obj.pearl_of_moira, obj.book, obj.keys,
-                  obj.insert_keys, obj.climb_b, obj.double_jump, obj.dash_b, obj.story_npc, obj.chests_open_coord,
-                  obj.hook_claimed, obj.save_f, obj.time, obj.reborn_bed_pos)
+    return Hero, (None, None, None, obj.max_health, obj.health, obj.gold, obj.gugunek_axe, obj.pearl_of_moira, obj.book,
+                  obj.keys, obj.insert_keys, obj.climb_b, obj.double_jump, obj.dash_b, obj.story_npc,
+                  obj.chests_open_coord, obj.save_f, obj.hook_claimed, obj.time, obj.reborn_bed_pos)
 
 
 def pickle_custom_dialog(obj):
