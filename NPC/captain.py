@@ -7,7 +7,7 @@ from texts import text_d
 
 
 class Captain(arcade.Sprite):
-    def __init__(self, x, y, story=0):
+    def __init__(self, hero, x, y, story=0):
         super().__init__()
         Textures.texture_captain()
         self.textures = Textures.captain['Captain']
@@ -16,6 +16,7 @@ class Captain(arcade.Sprite):
         self.texture_change_delay = 0.8
         self.current_texture = 0
         self.name = text_d['captain_name']
+        self.hero = hero
 
         self.position = (x, y + 15 * SCALE)
         self.scale = SCALE * 4
@@ -44,14 +45,18 @@ class Captain(arcade.Sprite):
                                       text_d['captain_replic_5'],
 
                                   text_d['hero_replic_bye']: 0},
-                                 'Captain/captain_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'Captain/captain_dialog.png', Textures.hero['Dialog'], self.name)
 
         if self.story != 0:
             self.dialog = Dialog(text_d[self.greeting],
                                  self.dialog.hero_answers,
-                                 'Captain/captain_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'Captain/captain_dialog.png', Textures.hero['Dialog'], self.name)
 
     def dialog_end(self):
         if self.story == 0:
             self.story = 1
             self.greeting = 'captain_replic_4'
+
+        if self.story == 1 and text_d['hero_captain_replic_1'] not in self.dialog.hero_answers:
+            self.story = 2
+            self.hero.hook_claimed = True
