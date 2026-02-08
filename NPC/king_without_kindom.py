@@ -44,24 +44,24 @@ class KingWithoutKindom(arcade.Sprite):
                                   text_d['hero_king_replic_3']:
                                       text_d['king_replic_4'],
                                   text_d['hero_replic_bye']: 0},
-                                 'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
 
         if self.story != 0:
             self.dialog = Dialog(text_d[self.greeting],
                                  self.dialog.hero_answers,
-                                 'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
             if self.story == 2 and gold > 0:
                 self.dialog.hero_answers[text_d['hero_king_replic_4']] = text_d['king_replic_6']
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 31
 
             if self.story == 3 and gold > 0:
                 self.dialog.hero_answers[text_d['hero_king_replic_4']] = text_d['king_replic_7']
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 41
 
             if self.story == 4 and gold > 0:
@@ -69,14 +69,14 @@ class KingWithoutKindom(arcade.Sprite):
                     text_d['king_replic_8']: {text_d['hero_king_replic_5']: text_d['king_replic_9']}}
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 51
 
             if self.story == 5 and gold > 0:
                 self.dialog.hero_answers[text_d['hero_king_replic_4']] = text_d['king_replic_10']
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 61
 
             if self.story == 6 and gold > 0:
@@ -85,14 +85,14 @@ class KingWithoutKindom(arcade.Sprite):
                         text_d['king_replic_12']: {text_d['hero_king_replic_8']: text_d['king_replic_13']}}}}}}
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 71
 
             if self.story == 7 and gold > 0:
                 self.dialog.hero_answers[text_d['hero_king_replic_4']] = text_d['king_replic_14']
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 81
 
             if self.story == 8 and gold > 0:
@@ -100,7 +100,7 @@ class KingWithoutKindom(arcade.Sprite):
                     text_d['king_replic_15']: {text_d['hero_king_replic_9']: text_d['king_replic_16']}}
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 91
 
             if self.story == 9 and gold > 0:
@@ -108,14 +108,14 @@ class KingWithoutKindom(arcade.Sprite):
                     text_d['king_replic_17']: {text_d['hero_king_replic_10']: text_d['king_replic_18']}}
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 101
 
             if self.story == 100 and gold > 0:
                 self.dialog.hero_answers[text_d['hero_king_replic_4']] = {text_d['king_replic_19']: {text_d['hero_king_replic_11']: 1}}
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 111
 
     def dialog_end(self):

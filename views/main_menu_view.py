@@ -7,7 +7,7 @@ from arcade.gui.widgets.layout import UIAnchorLayout, UIBoxLayout
 from views.Settings_view import SettingsPopup
 
 from views.load_view import LoadView
-from views.test_levels.game_view_test_1 import GameView_test_2
+from views.save_view import SaveView
 from hero import Hero
 from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
 from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
@@ -196,7 +196,7 @@ class MainMenuView(arcade.View):
 
         play_button.on_click = lambda event: (Textures.texture_hero_1(),
                                               self.manager.disable(),
-                                              self.window.show_view(LoadView(Hero(), 62, GameView_ma_level_7)))
+                                              self.window.show_view(LoadView(Hero(), None, GameView_ma_level_2)))
 
         setting_button.on_click = lambda event: self.settings_popup.show()
 
@@ -225,3 +225,8 @@ class MainMenuView(arcade.View):
     def on_mouse_release(self, x, y, button, modifiers):
         self.manager.on_mouse_release(x, y, button, modifiers)
         self.settings_popup.on_mouse_release(x, y, button, modifiers)
+
+    def open_level(self):
+        sv = SaveView()
+        sv.start()
+
