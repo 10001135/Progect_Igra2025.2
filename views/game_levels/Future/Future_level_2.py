@@ -43,7 +43,6 @@ class GameView_fut_level_2(GameView_common):
         Textures.textures_future_level_2()
         Textures.textures_future_level_1()
         self.hero.level = self
-        self.a = hero
 
         self.emitter_clouds_boss = {}
 
@@ -62,7 +61,7 @@ class GameView_fut_level_2(GameView_common):
         self.generator_decor = self.tile_map.sprite_lists['Generator_decor']
         self.razor_spawn = self.tile_map.sprite_lists['Razor']
         self.laser_decor = self.tile_map.sprite_lists['Lasers_decor']
-
+        self.enter_list = self.tile_map.sprite_lists['Enter_2']
         self.laser_list = []
         if 'Lasers' in self.tile_map.sprite_lists:
             lasers = self.tile_map.sprite_lists['Lasers']
@@ -135,7 +134,6 @@ class GameView_fut_level_2(GameView_common):
         if self.hero.is_hooked and self.hero.collides_with_list(self.tile_map.sprite_lists['Thorns']):
             self.hero.damage(1)
 
-
         self.hero_l = arcade.SpriteList(use_spatial_hash=True)
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)
@@ -144,7 +142,6 @@ class GameView_fut_level_2(GameView_common):
         self.set_darkness()
 
     def setup_init(self):
-        print(1)
         self.damage_timer = 0
         self.move_timer = 0
         self.boss_death_timer = 0
@@ -154,7 +151,7 @@ class GameView_fut_level_2(GameView_common):
         self.second_attach_end = False
 
         self.boss_attach_time = 0
-        self.first_attach_time = 10
+        self.first_attach_time = 25
         self.second_attach_delay = 0
         self.third_attach_delay = 0
         self.boss_spawn_timer = 0
@@ -167,8 +164,8 @@ class GameView_fut_level_2(GameView_common):
         self.boss = False
 
         self.hook_points_draw = False
+        self.do_draw_enter = False
         self.hook_points_decor_draw = False
-
 
     def on_draw(self):
         self.clear()
@@ -188,6 +185,9 @@ class GameView_fut_level_2(GameView_common):
         if self.background_list:
             self.background_list.draw(pixelated=True)
 
+        if self.do_second_attach:
+            self.razor_list.draw(pixelated=True)
+
         self.walls_list_p.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
 
@@ -204,6 +204,9 @@ class GameView_fut_level_2(GameView_common):
                 self.hero_l.draw(pixelated=True)
                 self.d_list.draw()
                 self.boss_l.draw(pixelated=True)
+                if self.boss in self.emitter_clouds_boss:
+                    for emitter in self.emitter_clouds_boss[self.boss]:
+                        emitter.draw()
                 self.update_darkness()
                 if self.boss.health > 0:
                     self.boss.draw_hearts()
@@ -239,7 +242,6 @@ class GameView_fut_level_2(GameView_common):
                 self.hero_l.draw(pixelated=True)
                 self.d_list.draw()
                 self.boss_l.draw(pixelated=True)
-                self.razor_list.draw(pixelated=True)
                 self.update_darkness()
                 if self.boss.health > 0:
                     self.boss.draw_hearts()
@@ -277,15 +279,22 @@ class GameView_fut_level_2(GameView_common):
             self.d_list.draw()
             self.update_darkness()
 
+        if self.do_draw_enter:
+            self.enter_list.draw(pixelated=True)
+
         self.gui_camera.use()
         self.gui()
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
         if not self.boss and self.boss_spawn_timer > 5:
-            self.boss = self.boss = Visor(self.first_boss_pos[0].center_x, self.first_boss_pos[0].center_y,
-                                          self.second_boss_pos[0].center_x, self.second_boss_pos[0].center_y)
+            self.boss = Visor(self.first_boss_pos[0].center_x, self.first_boss_pos[0].center_y,
+                              self.second_boss_pos[0].center_x, self.second_boss_pos[0].center_y)
             self.boss_l.append(self.boss)
+            if self.boss not in self.emitter_clouds_boss:
+                self.emitter_clouds_boss[self.boss] = []
+            for _ in range(25):
+                self.emitter_clouds_boss[self.boss].append(make_cloud_for_boss(self.boss))
         else:
             self.boss_spawn_timer += delta_time
 
@@ -293,6 +302,10 @@ class GameView_fut_level_2(GameView_common):
             self.boss_l.update(delta_time)
             self.boss_l.update_animation(delta_time)
             self.boss_attach_time += delta_time
+
+            if self.boss in self.emitter_clouds_boss and not self.boss_is_dead:
+                for emitter in self.emitter_clouds_boss[self.boss]:
+                    emitter.update()
 
             if self.boss.health == 0:
                 if not self.boss_is_dead:
@@ -303,6 +316,8 @@ class GameView_fut_level_2(GameView_common):
                             self.emitter_clouds_boss[boss] = []
                         for _ in range(25):
                             self.emitter_clouds_boss[boss].append(make_cloud_for_boss(boss))
+                else:
+                    self.do_draw_enter = True
 
                 self.boss_death_timer += delta_time
                 for emitters in self.emitter_clouds_boss.values():
@@ -425,6 +440,11 @@ class GameView_fut_level_2(GameView_common):
             else:
                 self.hook_engine.step(delta_time)
 
+        for hero in self.hero_l:
+            if self.hero.collides_with_list(self.tile_map.sprite_lists['Enter_2']) and self.boss_is_dead:
+                from views.game_levels.Future.Future_level_3 import GameView_fut_level_3
+                self.window.show_view(LoadView(self.hero, None, GameView_fut_level_3))
+
     def deth(self, hero):
         hero.is_hooked = False
         self.boss = False
@@ -433,4 +453,3 @@ class GameView_fut_level_2(GameView_common):
         hero.health = hero.max_health
         hero.dash_time = 0
         hero.light_time = LIGHT_TIME
-
