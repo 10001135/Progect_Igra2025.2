@@ -38,7 +38,7 @@ class MainMenuView(arcade.View):
 
         self.first_plan = arcade.Sprite(self.textures['first_plan'], SCALE)
         self.first_plan.position = (SCREEN_WIDTH // 2, 230 * SCALE)
-        self.name = arcade.Sprite(self.textures['name'], SCALE)
+        self.name = arcade.Sprite(self.textures['name'], SCALE * 0.5)
         self.name.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 6 * 5)
 
         self.bg = arcade.Sprite(self.textures['mountain_bg'], SCALE * 5)
