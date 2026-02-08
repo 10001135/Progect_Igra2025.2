@@ -1,3 +1,5 @@
+import sqlite3
+
 import arcade
 from PIL import ImageEnhance
 from consts import *
@@ -13,14 +15,18 @@ from views.dialog import Dialog
 class Hero(arcade.Sprite):
     def __init__(self, tile_map=None, engine=None, hook_engine=None, max_health=3, health=3, gold=0, gugunek_axe=True,
                  pearl_of_moira=True, book=0, keys=0, insert_keys=0, climb_b=True, double_jump=True, dash_b=True,
-                 story_npc={}, chests_open_coord={}):
+                 story_npc={}, chests_open_coord={}, save_f=None, hook_claimed=False, time=0, reborn_bed_pos=None):
         super().__init__()
         Textures.texture_hero_1()
         self.tile_map = tile_map
         self.engine = engine
         self.hook_engine = hook_engine
 
-        self.hook_claimed = False
+        self.save_f = save_f
+        self.time = time
+        self.reborn_bed_pos = reborn_bed_pos
+
+        self.hook_claimed = hook_claimed
 
         self.is_hooked = False
         self.joint = None
@@ -125,21 +131,6 @@ class Hero(arcade.Sprite):
                 npc.dialog_end()
                 self.story_npc[npc.__class__.__name__] = (npc.story, npc.greeting, npc.dialog)
 
-        if key == arcade.key.U:
-            copyreg.pickle(Hero, pickle_custom_hero)
-            copyreg.pickle(Dialog, pickle_custom_dialog)
-
-            self2 = self.copy()
-            story_npc_2 = {}
-            for npc in self.story_npc:
-                story_npc_2[npc] = (*self.story_npc[npc][:2], pickle.dumps(self.story_npc[npc][2]))
-            self2.story_npc = story_npc_2
-            with open('rty.save', 'wb') as f:
-                pickle.dump(self2, f)
-            with open('rty.save', 'rb') as f:
-                deserialized = pickle.load(f)
-            print(deserialized.story_npc)
-
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
             self.left_hero = False
@@ -211,6 +202,7 @@ class Hero(arcade.Sprite):
             self.moment_timer = 0.2
 
     def on_update(self, dt):
+        self.time += dt
         self.speed = MOVE_SPEED * (dt ** 0.3)
         if self.moment_timer > 0:
             self.moment_timer -= dt
@@ -414,13 +406,32 @@ class Hero(arcade.Sprite):
     def copy(self):
         return Hero(max_health=self.max_health, health=self.health, gold=self.gold, gugunek_axe=self.gugunek_axe,
                     pearl_of_moira=self.pearl_of_moira, book=self.book, keys=self.keys, insert_keys=self.insert_keys,
-                    climb_b=self.climb_b, dash_b=self.dash_b, double_jump=self.double_jump, story_npc=self.story_npc.copy(),
+                    climb_b=self.climb_b, dash_b=self.dash_b, double_jump=self.double_jump,
+                    story_npc=self.story_npc.copy(),
                     chests_open_coord=self.chests_open_coord.copy())
+
+    def save(self, level):
+        copyreg.pickle(Hero, pickle_custom_hero)
+        copyreg.pickle(Dialog, pickle_custom_dialog)
+
+        self2 = self.copy()
+        story_npc_2 = {}
+        for npc in self.story_npc:
+            story_npc_2[npc] = (*self.story_npc[npc][:2], pickle.dumps(self.story_npc[npc][2]))
+        self2.story_npc = story_npc_2
+        with open(f'saves/saves_files/{self.save_f}.save', 'wb') as f:
+            pickle.dump(self2, f)
+        con = sqlite3.connect("saves/saves_sql.db")
+        cur = con.cursor()
+        cur.execute("""UPDATE saves SET time = ?, level = ? WHERE save = ?""", (self.time, level, self.save_f))
+        con.commit()
+        con.close()
 
 
 def pickle_custom_hero(obj):
     return Hero, (obj.max_health, obj.health, obj.gold, obj.gugunek_axe, obj.pearl_of_moira, obj.book, obj.keys,
-                  obj.insert_keys, obj.climb_b, obj.double_jump, obj.dash_b, obj.story_npc, obj.chests_open_coord)
+                  obj.insert_keys, obj.climb_b, obj.double_jump, obj.dash_b, obj.story_npc, obj.chests_open_coord,
+                  obj.hook_claimed, obj.save_f, obj.time, obj.reborn_bed_pos)
 
 
 def pickle_custom_dialog(obj):

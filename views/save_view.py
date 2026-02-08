@@ -2,21 +2,39 @@ import sqlite3
 
 import pickle
 import sys
+import traceback
 
 from PyQt6.QtCore import Qt
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
 
-from hero import Hero
 from save_ui import Ui_MainWindow
+from textures import Textures
+from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
+from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
+from views.game_levels.Middle_Ages.ma_level_3 import GameView_ma_level_3
+from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
+from views.game_levels.Middle_Ages.ma_level_5 import GameView_ma_level_5
+from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
+from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
 
+from views.game_levels.Future.Future_level_1 import GameView_fut_level_1
+from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
+from views.load_view import LoadView
+
+LEVELS = [GameView_ma_level_1, GameView_ma_level_2, GameView_ma_level_3, GameView_ma_level_4, GameView_ma_level_5,
+          GameView_ma_level_6, GameView_ma_level_7, GameView_fut_level_1, GameView_fut_level_2]
+LEVELS_DICT = {}
+for level in LEVELS:
+    LEVELS_DICT[level.__name__] = level
 
 class SaveView:
     def __init__(self):
         self.hero = None
         self.level = None
 
-    def start(self):
+    def start(self, window):
+        self.window = window
         app = QApplication(sys.argv)
         sqt = SaveQt(self)
         sqt.show()
@@ -29,9 +47,9 @@ class SaveQt(QMainWindow, Ui_MainWindow):
         self.self2 = self2
         self.setupUi(self)
         self.setWindowTitle('Hello')
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
 
-        self.exit_btn.clicked.connect(self.close)
+        self.exit_btn.clicked.connect(self.close_w)
 
         stylesheet = """
                         QMainWindow {
@@ -78,19 +96,27 @@ class SaveQt(QMainWindow, Ui_MainWindow):
         for save in self.saves_buttons:
             btn = QPushButton(f'{save[2]} --- {save[1]}', self)
             btn.setStyleSheet("text-align: left")
-            save_f = save[0]
             btn.clicked.connect(
-                lambda save_f, save_f0=save_f: self.file_r(save_f0))
+                lambda save, save0=save: self.file_r(save0))
             self.btn_lay.addWidget(btn)
 
-    def file_r(self, save_f):
-        with open(f'saves/{save_f}/{save_f}/{save_f}.save', "rb") as file:
+    def file_r(self, save):
+        with open(f'saves/saves_files/{save[0]}.save', "rb") as file:
             hero = pickle.load(file)
+            level = LEVELS_DICT[save[3]]
+            print(hero.health)
+            # Textures.texture_hero_1()
+            # self.self2.window.show_view(LoadView(hero, 993, level))
+            # self.close()
+
+    def close_w(self):
+        self.con.close()
+        self.close()
 
 
+def excepthook(exc_type, exc_value, exc_tb):
+    tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+    print("Oбнаружена ошибка !:", tb)
 
 
-
-
-
-
+sys.excepthook = excepthook

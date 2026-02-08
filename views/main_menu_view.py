@@ -11,7 +11,6 @@ from views.save_view import SaveView
 from hero import Hero
 from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
 from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
-from views.game_levels.Future.Future_level_1 import GameView_fut_level_1
 from views.game_levels.Middle_Ages.ma_level_3 import GameView_ma_level_3
 from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
 from views.game_levels.Middle_Ages.ma_level_5 import GameView_ma_level_5
@@ -175,6 +174,14 @@ class MainMenuView(arcade.View):
                                       text=text_d['play_button'],
                                       style=BUTTON_STYLE1)
 
+        new_game_button = UITextureButton(texture=texture_normal,
+                                      texture_hovered=texture_hovered,
+                                      texture_pressed=texture_pressed,
+                                      width=texture_normal.width * SCALE,
+                                      height=texture_normal.height * SCALE * 0.7,
+                                      text=text_d['new_game_button'],
+                                      style=BUTTON_STYLE1)
+
         setting_button = UITextureButton(texture=texture_normal,
                                          position=(SCREEN_WIDTH // 6, SCREEN_HEIGHT - 100),
                                          texture_hovered=texture_hovered,
@@ -194,15 +201,18 @@ class MainMenuView(arcade.View):
             text='Close',
             style=BUTTON_STYLE2)
 
-        play_button.on_click = lambda event: (Textures.texture_hero_1(),
+        play_button.on_click = lambda event: self.open_level()
+
+        new_game_button.on_click = lambda event: (Textures.texture_hero_1(),
                                               self.manager.disable(),
-                                              self.window.show_view(LoadView(Hero(), None, GameView_ma_level_2)))
+                                              self.window.show_view(LoadView(Hero(), None, GameView_ma_level_1)))
 
         setting_button.on_click = lambda event: self.settings_popup.show()
 
         close_button.on_click = lambda event: arcade.exit()
 
         self.box_layout.add(play_button)
+        self.box_layout.add(new_game_button)
         self.box_layout.add(setting_button)
         self.box_layout.add(close_button)
 
@@ -228,5 +238,5 @@ class MainMenuView(arcade.View):
 
     def open_level(self):
         sv = SaveView()
-        sv.start()
+        sv.start(self.window)
 

@@ -4,12 +4,31 @@ from texts import text_d
 from camera_for_hero import CameraForHero
 from consts import *
 from random import choice
+import sqlite3
 
 
 class LoadView(arcade.View):
     def __init__(self, hero, level_from, level_to):
         super().__init__()
         self.hero = hero
+        if not hero.save_f:
+            con = sqlite3.connect("saves/saves_sql.db")
+            cur = con.cursor()
+            result = cur.execute("""SELECT save FROM saves""").fetchall()
+            if result:
+                saves_numbs = []
+                for save in result:
+                    saves_numbs.append(int(save[0][4:]))
+                new_numb = max(saves_numbs) + 1
+                save_f = new_numb
+                cur.execute("""INSERT INTO saves(save, time, name, level) VALUES(?, 0, ?, 'MA1')""", (f'save{new_numb}', f'Сохранение {new_numb}'))
+            else:
+                save_f = 'save1'
+                cur.execute("""INSERT INTO saves(save, time, name, level) VALUES('save1', 0, 'Сохранение 1', 'MA1')""")
+            con.commit()
+            con.close()
+            self.hero.save_f = save_f
+
         self.level_from = level_from
         self.level_to = level_to
         self.clear(color=(21, 32, 59))

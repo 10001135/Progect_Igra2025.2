@@ -150,6 +150,9 @@ class GameView_common(arcade.View):
         self.hero_l.draw(pixelated=True)
 
     def on_update(self, delta_time):
+        if self.hero.reborn_bed_pos:
+            self.reborn_point = self.hero.reborn_bed_pos
+
         if self.pause_popup.visible:
             return
 
@@ -245,9 +248,11 @@ class GameView_common(arcade.View):
         self.hero.on_key_press(key, modifiers)
         if key == arcade.key.Q:
             for bed in self.hero.collides_with_list(self.reborn_bed_list):
+                self.hero.reborn_bed_pos = bed.position
                 self.reborn_point = bed.position
                 self.hero.light_time = LIGHT_TIME
                 self.hero.health = self.hero.max_health
+                self.hero.save(self.__class__.__name__)
 
 
         if key == arcade.key.O:
@@ -267,10 +272,10 @@ class GameView_common(arcade.View):
         if key == arcade.key.ESCAPE:
             self.window.show_view(self.pause_popup)
 
-        if key == arcade.key.O:
+        if key == arcade.key.U:
             self.window.show_view(self.quest_popup)
 
-        if key == arcade.key.P:
+        if key == arcade.key.I:
             self.window.show_view(self.inventory_popup)
 
     def on_key_release(self, key, modifiers):
