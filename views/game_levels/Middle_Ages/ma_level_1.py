@@ -55,6 +55,8 @@ class GameView_ma_level_1(GameView_common):
         if level_p:
             if level_p == 2:
                 self.reborn_point = self.reborn_point_list[1].position
+            if level_p == 993:
+                self.reborn_point = self.hero.reborn_point
         else:
             self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
