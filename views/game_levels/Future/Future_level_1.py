@@ -108,6 +108,9 @@ class GameView_fut_level_1(GameView_common):
                 npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
                 npc.story_change()
 
+        if self.hero.joint:
+            self.hook_engine.space.remove(self.hero.joint)
+
         self.hero_l = arcade.SpriteList(use_spatial_hash=True)
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)

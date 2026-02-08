@@ -148,8 +148,8 @@ class GameView_ma_level_7(GameView_common):
             self.window.show_view(LoadView(self.hero, 72, GameView_ma_level_6))
 
         if self.enter_b:
-            from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1  # Заглушка. Будет переносить в будущее.
-            self.window.show_view(LoadView(self.hero, None, GameView_ma_level_1))
+            from views.game_levels.Future.Future_level_1 import GameView_fut_level_1
+            self.window.show_view(LoadView(self.hero, None, GameView_fut_level_1))
 
         for key_p in self.keys_place:
             if key_p.position in self.hero.chests_open_coord[self.__class__.__name__]:
