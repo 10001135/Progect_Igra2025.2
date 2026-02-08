@@ -6,7 +6,6 @@ from texts import text_d
 
 from consts import *
 from textures import Textures
-from views.dialog import Dialog
 
 from views.pause_view import PausPopup
 from views.quest_view import QuestPopup
@@ -250,6 +249,7 @@ class GameView_common(arcade.View):
                 self.hero.light_time = LIGHT_TIME
                 self.hero.health = self.hero.max_health
 
+
         if key == arcade.key.O:
             if 'Chests' in self.tile_map.sprite_lists:
                 for chest in self.hero.collides_with_list(self.chests_list):
@@ -364,3 +364,9 @@ class GameView_common(arcade.View):
 
         if hasattr(self, 'pause_popup'):
             self.inventory_popup.setup_ui()
+
+    def npc_d(self):
+        for npc in self.npc:
+            if npc.__class__.__name__ in self.hero.story_npc:
+                npc.story, npc.greeting, npc.dialog = self.hero.story_npc[npc.__class__.__name__]
+                npc.story_change()

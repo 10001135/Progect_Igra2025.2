@@ -46,12 +46,12 @@ class Gugunek(arcade.Sprite):
                                   text_d['hero_gugunek_replic_4']:
                                       text_d['gugunek_replic_5'],
                                   text_d['hero_replic_bye']: 0},
-                                 'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self.name)
 
         if self.story != 0:
             self.dialog = Dialog(text_d[self.greeting],
                                  self.dialog.hero_answers,
-                                 'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self.name)
 
             if self.story == 2 and self.hero.gugunek_axe:
                 self.dialog.hero_answers[text_d['hero_gugunek_replic_5']] = {
@@ -59,7 +59,7 @@ class Gugunek(arcade.Sprite):
                                                  text_d['hero_gugunek_replic_7']: text_d['gugunek_replic_9']}}
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
-                                     'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                     'Gugunek/gugunek_dialog.png', Textures.hero['Dialog'], self.name)
                 self.story = 31
 
     def dialog_end(self):

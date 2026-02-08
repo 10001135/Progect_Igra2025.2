@@ -81,10 +81,7 @@ class GameView_ma_level_5(GameView_common):
         self.fara = Fara(self.hero, *self.tile_map.sprite_lists['Fara'][0].position)
         self.npc.append(self.fara)
 
-        for npc in self.npc:
-            if npc.__class__.__name__ in self.hero.story_npc:
-                npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
-                npc.story_change()
+        self.npc_d()
 
         self.set_darkness()
 

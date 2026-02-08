@@ -46,18 +46,18 @@ class Nikshulp(arcade.Sprite):
                                   text_d['hero_nikshulp_replic_5']:
                                       text_d['nikshulp_replic_5'],
                                   text_d['hero_replic_bye']: 0},
-                                 'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self.name)
 
         if self.story != 0:
             self.dialog = Dialog(text_d[self.greeting],
                    self.dialog.hero_answers,
-                   'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self, self.name)
+                   'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self.name)
 
         if self.story == 2 and self.hero.book:
             self.dialog.hero_answers[text_d['hero_nikshulp_replic_6']] = text_d['nikshulp_replic_7']
             self.dialog = Dialog(text_d[self.greeting],
                                  self.dialog.hero_answers,
-                                 'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self, self.name)
+                                 'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self.name)
             self.story = 31
 
     def dialog_end(self):

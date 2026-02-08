@@ -70,10 +70,7 @@ class GameView_ma_level_2(GameView_common):
         self.gugunek = Gugunek(self.hero, *self.tile_map.sprite_lists['Gugunek'][0].position)
         self.npc.append(self.gugunek)
 
-        for npc in self.npc:
-            if npc.__class__.__name__ in self.hero.story_npc:
-                npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
-                npc.story_change()
+        self.npc_d()
 
         self.set_darkness()
 

@@ -14,20 +14,18 @@ from dialog_fr_ui import Ui_MainWindow
 
 
 class Dialog:
-    def __init__(self, text_npc, hero_answers, npc, hero, npc_obj, npc_name):
+    def __init__(self, text_npc, hero_answers, npc, hero, npc_name):
         self.text_npc  = text_npc
         self.hero_answers = hero_answers
         self.npc = npc
         self.npc_name = npc_name
         self.hero = hero
-        self.npc_obj = npc_obj
 
     def start(self):
         app = QApplication(sys.argv)
         dqt = DialogQt(self.npc, self.hero, self.text_npc, self.hero_answers, self, self.npc_name)
         dqt.show()
         app.exec()
-        self.npc_obj.dialog_end()
 
 
 class DialogQt(QMainWindow, Ui_MainWindow):

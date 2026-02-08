@@ -4,10 +4,16 @@ from consts import *
 from textures import Textures
 import pymunk
 import math
+import copyreg
+import pickle
+
+from views.dialog import Dialog
 
 
 class Hero(arcade.Sprite):
-    def __init__(self, tile_map=None, engine=None, hook_engine=None):
+    def __init__(self, tile_map=None, engine=None, hook_engine=None, max_health=3, health=3, gold=0, gugunek_axe=True,
+                 pearl_of_moira=True, book=0, keys=0, insert_keys=0, climb_b=True, double_jump=True, dash_b=True,
+                 story_npc={}, chests_open_coord={}):
         super().__init__()
         Textures.texture_hero_1()
         self.tile_map = tile_map
@@ -24,16 +30,16 @@ class Hero(arcade.Sprite):
         self.scale = 3.5 * SCALE
         self.speed = MOVE_SPEED
         self.jump_speed = JUMP_SPEED
-        self.max_health = 3
-        self.health = self.max_health
+        self.max_health = max_health
+        self.health = health
 
-        self.gold = 9
+        self.gold = gold
 
-        self.gugunek_axe = False
-        self.pearl_of_moira = False
-        self.book = 0
-        self.keys = 3
-        self.insert_keys = 3
+        self.gugunek_axe = gugunek_axe
+        self.pearl_of_moira = pearl_of_moira
+        self.book = book
+        self.keys = keys
+        self.insert_keys = insert_keys
 
         self.left_hero = False
         self.right_hero = False
@@ -42,15 +48,15 @@ class Hero(arcade.Sprite):
 
         self.run = False
         self.dash = False
-        self.dash_b = True
+        self.dash_b = dash_b
         self.dash_size = DASH_SIZE
         self.dash_time = 0
         self.dash_light = (True, False)
         self.light_time = 0
 
         self.climb = False
-        self.climb_b = True
-        self.double_jump = True
+        self.climb_b = climb_b
+        self.double_jump = double_jump
 
         self.jump_pressed = False
         self.world_camera = arcade.camera.Camera2D()
@@ -75,9 +81,8 @@ class Hero(arcade.Sprite):
 
         self.on_ladder = False
 
-        self.story_npc = {}
-        self.chests_open_coord = {}
-        self.det_t = [9, 0]
+        self.story_npc = story_npc
+        self.chests_open_coord = chests_open_coord
 
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -117,7 +122,23 @@ class Hero(arcade.Sprite):
                 else:
                     npc.story_change()
                 npc.dialog.start()
-                self.story_npc[npc.__class__.__name__] = (npc.story, npc.dialog, npc.greeting)
+                npc.dialog_end()
+                self.story_npc[npc.__class__.__name__] = (npc.story, npc.greeting, npc.dialog)
+
+        if key == arcade.key.U:
+            copyreg.pickle(Hero, pickle_custom_hero)
+            copyreg.pickle(Dialog, pickle_custom_dialog)
+
+            self2 = self.copy()
+            story_npc_2 = {}
+            for npc in self.story_npc:
+                story_npc_2[npc] = (*self.story_npc[npc][:2], pickle.dumps(self.story_npc[npc][2]))
+            self2.story_npc = story_npc_2
+            with open('rty.save', 'wb') as f:
+                pickle.dump(self2, f)
+            with open('rty.save', 'rb') as f:
+                deserialized = pickle.load(f)
+            print(deserialized.story_npc)
 
     def on_key_release(self, key, modifiers):
         if key in (arcade.key.LEFT, arcade.key.A):
@@ -191,10 +212,6 @@ class Hero(arcade.Sprite):
 
     def on_update(self, dt):
         self.speed = MOVE_SPEED * (dt ** 0.3)
-        if dt > self.det_t[1]:
-            self.det_t[1] = dt
-        if dt < self.det_t[0]:
-            self.det_t[0] = dt
         if self.moment_timer > 0:
             self.moment_timer -= dt
             if self.moment_timer <= 0:
@@ -277,7 +294,8 @@ class Hero(arcade.Sprite):
                 self.is_in_air = False
             self.is_walking = False
 
-        if self.tile_map and 'Thorns' in self.tile_map.sprite_lists and self.collides_with_list(self.tile_map.sprite_lists['Thorns']):
+        if self.tile_map and 'Thorns' in self.tile_map.sprite_lists and self.collides_with_list(
+                self.tile_map.sprite_lists['Thorns']):
             self.damage(1)
 
         self.climb = False
@@ -392,3 +410,18 @@ class Hero(arcade.Sprite):
             self.is_hooked = False
         self.position = p[1].position
         self.health -= power
+
+    def copy(self):
+        return Hero(max_health=self.max_health, health=self.health, gold=self.gold, gugunek_axe=self.gugunek_axe,
+                    pearl_of_moira=self.pearl_of_moira, book=self.book, keys=self.keys, insert_keys=self.insert_keys,
+                    climb_b=self.climb_b, dash_b=self.dash_b, double_jump=self.double_jump, story_npc=self.story_npc.copy(),
+                    chests_open_coord=self.chests_open_coord.copy())
+
+
+def pickle_custom_hero(obj):
+    return Hero, (obj.max_health, obj.health, obj.gold, obj.gugunek_axe, obj.pearl_of_moira, obj.book, obj.keys,
+                  obj.insert_keys, obj.climb_b, obj.double_jump, obj.dash_b, obj.story_npc, obj.chests_open_coord)
+
+
+def pickle_custom_dialog(obj):
+    return Dialog, (obj.text_npc, obj.hero_answers, obj.npc, obj.hero, obj.npc_name)
