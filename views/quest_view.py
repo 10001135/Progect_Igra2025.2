@@ -35,9 +35,31 @@ class QuestPopup(arcade.View):
         self.all_items_actions = []
         self.item_buttons = []
 
-        self.text = "Нажмите на предмет, чтобы увидеть описание"
+        self.texye = arcade.Text(
+            "Quests",
+            SCREEN_WIDTH // 2,
+            850 * SCALE,
+            arcade.color.WHITE,
+            font_size=min(30, int(SCREEN_WIDTH * 0.04)),
+            anchor_x="center",
+            anchor_y="center")
+
+        self.texte = arcade.Text(
+            "Нажмите на предмет, чтобы увидеть описание",
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2 - 150 * SCALE,
+            arcade.color.WHITE,
+            font_size=min(18, int(SCREEN_WIDTH * 0.02)),
+            anchor_x="center",
+            anchor_y="center",
+            width=self.settings_width - 120 * SCALE,
+            multiline=True,
+            align="center")
 
         self.initialize_quest_items()
+
+    def update_description(self):
+        self.texte.text = self.text
 
     def initialize_quest_items(self):
         if KEY1:
@@ -169,9 +191,12 @@ class QuestPopup(arcade.View):
     def show(self):
         self.visible = True
         self.settings_popup_visible = False
-        self.resize_position()
+        self.initialize_quest_items()
+        self.setup_ui()
         self.settings_popup.manager.disable()
         self.manager.enable()
+        self.text = "Нажмите на предмет, чтобы увидеть описание"
+        self.update_description()
 
     def close(self, event=None):
         self.visible = False
@@ -180,20 +205,24 @@ class QuestPopup(arcade.View):
         self.settings_popup.close()
         self.window.show_view(self.parent_view)
 
+    def set_text(self, text):
+        self.text = text
+        self.update_description()
+
     def key1_show(self, event=None):
-        self.text = "Ключ как ключ. На вид очень старый"
+        self.set_text("Ключ как ключ. На вид очень старый")
 
     def key2_show(self, event=None):
-        self.text = "Ключ как ключ. О рубин!!! Можно продать;)"
+        self.set_text("Ключ как ключ. О рубин!!! Можно продать;)")
 
     def key3_show(self, event=None):
-        self.text = "Ключ как ключ. Ничего особенного."
+        self.set_text("Ключ как ключ. Ничего особенного.")
 
     def grosbuch_show(self, event=None):
-        self.text = "Большая книга. Что тут у нас? Просто список припасов на складе:("
+        self.set_text("Большая книга. Что тут у нас? Просто список припасов на складе:(")
 
     def gugunek_axe_show(self, event=None):
-        self.text = "Топор как топор. Явно не для рубки дров."
+        self.set_text("Топор как топор. Явно не для рубки дров.")
 
     def on_draw(self):
         self.parent_view.on_draw()
@@ -215,27 +244,8 @@ class QuestPopup(arcade.View):
             color=arcade.color.GOLD,
             border_width=3)
 
-        arcade.draw_text(
-            "Квестовые предметы",
-            SCREEN_WIDTH // 2,
-            self.window_top - 40,
-            arcade.color.WHITE,
-            font_size=min(24, int(SCREEN_WIDTH * 0.03)),
-            anchor_x="center",
-            anchor_y="center",
-            bold=True)
-
-        arcade.draw_text(
-            self.text,
-            SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2 - 150 * SCALE,
-            arcade.color.WHITE,
-            font_size=min(18, int(SCREEN_WIDTH * 0.02)),
-            anchor_x="center",
-            anchor_y="center",
-            width=self.settings_width - 120,
-            multiline=True,
-            align="center")
+        self.texye.draw()
+        self.texte.draw()
 
         self.manager.draw()
 
@@ -251,8 +261,15 @@ class QuestPopup(arcade.View):
         self.window_bottom = height // 2 - self.settings_height // 2
         self.window_top = self.window_bottom + self.settings_height
 
+        self.texte.font_size = min(18, int(width * 0.02))
+        self.texte.width = self.settings_width - 120 * SCALE
+        self.texte.x = width // 2
+        self.texte.y = height // 2 - 150 * SCALE
+
+        self.text.x = width // 2
+        self.text.y = 850 * SCALE
+
         if self.visible:
             self.resize_position()
         if self.settings_popup_visible:
             self.settings_popup.on_resize(width, height)
-        
