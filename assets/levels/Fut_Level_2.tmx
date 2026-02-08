@@ -4,7 +4,7 @@
  <tileset firstgid="33" source="DawnLike/Tsx_files/Futuristics_2.tsx"/>
  <tileset firstgid="1633" source="DawnLike/Tsx_files/Futuristics.tsx"/>
  <tileset firstgid="1697" source="DawnLike/Tsx_files/Wall.tsx"/>
- <tileset firstgid="2717" source="../../../Progect_Igra2025/DawnLike/Tsx_files/Floor.tsx"/>
+ <tileset firstgid="2717" source="DawnLike/Tsx_files/Floor.tsx"/>
  <tileset firstgid="3536" source="DawnLike/Tsx_files/Floor.tsx"/>
  <layer id="1" name="Background" width="60" height="50" tintcolor="#cdd4dd">
   <data encoding="base64">

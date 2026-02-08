@@ -2,8 +2,8 @@
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="left-down" width="40" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="1">
  <tileset firstgid="1" source="DawnLike/Tsx_files/Futuristics.tsx"/>
  <tileset firstgid="65" source="DawnLike/Tsx_files/Futuristics_2.tsx"/>
- <tileset firstgid="1665" source="DawnLike/Tsx_files/земля красивая.tsx"/>
- <tileset firstgid="2665" source="../../../Progect_Igra2025/DawnLike/Tsx_files/Floor.tsx"/>
+ <tileset firstgid="1665" source="DawnLike/Tsx_files/cool.tsx"/>
+ <tileset firstgid="2665" source="DawnLike/Tsx_files/Floor.tsx"/>
  <tileset firstgid="3484" source="DawnLike/Tsx_files/electricity.tsx"/>
  <tileset firstgid="3486" source="DawnLike/Tsx_files/Decor0.tsx"/>
  <tileset firstgid="3662" source="DawnLike/Tsx_files/vbcnncbv.tsx"/>
