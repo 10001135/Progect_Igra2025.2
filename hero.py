@@ -424,7 +424,6 @@ class Hero(arcade.Sprite):
                     reborn_bed_pos=self.reborn_bed_pos)
 
     def save(self, level):
-        print(level)
         copyreg.pickle(Hero, pickle_custom_hero)
         copyreg.pickle(Dialog, pickle_custom_dialog)
 
