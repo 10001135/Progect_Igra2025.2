@@ -91,6 +91,12 @@ class Textures:
         Textures.laser = arcade.load_texture('assets/levels/DawnLike/Objects/laser.png')
 
     @staticmethod
+    def textures_future_level_3():
+        Textures.map_future_level_3 = "assets/levels/Fut_Level_3.tmx"
+        Textures.tile_map_future_level_3 = arcade.load_tilemap(Textures.map_future_level_3, scaling=3 * SCALE)
+        Textures.cosmo_bg = arcade.load_texture("assets/textures/cosmobg.png")
+
+    @staticmethod
     def textures_ma_level_3():
         Textures.map_ma_level_3 = "assets/levels/MA_Level_3.tmx"
         Textures.tile_map_ma_level_3 = arcade.load_tilemap(Textures.map_ma_level_3, scaling=3 * SCALE)
