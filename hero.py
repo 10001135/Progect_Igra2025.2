@@ -14,6 +14,8 @@ class Hero(arcade.Sprite):
         self.engine = engine
         self.hook_engine = hook_engine
 
+        self.hook_claimed = False
+
         self.is_hooked = False
         self.joint = None
         self.preserve_moment = False
@@ -136,11 +138,20 @@ class Hero(arcade.Sprite):
             self.run = False
 
     def do_hook(self, pos):
-        if not self.is_hooked:
+        if self.hook_claimed:
+            if self.is_hooked and self.joint:
+                hero_body = self.hook_engine.sprites[self].body
+                current_velocity_x = hero_body.velocity.x
+                current_velocity_y = hero_body.velocity.y
+                self.hook_engine.space.remove(self.joint)
+                self.joint = None
+            else:
+                current_velocity_x = self.change_x * 60 * SCALE
+                current_velocity_y = self.change_y * 60 * SCALE
             self.is_hooked = True
             hero_body = self.hook_engine.sprites[self].body
             hero_body.position = self.center_x, self.center_y
-            hero_body.velocity = self.change_x * 60 * SCALE, self.change_y * 60 * SCALE
+            hero_body.velocity = current_velocity_x, current_velocity_y
 
             self.joint = pymunk.PinJoint(
                 self.hook_engine.space.static_body,
