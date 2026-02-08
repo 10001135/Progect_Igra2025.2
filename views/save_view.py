@@ -1,5 +1,7 @@
 import sqlite3
 
+import time
+
 import pickle
 import sys
 import traceback
@@ -94,7 +96,7 @@ class SaveQt(QMainWindow, Ui_MainWindow):
         self.saves_buttons = cur.execute("""SELECT * FROM saves""").fetchall()
 
         for save in self.saves_buttons:
-            btn = QPushButton(f'{save[2]} --- {save[1]}', self)
+            btn = QPushButton(f'{save[2]} --- {format_time(int(save[1]))}', self)
             btn.setStyleSheet("text-align: left")
             btn.clicked.connect(
                 lambda save, save0=save: self.file_r(save0))
@@ -116,6 +118,11 @@ class SaveQt(QMainWindow, Ui_MainWindow):
 def excepthook(exc_type, exc_value, exc_tb):
     tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
     print("Oбнаружена ошибка !:", tb)
+
+
+def format_time(seconds):
+    time_f = time.gmtime(seconds)
+    return time.strftime("%H:%M:%S", time_f)
 
 
 sys.excepthook = excepthook
