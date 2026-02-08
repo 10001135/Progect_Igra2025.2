@@ -41,10 +41,11 @@ class InventoryPopup(arcade.View):
         self.robot2_icon = None
         self.rastenie_icon = None
 
+        # Позиция заголовка относительно верха окна
         self.texts = arcade.Text(
             "Inventory",
             SCREEN_WIDTH // 2,
-            800 * SCALE,
+            self.window_top - 60 * SCALE,
             arcade.color.WHITE,
             font_size=min(30, int(SCREEN_WIDTH * 0.04)),
             anchor_x="center",
@@ -55,12 +56,12 @@ class InventoryPopup(arcade.View):
         self.texye = arcade.Text(
             self.text,
             SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2 - 50,
+            SCREEN_HEIGHT // 2 - 50 * SCALE,
             arcade.color.WHITE,
             font_size=min(18, int(SCREEN_WIDTH * 0.02)),
             anchor_x="center",
             anchor_y="center",
-            width=self.settings_width - 120,
+            width=self.settings_width - 120 * SCALE,
             multiline=True,
             align="center")
 
@@ -68,6 +69,10 @@ class InventoryPopup(arcade.View):
 
     def update_description(self):
         self.texye.text = self.text
+        # Обновляем позицию текста описания
+        self.texye.x = SCREEN_WIDTH // 2
+        self.texye.y = SCREEN_HEIGHT // 2 - 100 * SCALE
+        self.texye.width = self.settings_width - 120 * SCALE
 
     def icons(self):
         if not self.textures:
@@ -191,23 +196,33 @@ class InventoryPopup(arcade.View):
         self.window.show_view(main_menu_view)
 
     def resize_position(self):
-        self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 150
+        spacing_horizontal = 150 * SCALE
+        spacing_vertical_upper = 120 * SCALE
+        spacing_vertical_lower = 20 * SCALE
 
-        self.hook_button.center_x = SCREEN_WIDTH // 2 + 150
-        self.hook_button.center_y = SCREEN_HEIGHT // 2 + 50
+        center_x = SCREEN_WIDTH // 2
+        center_y = SCREEN_HEIGHT // 2
 
-        self.dash_button.center_x = SCREEN_WIDTH // 2 - 150
-        self.dash_button.center_y = SCREEN_HEIGHT // 2 + 100
+        self.close_button.center_x = center_x
+        self.close_button.center_y = center_y - 150 * SCALE
 
-        self.dobl_jump_button.center_x = SCREEN_WIDTH // 2 - 150
-        self.dobl_jump_button.center_y = SCREEN_HEIGHT // 2 + 50
+        self.igrok.center_x = center_x
+        self.igrok.center_y = center_y + 70 * SCALE
 
-        self.climb_button.center_x = SCREEN_WIDTH // 2 + 150
-        self.climb_button.center_y = SCREEN_HEIGHT // 2 + 100
+        self.dash_button.center_x = center_x - spacing_horizontal
+        self.dash_button.center_y = center_y + spacing_vertical_upper
 
-        self.igrok.center_x = SCREEN_WIDTH // 2
-        self.igrok.center_y = SCREEN_HEIGHT // 2 + 50
+        self.dobl_jump_button.center_x = center_x - spacing_horizontal
+        self.dobl_jump_button.center_y = center_y + spacing_vertical_lower
+
+        self.climb_button.center_x = center_x + spacing_horizontal
+        self.climb_button.center_y = center_y + spacing_vertical_upper
+
+        self.hook_button.center_x = center_x + spacing_horizontal
+        self.hook_button.center_y = center_y + spacing_vertical_lower
+
+        self.texts.x = center_x
+        self.texts.y = self.window_top - 40 * SCALE
 
     def saves(self, event=None):
         self.close_pause_only()

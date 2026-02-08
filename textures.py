@@ -181,8 +181,8 @@ class Textures:
             'key1_icon': arcade.load_texture('assets/items/dash_shild.png'),  # картинки затычки пока не пределаю в пнг
             'key2_icon': arcade.load_texture('assets/items/kruck.png'),
             'key3_icon': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
-            'grosbuch_icon': arcade.load_texture('assets/items/buch.jpg'),
-            'gugunek_axe_icon': arcade.load_texture('assets/items/axe.jpg'),
+            'grosbuch_icon': arcade.load_texture('assets/items/Book.png'),
+            'gugunek_axe_icon': arcade.load_texture('assets/items/Gugunek_axe.png'),
         }
 
     @staticmethod
