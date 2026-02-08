@@ -299,6 +299,13 @@ class Hero(arcade.Sprite):
             self.is_walking = False
 
         if self.tile_map and 'Thorns' in self.tile_map.sprite_lists and self.collides_with_list(
+                self.tile_map.sprite_lists['Thorns']) and self.is_hooked:
+            self.is_hooked = False
+            self.hook_engine.space.remove(self.joint)
+            self.joint = None
+            self.damage(1)
+
+        if self.tile_map and 'Thorns' in self.tile_map.sprite_lists and self.collides_with_list(
                 self.tile_map.sprite_lists['Thorns']):
             self.damage(1)
 
