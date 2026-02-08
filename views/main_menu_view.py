@@ -10,6 +10,15 @@ from views.load_view import LoadView
 from views.save_view import SaveView
 from hero import Hero
 from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
+from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
+from views.game_levels.Middle_Ages.ma_level_3 import GameView_ma_level_3
+from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
+from views.game_levels.Middle_Ages.ma_level_5 import GameView_ma_level_5
+from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
+from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
+
+from views.game_levels.Future.Future_level_1 import GameView_fut_level_1
+from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
 
 
 class BgPart(arcade.Sprite):
@@ -196,7 +205,7 @@ class MainMenuView(arcade.View):
 
         new_game_button.on_click = lambda event: (Textures.texture_hero_1(),
                                               self.manager.disable(),
-                                              self.window.show_view(LoadView(Hero(), None, GameView_ma_level_1)))
+                                              self.window.show_view(LoadView(Hero(), None, GameView_fut_level_1)))
 
         setting_button.on_click = lambda event: self.settings_popup.show()
 

@@ -102,13 +102,10 @@ class GameView_fut_level_1(GameView_common):
         if self.hero.is_hooked and self.hero.collides_with_list(self.tile_map.sprite_lists['Thorns']):
             self.hero.damage(1)
 
-        self.captain = Captain(*self.tile_map.sprite_lists['Captain'][0].position)
+        self.captain = Captain(self.hero, *self.tile_map.sprite_lists['Captain'][0].position)
         self.npc.append(self.captain)
 
-        for npc in self.npc:
-            if npc.__class__.__name__ in self.hero.story_npc:
-                npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
-                npc.story_change()
+        self.npc_d()
 
         if self.hero.joint:
             self.hook_engine.space.remove(self.hero.joint)

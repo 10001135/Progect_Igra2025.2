@@ -26,6 +26,7 @@ class GameView_fut_level_3(GameView_common):
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
+        self.reborn_bed = self.tile_map.sprite_lists['Reborn_bed']
         self.darkness_list = self.tile_map.sprite_lists['Darkness']
         self.light_list = self.tile_map.sprite_lists['Light']
         self.electro_list = self.tile_map.sprite_lists['Electro']
@@ -111,6 +112,7 @@ class GameView_fut_level_3(GameView_common):
         self.hero_l.draw(pixelated=True)
         self.thorns_list.draw(pixelated=True)
         self.electro_list.draw(pixelated=True)
+        self.reborn_bed.draw(pixelated=True)
         self.d_list.draw()
         self.update_darkness()
 
