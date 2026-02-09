@@ -1,0 +1,12 @@
+audioplayer 0.6
+cffi        2.0.0
+fonttools   4.61.1
+pip         25.3
+pycparser   2.23
+pymunk      7.2.0
+PyQt6       6.10.2
+PyQt6-Qt6   6.10.1
+PyQt6_sip   13.11.0
+schedule    1.2.2
+setuptools  80.9.0
+wheel       0.45.1
