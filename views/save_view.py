@@ -22,10 +22,11 @@ from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
 
 from views.game_levels.Future.Future_level_1 import GameView_fut_level_1
 from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
+from views.game_levels.Future.Future_level_3 import GameView_fut_level_3
 from views.load_view import LoadView
 
 LEVELS = [GameView_ma_level_1, GameView_ma_level_2, GameView_ma_level_3, GameView_ma_level_4, GameView_ma_level_5,
-          GameView_ma_level_6, GameView_ma_level_7, GameView_fut_level_1, GameView_fut_level_2]
+          GameView_ma_level_6, GameView_ma_level_7, GameView_fut_level_1, GameView_fut_level_2, GameView_fut_level_3]
 LEVELS_DICT = {}
 for level in LEVELS:
     LEVELS_DICT[level.__name__] = level

@@ -78,22 +78,22 @@ class InventoryPopup(arcade.View):
         if not self.textures:
             return
 
-        if DASH:
+        if self.parent_view.hero.dash_b:
             self.dash_icon = self.textures.get('dash')
         else:
             self.dash_icon = self.textures.get('chto_eto')
 
-        if CLIMB:
-            self.climb_icon = self.textures.get('cogti')
+        if self.parent_view.hero.climb_b:
+            self.climb_icon = self.textures.get('kogti')
         else:
             self.climb_icon = self.textures.get('chto_eto')
 
-        if HOOK:
+        if self.parent_view.hero.hook_claimed:
             self.hook_icon = self.textures.get('hook')
         else:
             self.hook_icon = self.textures.get('chto_eto')
 
-        if DOBL_JUMP:
+        if self.parent_view.hero.double_jump:
             self.jump_icon = self.textures.get('jump')
         else:
             self.jump_icon = self.textures.get('chto_eto')
@@ -116,8 +116,8 @@ class InventoryPopup(arcade.View):
             texture_hovered=buttons_textures['hovered'],
             texture_pressed=buttons_textures['pressed'],
             width=200 * SCALE,
-            height=90 * SCALE,
-            text="Close",
+            height=65 * SCALE,
+            text="Закрыть",
             style=BUTTON_STYLE1)
 
         self.dash_button = UITextureButton(
@@ -204,7 +204,7 @@ class InventoryPopup(arcade.View):
         center_y = SCREEN_HEIGHT // 2
 
         self.close_button.center_x = center_x
-        self.close_button.center_y = center_y - 150 * SCALE
+        self.close_button.center_y = center_y - 300 * SCALE
 
         self.igrok.center_x = center_x
         self.igrok.center_y = center_y + 70 * SCALE
@@ -253,39 +253,39 @@ class InventoryPopup(arcade.View):
         self.window.show_view(self.parent_view)
 
     def dash(self, event=None):
-        if DASH:
-            self.text = ("Странный щит с глазом по середине. Стоп что, глаз стал ртом? ААААААААА!! Почему"
-                         " меня перенесло вперёд? (даёт dash)")
+        if self.parent_view.hero.dash_b:
+            self.text = "Колокольчик, если позвонить, то сразу швыряет в сторону. (Нажмите Shift для рывка)"
         else:
-            self.text = 'Что это:('
+            self.text = 'Что это?'
         self.update_description()
 
     def dobl_jump(self, event=None):
-        if DOBL_JUMP:
-            self.text = "Облако в бутылке. Странно но оно твёрдое00? На нём можно прыгать!? ГДЕ ЗАКОНЫ ФИЗИКИ!!!!!"
+        if self.parent_view.hero.double_jump:
+            self.text = "Облако в бутылке. Странно но оно твёрдое? На нём можно прыгать! Ююху! (Вы можете совершать 2 прыжок)"
         else:
-            self.text = 'Что это:('
+            self.text = 'Что это?'
         self.update_description()
 
     def climb(self, event=None):
-        if CLIMB:
-            self.text = "Это когти и шипы на ботинки. Ими вы можете цепляться за стены(они отличаются от обычных;)"
+        if self.parent_view.hero.climb_b:
+            self.text = "Плотные перчатки. Теперь я могу цепляться за стены как паучок! (Работает на некоторых видах стен)"
         else:
-            self.text = 'Что это:('
+            self.text = 'Что это?'
         self.update_description()
 
     def hook(self, event=None):
-        if HOOK:
-            self.text = "Странная металлическая лоза. Ей вы можете цепляться за уступы(они выглядят как чёрные круги)"
+        if self.parent_view.hero.hook_claimed:
+            self.text = "Это дал Капитан. Надеюсь меня не укачает. (Кликните курсором рядом с крюком, чтобы зацепиться)"
         else:
-            self.text = 'Что это:('
+            self.text = 'Что это?'
         self.update_description()
 
     def player_info(self, event=None):
-        self.text = "Это пасхалка поздравляю."
+        self.text = "=)"
         self.update_description()
 
     def on_draw(self):
+        self.icons()
         self.parent_view.on_draw()
         if not self.settings_popup.visible:
             self.manager.enable()

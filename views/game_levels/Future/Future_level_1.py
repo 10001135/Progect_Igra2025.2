@@ -18,7 +18,6 @@ class GameView_fut_level_1(GameView_common):
         super().__init__(hero)
         Textures.textures_future_level_1()
         arcade.set_background_color(arcade.color.FRENCH_SKY_BLUE)
-        self.hero.double_jump = True
         self.draw_fake_floor = True
         self.hero.level = self
 
@@ -84,7 +83,6 @@ class GameView_fut_level_1(GameView_common):
         self.hook_engine = arcade.PymunkPhysicsEngine(gravity=(0, -900))
 
         self.hero.engine = self.engine
-        self.hero.double_jump = True
         self.hero.hook_engine = self.hook_engine
 
         self.hook_engine.add_sprite(self.hero,

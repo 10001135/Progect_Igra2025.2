@@ -5,6 +5,7 @@ from texts import text_d
 from arcade.gui import UIManager, UITextureButton
 from arcade.gui.widgets.layout import UIAnchorLayout, UIBoxLayout
 from views.Settings_view import SettingsPopup
+from views.game_levels.Future.Future_level_3 import GameView_fut_level_3
 
 from views.load_view import LoadView
 from views.save_view import SaveView
@@ -205,7 +206,7 @@ class MainMenuView(arcade.View):
 
         new_game_button.on_click = lambda event: (Textures.texture_hero_1(),
                                               self.manager.disable(),
-                                              self.window.show_view(LoadView(Hero(), None, GameView_fut_level_1)))
+                                              self.window.show_view(LoadView(Hero(), None, GameView_fut_level_3)))
 
         setting_button.on_click = lambda event: self.settings_popup.show()
 
@@ -238,5 +239,6 @@ class MainMenuView(arcade.View):
 
     def open_level(self):
         sv = SaveView()
+        self.manager.disable()
         sv.start(self.window)
 
