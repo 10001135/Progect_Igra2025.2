@@ -1,5 +1,6 @@
 import sys
 import traceback
+from end_view import EndView
 
 from PyQt6.QtCore import Qt
 
@@ -72,7 +73,7 @@ class TimeQt(QMainWindow, Ui_MainWindow):
         self.setStyleSheet(stylesheet)
 
     def end(self):
-        self.self2.window.show_view(self.window)
+        self.self2.window.show_view(EndView())
 
 
 def excepthook(exc_type, exc_value, exc_tb):
