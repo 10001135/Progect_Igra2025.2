@@ -35,7 +35,7 @@ class LoadView(arcade.View):
             con.close()
             self.hero.save_f = save_f
             Textures.textures_ma_level_1()
-            self.hero.reborn_bed_pos = Textures.tile_map_ma_level_1.sprite_lists['Reborn_point'][0].position
+            self.hero.reb_bed = True
             self.hero.save(level_to.__name__)
 
         self.level_from = level_from

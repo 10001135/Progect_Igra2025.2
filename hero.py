@@ -22,6 +22,7 @@ class Hero(arcade.Sprite):
         self.tile_map = tile_map
         self.engine = engine
         self.hook_engine = hook_engine
+        self.reb_bed = False
 
         self.save_f = save_f
         self.time = time
@@ -216,6 +217,8 @@ class Hero(arcade.Sprite):
             self.moment_timer = 0.2
 
     def on_update(self, dt):
+        if self.reb_bed:
+            self.reborn_bed_pos = self.tile_map.sprite_lists['Reborn_point'][0].position
         self.time += dt
         self.speed = MOVE_SPEED * (dt ** 0.3)
         if self.moment_timer > 0:
