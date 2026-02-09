@@ -4,6 +4,7 @@ from consts import *
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
 from views.Settings_view import SettingsPopup
+from views.time_view import TimeView
 
 
 class QuestPopup(arcade.View):
@@ -222,7 +223,8 @@ class QuestPopup(arcade.View):
         self.set_text("Жемчужина... И солнечные зайчики в придачу!")
 
     def time_m_show(self, event=None):
-        self.set_text('1')
+        tv = TimeView()
+        tv.start(self.parent_view.window)
 
     def on_draw(self):
         self.initialize_quest_items()
