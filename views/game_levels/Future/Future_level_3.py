@@ -48,7 +48,7 @@ class GameView_fut_level_3(GameView_common):
 
         if level_p:
             if level_p == 2:
-                self.reborn_point = self.reborn_point_list[1].position
+                self.reborn_point = self.reborn_point_list[0].position
             if level_p == 993:
                 self.reborn_point = self.hero.reborn_bed_pos
         else:
