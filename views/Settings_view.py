@@ -106,9 +106,6 @@ class SettingsPopup:
         self.shesterna.center_x = SCREEN_WIDTH // 2 + 275 * SCALE
         self.shesterna.center_y = SCREEN_HEIGHT // 2 + 300 * SCALE
 
-    def saves(self, event=None):
-        print("Будет отдельное окно с сохранениями")
-
     def music(self, event=None):
         self.manager.disable()
         self.music_popup.show()

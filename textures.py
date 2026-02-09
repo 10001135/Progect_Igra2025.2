@@ -16,11 +16,11 @@ class Textures:
                 'assets/textures/main_menu_bg/parallax-mountain-foreground-trees.png'),
             'name': arcade.load_texture('assets/textures/name_pic.png'),
             'buttons': {
-                'style1':{
+                'style1': {
                     'normal': arcade.load_texture("assets/textures/Buttons/normal_button.png"),
                     'hovered': arcade.load_texture("assets/textures/Buttons/hovered_button.png"),
                     'pressed': arcade.load_texture("assets/textures/Buttons/pressed_button.png")
-            }}
+                }}
         }
 
     @staticmethod
@@ -126,7 +126,7 @@ class Textures:
         hero = {'to_us': arcade.load_texture('assets/textures/Hero/Engineer.png'), 'walk': [],
                 'in_air': arcade.load_texture('assets/textures/Hero/Engineer_Walk_4.png'),
                 'climb': arcade.load_texture('assets/textures/Hero/Engineer_climb.png'),
-                'to_forest': arcade.load_texture('assets/textures/Hero/Engineer_to_forest.png'),}
+                'to_forest': arcade.load_texture('assets/textures/Hero/Engineer_to_forest.png'), }
         for i in range(1, 5):
             hero['walk'].append(arcade.load_texture(f"assets/textures/Hero/Engineer_Walk_{i}.png"))
         Textures.hero = {'Hero': hero, 'Dialog': 'assets/textures/Hero/Engineer_dialog.png'}
@@ -148,7 +148,8 @@ class Textures:
 
     @staticmethod
     def texture_captain():
-        captain = [arcade.load_texture(f'assets/textures/NPC/Captain/Captain{i}.png').flip_horizontally() for i in range(2)]
+        captain = [arcade.load_texture(f'assets/textures/NPC/Captain/Captain{i}.png').flip_horizontally() for i in
+                   range(2)]
         Textures.captain = {'Captain': captain}
 
     @staticmethod
@@ -165,7 +166,8 @@ class Textures:
         money1 = arcade.load_texture(f'assets/textures/GUI/Money1.png')
         money3 = arcade.load_texture(f'assets/textures/GUI/Money3.png')
         money5 = arcade.load_texture(f'assets/textures/GUI/Money5.png')
-        Textures.gui = {'Heart': heart, 'HeartBoss': boss_heart, 'Unheart': unheart, 'Money1': money1, 'Money3': money3, 'Money5': money5}
+        Textures.gui = {'Heart': heart, 'HeartBoss': boss_heart, 'Unheart': unheart, 'Money1': money1, 'Money3': money3,
+                        'Money5': money5}
 
     @staticmethod
     def texture_objects():
@@ -173,25 +175,26 @@ class Textures:
         bell = arcade.load_texture('assets/textures/bell.png')
         climb = arcade.load_texture('assets/textures/climb.png')
         cloud = arcade.load_texture('assets/textures/Cloud.png')
-        Textures.objects = {'Book': book, 'Bell': bell, 'Climb': climb, 'Cloud': cloud}
+        time_m = arcade.load_texture('assets/textures/time.png')
+        Textures.objects = {'Book': book, 'Bell': bell, 'Climb': climb, 'Cloud': cloud, 'Time_m': time_m}
 
     @staticmethod
     def quest_textures(csl):
         csl.quest_icons = {
-            'key1_icon': arcade.load_texture('assets/items/dash_shild.png'),  # картинки затычки пока не пределаю в пнг
-            'key2_icon': arcade.load_texture('assets/items/kruck.png'),
-            'key3_icon': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
+            'key1_icon': arcade.load_texture('assets/items/key.png'),
             'grosbuch_icon': arcade.load_texture('assets/items/Book.png'),
             'gugunek_axe_icon': arcade.load_texture('assets/items/Gugunek_axe.png'),
+            'pearl_of_moira': arcade.load_texture('assets/items/pearl.png'),
+            'time_m': arcade.load_texture('assets/items/time.png'),
         }
 
     @staticmethod
     def inventory_textures(csl):
         csl.inventory_icons = {
-            'dash': arcade.load_texture('assets/items/dash_shild.png'),
+            'dash': arcade.load_texture('assets/items/bell.png'),
             'hook': arcade.load_texture('assets/items/kruck.png'),
-            'jump': arcade.load_texture('assets/items/cloud_in_a_bottle.png'),
-            'kogti': arcade.load_texture('assets/items/Master_Ninja_Gear.png'),
+            'jump': arcade.load_texture('assets/items/cloud.png'),
+            'kogti': arcade.load_texture('assets/items/climb.png'),
             'chto_eto': arcade.load_texture('assets/items/chto_eto.png'),
         }
 

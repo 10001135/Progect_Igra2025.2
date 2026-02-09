@@ -62,35 +62,35 @@ class QuestPopup(arcade.View):
         self.texte.text = self.text
 
     def initialize_quest_items(self):
-        if KEY1:
-            self.all_items.append("key1")
+        for i in range(self.parent_view.hero.keys):
+            self.all_items.append(f"key{i}")
             key1_icon = self.textures.get('key1_icon')
             self.all_items_icons.append(key1_icon)
             self.all_items_actions.append(self.key1_show)
 
-        if KEY2:
-            self.all_items.append("key2")
-            key2_icon = self.textures.get('key2_icon')
-            self.all_items_icons.append(key2_icon)
-            self.all_items_actions.append(self.key2_show)
-
-        if KEY3:
-            self.all_items.append("key3")
-            key3_icon = self.textures.get('key3_icon')
-            self.all_items_icons.append(key3_icon)
-            self.all_items_actions.append(self.key3_show)
-
-        if GROSBUCH:
+        if self.parent_view.hero.book:
             self.all_items.append("grosbuch")
             grosbuch_icon = self.textures.get('grosbuch_icon')
             self.all_items_icons.append(grosbuch_icon)
             self.all_items_actions.append(self.grosbuch_show)
 
-        if GUGUNEK_AXE:
+        if self.parent_view.hero.gugunek_axe:
             self.all_items.append("gugunek_axe")
             gugunek_axe_icon = self.textures.get('gugunek_axe_icon')
             self.all_items_icons.append(gugunek_axe_icon)
             self.all_items_actions.append(self.gugunek_axe_show)
+
+        if self.parent_view.hero.pearl_of_moira:
+            self.all_items.append("pearl_of_moira")
+            pearl_of_moira_icon = self.textures.get('pearl_of_moira')
+            self.all_items_icons.append(pearl_of_moira_icon)
+            self.all_items_actions.append(self.pearl_of_moira_show)
+
+        if self.parent_view.hero.time_m:
+            self.all_items.append("time_m")
+            time_m = self.textures.get('time_m')
+            self.all_items_icons.append(time_m)
+            self.all_items_actions.append(self.time_m_show)
 
     def setup_ui(self):
         self.manager.clear()
@@ -110,7 +110,7 @@ class QuestPopup(arcade.View):
             texture_pressed=buttons_textures['pressed'],
             width=300 * SCALE,
             height=65 * SCALE,
-            text="Continue",
+            text="Продолжить",
             style=BUTTON_STYLE1)
 
         self.close_button.on_click = self.close
@@ -160,7 +160,7 @@ class QuestPopup(arcade.View):
 
     def resize_position(self):
         self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - self.settings_height // 2 + 50 * SCALE
+        self.close_button.center_y = SCREEN_HEIGHT // 2 - self.settings_height // 2 + 40 * SCALE
 
         start_x = SCREEN_WIDTH // 2 - 150 * SCALE
         start_y = SCREEN_HEIGHT // 2 + 200 * SCALE
@@ -210,21 +210,22 @@ class QuestPopup(arcade.View):
         self.update_description()
 
     def key1_show(self, event=None):
-        self.set_text("Ключ как ключ. На вид очень старый")
-
-    def key2_show(self, event=None):
-        self.set_text("Ключ как ключ. О рубин!!! Можно продать;)")
-
-    def key3_show(self, event=None):
-        self.set_text("Ключ как ключ. Ничего особенного.")
+        self.set_text("Ключ. На вид очень старый")
 
     def grosbuch_show(self, event=None):
-        self.set_text("Большая книга. Что тут у нас? Просто список припасов на складе:(")
+        self.set_text("Большая книга. Что тут у нас? Просто список припасов на складе, а нет, к каждому предмету прилагается по анегдоту!")
 
     def gugunek_axe_show(self, event=None):
         self.set_text("Топор как топор. Явно не для рубки дров.")
 
+    def pearl_of_moira_show(self, event=None):
+        self.set_text("Жемчужина... И солнечные зайчики в придачу!")
+
+    def time_m_show(self, event=None):
+        self.set_text('1')
+
     def on_draw(self):
+        self.initialize_quest_items()
         self.parent_view.on_draw()
         if not self.settings_popup.visible:
             self.manager.enable()

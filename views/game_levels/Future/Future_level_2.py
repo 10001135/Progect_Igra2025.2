@@ -116,7 +116,6 @@ class GameView_fut_level_2(GameView_common):
         self.hook_engine = arcade.PymunkPhysicsEngine(gravity=(0, -900))
 
         self.hero.engine = self.engine
-        self.hero.double_jump = True
         self.hero.hook_engine = self.hook_engine
 
         self.hook_engine.add_sprite(self.hero,

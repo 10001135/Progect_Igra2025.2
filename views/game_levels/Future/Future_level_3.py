@@ -1,5 +1,6 @@
 import arcade
 
+from texts import text_d
 from views import load_view
 from camera_for_hero import CameraForHero
 from textures import Textures
@@ -16,7 +17,6 @@ class GameView_fut_level_3(GameView_common):
         super().__init__(hero)
         Textures.textures_future_level_3()
         arcade.set_background_color(arcade.color.FRENCH_SKY_BLUE)
-        self.hero.double_jump = True
         self.hero.level = self
 
         self.charge = 0
@@ -26,7 +26,7 @@ class GameView_fut_level_3(GameView_common):
         self.hero.tile_map = self.tile_map
         self.walls_list = self.tile_map.sprite_lists['Walls']
         self.reborn_point_list = self.tile_map.sprite_lists['Reborn_point']
-        self.reborn_bed = self.tile_map.sprite_lists['Reborn_bed']
+        self.reborn_bed_list = self.tile_map.sprite_lists['Reborn_bed']
         self.darkness_list = self.tile_map.sprite_lists['Darkness']
         self.light_list = self.tile_map.sprite_lists['Light']
         self.electro_list = self.tile_map.sprite_lists['Electro']
@@ -49,6 +49,8 @@ class GameView_fut_level_3(GameView_common):
         if level_p:
             if level_p == 2:
                 self.reborn_point = self.reborn_point_list[1].position
+            if level_p == 993:
+                self.reborn_point = self.hero.reborn_bed_pos
         else:
             self.reborn_point = self.reborn_point_list[0].position
         self.hero.position = self.reborn_point
@@ -60,7 +62,6 @@ class GameView_fut_level_3(GameView_common):
         )
 
         self.hero.engine = self.engine
-        self.hero.double_jump = True
         self.hero_l = arcade.SpriteList(use_spatial_hash=True)
         self.hero_l.append(self.hero)
         self.world_camera = CameraForHero(self.hero, self.tile_map)
@@ -72,6 +73,18 @@ class GameView_fut_level_3(GameView_common):
         selfm.music_player = selfm.music_play.play(volume=0.2, loop=True)
 
         self.set_darkness()
+
+        self.time_m_pos = self.tile_map.sprite_lists['Time']
+
+        self.time_m_list = arcade.SpriteList()
+        if not self.hero.time_m:
+            self.time_m = arcade.Sprite(Textures.objects['Time_m'], SCALE * 3, *self.time_m_pos[0].position)
+            self.time_m_list.append(self.time_m)
+
+        self.text_obj = arcade.Text(text_d['o_to_take'],
+                                    SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                    30 * SCALE)
+        self.text_obj.position = (SCREEN_WIDTH - self.text_obj.content_width - 50 * SCALE, 36 * SCALE)
 
     def on_draw(self):
         self.clear()
@@ -114,10 +127,11 @@ class GameView_fut_level_3(GameView_common):
         self.decor_list.draw(pixelated=True)
         self.ladders_list.draw(pixelated=True)
         self.draw_hook()
+        self.reborn_bed_list.draw(pixelated=True)
+        self.time_m_list.draw(pixelated=True)
         self.hero_l.draw(pixelated=True)
         self.thorns_list.draw(pixelated=True)
         self.electro_list.draw(pixelated=True)
-        self.reborn_bed.draw(pixelated=True)
         self.d_list.draw()
         self.update_darkness()
 
@@ -165,3 +179,16 @@ class GameView_fut_level_3(GameView_common):
                     if r < a:
                         a = r
                 d.alpha = min(d.alpha_p, a)
+
+    def on_key_press(self, key, modifiers):
+        super().on_key_press(key, modifiers)
+        if key == arcade.key.O :
+            if self.hero.collides_with_list(self.time_m_pos) and not self.hero.time_m:
+                self.hero.time_m = True
+                self.time_m_list = arcade.SpriteList()
+
+    def gui(self):
+        super().gui()
+        if not self.hero.time_m and self.hero.collides_with_list(self.time_m_pos):
+            self.text_field(self.text_obj)
+            self.text_obj.draw()

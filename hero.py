@@ -13,9 +13,10 @@ from views.dialog import Dialog
 
 
 class Hero(arcade.Sprite):
-    def __init__(self, tile_map=None, engine=None, hook_engine=None, max_health=3, health=3, gold=0, gugunek_axe=True,
-                 pearl_of_moira=True, book=0, keys=0, insert_keys=0, climb_b=True, double_jump=True, dash_b=True,
-                 story_npc={}, chests_open_coord={}, save_f=None, hook_claimed=False, time=0, reborn_bed_pos=None):
+    def __init__(self, tile_map=None, engine=None, hook_engine=None, max_health=3, health=3, gold=0, gugunek_axe=False,
+                 pearl_of_moira=True, book=2, keys=2, insert_keys=0, climb_b=False, double_jump=False, dash_b=False,
+                 story_npc={}, chests_open_coord={}, save_f=None, hook_claimed=False, time=0, reborn_bed_pos=None,
+                 time_m=False):
         super().__init__()
         Textures.texture_hero_1()
         self.tile_map = tile_map
@@ -25,6 +26,7 @@ class Hero(arcade.Sprite):
         self.save_f = save_f
         self.time = time
         self.reborn_bed_pos = reborn_bed_pos
+        self.time_m = time_m
 
         self.hook_claimed = hook_claimed
 
@@ -428,7 +430,7 @@ class Hero(arcade.Sprite):
                     climb_b=self.climb_b, dash_b=self.dash_b, double_jump=self.double_jump,
                     story_npc=self.story_npc.copy(), chests_open_coord=self.chests_open_coord.copy(),
                     save_f=self.save_f, hook_claimed=self.hook_claimed, time=self.time,
-                    reborn_bed_pos=self.reborn_bed_pos)
+                    reborn_bed_pos=self.reborn_bed_pos, time_m=self.time_m)
 
     def save(self, level):
         copyreg.pickle(Hero, pickle_custom_hero)
@@ -451,7 +453,7 @@ class Hero(arcade.Sprite):
 def pickle_custom_hero(obj):
     return Hero, (None, None, None, obj.max_health, obj.health, obj.gold, obj.gugunek_axe, obj.pearl_of_moira, obj.book,
                   obj.keys, obj.insert_keys, obj.climb_b, obj.double_jump, obj.dash_b, obj.story_npc,
-                  obj.chests_open_coord, obj.save_f, obj.hook_claimed, obj.time, obj.reborn_bed_pos)
+                  obj.chests_open_coord, obj.save_f, obj.hook_claimed, obj.time, obj.reborn_bed_pos, obj.time_m)
 
 
 def pickle_custom_dialog(obj):
