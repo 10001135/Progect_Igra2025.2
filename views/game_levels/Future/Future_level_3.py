@@ -66,6 +66,11 @@ class GameView_fut_level_3(GameView_common):
         self.world_camera = CameraForHero(self.hero, self.tile_map)
         self.hero.world_camera = self.world_camera
 
+        selfm = self.pause_popup.settings_popup.music_popup
+        selfm.music_st()
+        selfm.music_play = arcade.Sound(selfm.music_list[9], streaming=True)
+        selfm.music_player = selfm.music_play.play(volume=0.2, loop=True)
+
         self.set_darkness()
 
     def on_draw(self):

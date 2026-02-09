@@ -26,7 +26,8 @@ class MusicPopup:
 
         self.music_list = ["assets/music/music2.mp3", "assets/music/music3.mp3", "assets/music/music4.mp3",
                            "assets/music/music4.mp3", "assets/music/standart(cyber).ogg",
-                           "assets/music/music6.ogg", "assets/music/music7.ogg", "assets/music/music8.ogg"]
+                           "assets/music/music6.ogg", "assets/music/music7.ogg", "assets/music/for_1_level.mp3",
+                           "assets/music/for_2_level(boss).mp3", "assets/music/for_3_level.mp3"]
 
         self.on_back_to_settings = None
 

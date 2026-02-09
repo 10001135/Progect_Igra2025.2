@@ -167,6 +167,11 @@ class GameView_fut_level_2(GameView_common):
         self.do_draw_enter = False
         self.hook_points_decor_draw = False
 
+        self.selfm = self.pause_popup.settings_popup.music_popup
+        self.selfm.music_st()
+        self.selfm.music_play = arcade.Sound(self.selfm.music_list[8], streaming=True)
+        self.selfm.music_player = self.selfm.music_play.play(volume=0.1, loop=True)
+
     def on_draw(self):
         self.clear()
 
@@ -287,7 +292,7 @@ class GameView_fut_level_2(GameView_common):
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
-        if not self.boss and self.boss_spawn_timer > 5:
+        if not self.boss and self.boss_spawn_timer > 7:
             self.boss = Visor(self.first_boss_pos[0].center_x, self.first_boss_pos[0].center_y,
                               self.second_boss_pos[0].center_x, self.second_boss_pos[0].center_y)
             self.boss_l.append(self.boss)
@@ -449,6 +454,7 @@ class GameView_fut_level_2(GameView_common):
         hero.is_hooked = False
         self.boss = False
         self.window.show_view(LoadView(self.hero, None, self.__class__))
+        self.selfm.music_st()
         hero.position = self.reborn_point
         hero.health = hero.max_health
         hero.dash_time = 0

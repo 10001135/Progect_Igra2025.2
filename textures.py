@@ -207,3 +207,8 @@ class Textures:
             'not2': arcade.load_texture('assets/items/nota2.png'),
             'settings': arcade.load_texture('assets/items/settin.png'),
         }
+
+    @staticmethod
+    def end_story_textures():
+        Textures.hero_with_cat = arcade.load_texture('assets/textures/hero_with_cat.png')
+        Textures.konec = arcade.load_texture('assets/textures/text_end.png')
