@@ -1,10 +1,10 @@
 from arcade import get_display_size
 from arcade.gui import UITextureButtonStyle
 
-SCALE = 0.999
 w, h = get_display_size()
-SCREEN_WIDTH = int(w * SCALE)
-SCREEN_HEIGHT = int(h * SCALE)
+SCALE = 0.999 * (w / 1920)
+SCREEN_WIDTH = int(1920 * SCALE)
+SCREEN_HEIGHT = int(1080 * SCALE)
 
 GRAVITY = 3 * SCALE
 JUMP_BUFFER = 0.12
