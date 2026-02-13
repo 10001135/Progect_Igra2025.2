@@ -1,0 +1,13 @@
+arcade            3.3.3
+attrs             25.4.0
+cffi              2.0.0
+pillow            11.3.0
+pip               25.1.1
+pycparser         3.0
+pyglet            2.1.13
+pymunk            6.9.0
+PyQt6             6.10.2
+PyQt6-Qt6         6.10.2
+PyQt6_sip         13.11.0
+pytiled_parser    2.2.9
+typing_extensions 4.15.0

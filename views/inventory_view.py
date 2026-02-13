@@ -260,7 +260,7 @@ class InventoryPopup(arcade.View):
 
     def dobl_jump(self, event=None):
         if self.parent_view.hero.double_jump:
-            self.text = "Облако в бутылке. Странно но оно твёрдое? На нём можно прыгать! Ююху! (Вы можете совершать 2 прыжок)"
+            self.text = "Облако в бутылке. Странно, но оно твёрдое? На нём можно прыгать! Ююху! (Вы можете совершать 2 прыжок)"
         else:
             self.text = 'Что это?'
         self.update_description()
