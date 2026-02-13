@@ -24,6 +24,7 @@ def make_cloud_for_hero(hero):
         ),
     ) for _ in range(15)]
 
+
 class GameView_ma_level_7(GameView_common):
     def __init__(self, hero, level_p=None):
         super().__init__(hero)
@@ -58,13 +59,13 @@ class GameView_ma_level_7(GameView_common):
         self.background_list = self.tile_map.sprite_lists['Background']
 
         self.text_insert = arcade.Text(text_d['o_to_open'],
-                                     SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
-                                     30 * SCALE)
+                                       SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                       30 * SCALE)
         self.text_insert.position = (SCREEN_WIDTH - self.text_insert.content_width - 50 * SCALE, 36 * SCALE)
 
         self.text_enter = arcade.Text(text_d['e_to_activate'],
-                                       SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
-                                       30 * SCALE)
+                                      SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                      30 * SCALE)
         self.text_enter.position = (SCREEN_WIDTH - self.text_enter.content_width - 50 * SCALE, 36 * SCALE)
 
         self.hero.level = self
@@ -91,13 +92,15 @@ class GameView_ma_level_7(GameView_common):
         )
         self.hero.engine = self.engine
 
-
         for npc in self.npc:
             if npc.__class__.__name__ in self.hero.story_npc:
                 npc.story, npc.dialog, npc.greeting = self.hero.story_npc[npc.__class__.__name__]
                 npc.story_change()
 
         self.set_darkness()
+
+        self.selfm = self.pause_popup.settings_popup.music_popup
+        self.selfm.music_pla(6)
 
     def on_draw(self):
         super().on_draw()
@@ -132,6 +135,7 @@ class GameView_ma_level_7(GameView_common):
             b = [1 for enter1 in self.tile_map.sprite_lists['Enter_1'] if hero.bottom > enter1.top and sqrt(
                 abs(hero.center_x - enter1.center_x) ** 2 + abs(hero.center_y - enter1.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_3 import GameView_ma_level_3
             self.window.show_view(LoadView(self.hero, 7, GameView_ma_level_3))
 
@@ -139,6 +143,7 @@ class GameView_ma_level_7(GameView_common):
             b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.right < enter2.left and sqrt(
                 abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
             self.window.show_view(LoadView(self.hero, 71, GameView_ma_level_6))
 
@@ -146,10 +151,12 @@ class GameView_ma_level_7(GameView_common):
             b = [1 for enter3 in self.tile_map.sprite_lists['Enter_3'] if hero.right < enter3.left and sqrt(
                 abs(hero.center_x - enter3.center_x) ** 2 + abs(hero.center_y - enter3.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
             self.window.show_view(LoadView(self.hero, 72, GameView_ma_level_6))
 
         if self.enter_b:
+            self.selfm.music_st()
             from views.game_levels.Future.Future_level_1 import GameView_fut_level_1
             self.window.show_view(LoadView(self.hero, None, GameView_fut_level_1))
 
@@ -186,7 +193,6 @@ class GameView_ma_level_7(GameView_common):
         if key == arcade.key.E:
             if self.hero.collides_with_list(self.enter_place):
                 self.enter_b = True
-
 
     def gui(self):
         super().gui()

@@ -167,9 +167,7 @@ class GameView_fut_level_2(GameView_common):
         self.hook_points_decor_draw = False
 
         self.selfm = self.pause_popup.settings_popup.music_popup
-        self.selfm.music_st()
-        self.selfm.music_play = arcade.Sound(self.selfm.music_list[8], streaming=True)
-        self.selfm.music_player = self.selfm.music_play.play(volume=0.1, loop=True)
+        self.selfm.music_pla(8)
 
     def on_draw(self):
         self.clear()
@@ -228,7 +226,7 @@ class GameView_fut_level_2(GameView_common):
                 if self.boss.health > 0:
                     self.boss.draw_hearts()
 
-            if self.return_map_from_first:
+            if self.return_map_from_first and not self.do_second_attach and not self.do_third_attach:
                 self.decor_list.draw(pixelated=True)
                 self.ladders_list.draw(pixelated=True)
                 self.draw_hook()
@@ -444,10 +442,10 @@ class GameView_fut_level_2(GameView_common):
             else:
                 self.hook_engine.step(delta_time)
 
-        for hero in self.hero_l:
-            if self.hero.collides_with_list(self.tile_map.sprite_lists['Enter_2']) and self.boss_is_dead:
-                from views.game_levels.Future.Future_level_3 import GameView_fut_level_3
-                self.window.show_view(LoadView(self.hero, None, GameView_fut_level_3))
+        if self.hero.collides_with_list(self.tile_map.sprite_lists['Enter_2']) and self.boss_is_dead:
+            self.selfm.music_st()
+            from views.game_levels.Future.Future_level_3 import GameView_fut_level_3
+            self.window.show_view(LoadView(self.hero, None, GameView_fut_level_3))
 
     def deth(self, hero):
         hero.is_hooked = False

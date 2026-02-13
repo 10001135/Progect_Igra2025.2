@@ -1,6 +1,5 @@
 import arcade
 from consts import *
-from textures import Textures
 
 
 class Laser:

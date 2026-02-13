@@ -37,7 +37,7 @@ class QuestPopup(arcade.View):
         self.item_buttons = []
 
         self.texye = arcade.Text(
-            "Quests",
+            "Предметы",
             SCREEN_WIDTH // 2,
             850 * SCALE,
             arcade.color.WHITE,
@@ -69,7 +69,7 @@ class QuestPopup(arcade.View):
             self.all_items_icons.append(key1_icon)
             self.all_items_actions.append(self.key1_show)
 
-        if self.parent_view.hero.book:
+        if self.parent_view.hero.book == 1:
             self.all_items.append("grosbuch")
             grosbuch_icon = self.textures.get('grosbuch_icon')
             self.all_items_icons.append(grosbuch_icon)
@@ -94,6 +94,11 @@ class QuestPopup(arcade.View):
             self.all_items_actions.append(self.time_m_show)
 
     def setup_ui(self):
+        self.all_items.clear()
+        self.all_items_icons.clear()
+        self.all_items_actions.clear()
+        self.initialize_quest_items()
+
         self.manager.clear()
         self.item_buttons.clear()
 
@@ -214,7 +219,8 @@ class QuestPopup(arcade.View):
         self.set_text("Ключ. На вид очень старый")
 
     def grosbuch_show(self, event=None):
-        self.set_text("Большая книга. Что тут у нас? Просто список припасов на складе, а нет, к каждому предмету прилагается по анегдоту!")
+        self.set_text(
+            "Большая книга. Что тут у нас? Просто список припасов на складе, а нет, к каждому предмету прилагается по анекдоту!")
 
     def gugunek_axe_show(self, event=None):
         self.set_text("Топор как топор. Явно не для рубки дров.")
@@ -224,10 +230,9 @@ class QuestPopup(arcade.View):
 
     def time_m_show(self, event=None):
         tv = TimeView()
-        tv.start(self.parent_view.window)
+        tv.start(self)
 
     def on_draw(self):
-        self.initialize_quest_items()
         self.parent_view.on_draw()
         if not self.settings_popup.visible:
             self.manager.enable()
@@ -250,6 +255,7 @@ class QuestPopup(arcade.View):
         self.texye.draw()
         self.texte.draw()
 
+        self.manager.draw()
         self.manager.draw()
 
         if self.settings_popup_visible:

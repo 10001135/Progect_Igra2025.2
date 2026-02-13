@@ -41,9 +41,8 @@ class InventoryPopup(arcade.View):
         self.robot2_icon = None
         self.rastenie_icon = None
 
-        # Позиция заголовка относительно верха окна
         self.texts = arcade.Text(
-            "Inventory",
+            "Способности",
             SCREEN_WIDTH // 2,
             self.window_top - 60 * SCALE,
             arcade.color.WHITE,

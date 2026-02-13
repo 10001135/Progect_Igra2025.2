@@ -1,6 +1,6 @@
 import arcade
-import sys
 from consts import *
+from texts import text_d
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
 from views.Settings_view import SettingsPopup
@@ -17,7 +17,7 @@ class PausPopup(arcade.View):
         self.settings_popup_visible = False
 
         self.text = arcade.Text(
-            "Pause",
+            text_d['pause'],
             SCREEN_WIDTH // 2,
             800 * SCALE,
             arcade.color.WHITE,
@@ -38,7 +38,7 @@ class PausPopup(arcade.View):
             texture_pressed=buttons_textures['pressed'],
             width=300 * SCALE,
             height=65 * SCALE,
-            text="Settings",
+            text=text_d['setting_button'],
             style=BUTTON_STYLE1)
 
         self.main_button = UITextureButton(
@@ -47,7 +47,7 @@ class PausPopup(arcade.View):
             texture_pressed=buttons_textures['pressed'],
             width=300 * SCALE,
             height=65 * SCALE,
-            text="To_Menu",
+            text=text_d['menu_btn'],
             style=BUTTON_STYLE1)
 
         self.close_button = UITextureButton(
@@ -56,7 +56,7 @@ class PausPopup(arcade.View):
             texture_pressed=buttons_textures['pressed'],
             width=300 * SCALE,
             height=65 * SCALE,
-            text="Continue",
+            text=text_d['play_button'],
             style=BUTTON_STYLE1)
 
         self.saves_button.on_click = self.saves
@@ -69,21 +69,9 @@ class PausPopup(arcade.View):
 
         self.resize_position()
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        if self.settings_popup_visible:
-            self.settings_popup.on_mouse_press(x, y, button, modifiers)
-        elif self.visible:
-            self.manager.on_mouse_press(x, y, button, modifiers)
-
-    def on_mouse_release(self, x, y, button, modifiers):
-        if self.settings_popup_visible:
-            self.settings_popup.on_mouse_release(x, y, button, modifiers)
-        elif self.visible:
-            self.manager.on_mouse_release(x, y, button, modifiers)
-
     def main_menu(self, event=None):
-        del sys.modules['views.main_menu_view']
-
+        selfm = self.settings_popup.music_popup
+        selfm.music_st()
         from views.main_menu_view import MainMenuView
 
         main_menu_view = MainMenuView()

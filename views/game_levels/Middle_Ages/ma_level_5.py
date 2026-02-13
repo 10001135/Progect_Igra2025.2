@@ -31,7 +31,8 @@ class GameView_ma_level_5(GameView_common):
         self.cloud_pos = self.tile_map.sprite_lists['Cloud_pos']
         self.cloud_list = arcade.SpriteList()
         if not self.hero.double_jump:
-            self.cloud = arcade.Sprite(Textures.objects['Cloud'], SCALE * 3, self.cloud_pos[0].position[0], self.cloud_pos[0].top)
+            self.cloud = arcade.Sprite(Textures.objects['Cloud'], SCALE * 3, self.cloud_pos[0].position[0],
+                                       self.cloud_pos[0].top)
             self.cloud_list.append(self.cloud)
 
         self.decor_list_b_f = self.tile_map.sprite_lists['Decor_back_f']
@@ -87,6 +88,9 @@ class GameView_ma_level_5(GameView_common):
 
         self.set_darkness()
 
+        self.selfm = self.pause_popup.settings_popup.music_popup
+        self.selfm.music_pla(4)
+
     def on_draw(self):
         super().on_draw()
         self.decor_list_b_b.draw(pixelated=True)
@@ -126,6 +130,7 @@ class GameView_ma_level_5(GameView_common):
             b = [1 for enter1 in self.tile_map.sprite_lists['Enter_1'] if hero.left > enter1.right and sqrt(
                 abs(hero.center_x - enter1.center_x) ** 2 + abs(hero.center_y - enter1.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
             self.window.show_view(LoadView(self.hero, 5, GameView_ma_level_4))
 
@@ -133,6 +138,7 @@ class GameView_ma_level_5(GameView_common):
             b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.top < enter2.bottom and sqrt(
                 abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
             self.window.show_view(LoadView(self.hero, 5, GameView_ma_level_6))
 
@@ -144,7 +150,6 @@ class GameView_ma_level_5(GameView_common):
         if not self.hero.double_jump and self.hero.collides_with_list(self.cloud_pos):
             self.text_field(self.text_obj)
             self.text_obj.draw()
-
 
     def on_key_press(self, key, modifiers):
         super().on_key_press(key, modifiers)

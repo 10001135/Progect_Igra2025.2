@@ -59,8 +59,8 @@ class GameView_ma_level_3(GameView_common):
             self.bell_list.append(self.bell)
 
         self.text_obj = arcade.Text(text_d['o_to_take'],
-                                     SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
-                                     30 * SCALE)
+                                    SCREEN_WIDTH - 80 * SCALE, 36 * SCALE, (182, 154, 122),
+                                    30 * SCALE)
         self.text_obj.position = (SCREEN_WIDTH - self.text_obj.content_width - 50 * SCALE, 36 * SCALE)
 
         self.hero.level = self
@@ -95,6 +95,9 @@ class GameView_ma_level_3(GameView_common):
 
         self.set_darkness()
 
+        self.selfm = self.pause_popup.settings_popup.music_popup
+        self.selfm.music_pla(2)
+
     def on_draw(self):
         super().on_draw()
         self.decor_list_b_b.draw(pixelated=True)
@@ -128,6 +131,7 @@ class GameView_ma_level_3(GameView_common):
             b = [1 for enter1 in self.tile_map.sprite_lists['Enter_1'] if hero.bottom > enter1.top and sqrt(
                 abs(hero.center_x - enter1.center_x) ** 2 + abs(hero.center_y - enter1.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
             self.window.show_view(LoadView(self.hero, 3, GameView_ma_level_2))
 
@@ -135,6 +139,7 @@ class GameView_ma_level_3(GameView_common):
             b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if hero.right < enter2.left and sqrt(
                 abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
             self.window.show_view(LoadView(self.hero, 3, GameView_ma_level_4))
 
@@ -142,6 +147,7 @@ class GameView_ma_level_3(GameView_common):
             b = [1 for enter3 in self.tile_map.sprite_lists['Enter_3'] if hero.top < enter3.bottom and sqrt(
                 abs(hero.center_x - enter3.center_x) ** 2 + abs(hero.center_y - enter3.center_y) ** 2) < 16 * 5 * SCALE]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
             self.window.show_view(LoadView(self.hero, 3, GameView_ma_level_7))
 
@@ -150,7 +156,7 @@ class GameView_ma_level_3(GameView_common):
 
     def on_key_press(self, key, modifiers):
         super().on_key_press(key, modifiers)
-        if key == arcade.key.O :
+        if key == arcade.key.O:
             if self.hero.collides_with_list(self.book_pos) and not self.hero.book:
                 self.hero.book = 1
                 self.book_list = arcade.SpriteList()
@@ -161,6 +167,7 @@ class GameView_ma_level_3(GameView_common):
 
     def gui(self):
         super().gui()
-        if (not self.hero.book and self.hero.collides_with_list(self.book_pos)) or (not self.hero.dash_b and self.hero.collides_with_list(self.bell_pos)):
+        if (not self.hero.book and self.hero.collides_with_list(self.book_pos)) or (
+                not self.hero.dash_b and self.hero.collides_with_list(self.bell_pos)):
             self.text_field(self.text_obj)
             self.text_obj.draw()

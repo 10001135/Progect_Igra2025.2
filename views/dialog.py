@@ -1,12 +1,9 @@
-import arcade
-from texts import text_d
 import sys
 from texts import text_d
 
 from PyQt6.QtCore import Qt
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
-from arcade import get_display_size
 
 from consts import *
 
@@ -15,7 +12,7 @@ from dialog_fr_ui import Ui_MainWindow
 
 class Dialog:
     def __init__(self, text_npc, hero_answers, npc, hero, npc_name):
-        self.text_npc  = text_npc
+        self.text_npc = text_npc
         self.hero_answers = hero_answers
         self.npc = npc
         self.npc_name = npc_name
@@ -36,9 +33,10 @@ class DialogQt(QMainWindow, Ui_MainWindow):
         self.self2 = self2
         self.npc_name = npc_name
         screen_width, screen_height = get_display_size()
-        self.setGeometry(int(screen_width // 2 - int(1620 * SCALE) / 2), int(screen_height // 2 - int(600 * SCALE) / 2 - 200 * SCALE), 0, 0)
-        self.setFixedWidth(int(1620 * SCALE))
-        self.setFixedHeight(int(600 * SCALE))
+        self.setGeometry(int(screen_width // 2 - int(1620 * SCALE) / 2),
+                         int(screen_height // 2 - int(600 * SCALE) / 2 - 200 * SCALE), 0, 0)
+        self.setFixedWidth(int(SCREEN_WIDTH - (300 * SCALE)))
+        self.setFixedHeight(int(SCREEN_HEIGHT - (480 * SCALE)))
 
         self.setWindowTitle('Hello')
 
@@ -52,7 +50,7 @@ class DialogQt(QMainWindow, Ui_MainWindow):
 
         self.hero_av.setStyleSheet(f"border-image: url({hero}) space")
         self.hero_av.setFixedSize(int(200 * SCALE), int(200 * SCALE))
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint|Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
 
         self.npc_tb.setText(f'<b>{self.npc_name}: </b>{text_npc}')
 
@@ -98,7 +96,8 @@ class DialogQt(QMainWindow, Ui_MainWindow):
         for answer in self.hero_answers:
             self.answers_buttons[answer] = QPushButton(answer, self)
             self.answers_buttons[answer].setStyleSheet("text-align: left")
-            self.answers_buttons[answer].clicked.connect(lambda answer, answer0=answer: self.to_answer(self.hero_answers[answer0], answer0, answer0))
+            self.answers_buttons[answer].clicked.connect(
+                lambda answer, answer0=answer: self.to_answer(self.hero_answers[answer0], answer0, answer0))
             self.answers_lay.addWidget(self.answers_buttons[answer])
 
     def to_answer(self, answer, answer_p, answer_0):
@@ -113,7 +112,9 @@ class DialogQt(QMainWindow, Ui_MainWindow):
             for answer_new in answer[list(answer)[0]]:
                 self.answers_buttons[answer_new] = QPushButton(answer_new, self)
                 self.answers_buttons[answer_new].setStyleSheet("text-align: left")
-                self.answers_buttons[answer_new].clicked.connect(lambda answer_new, answer_new0=answer_new: self.to_answer(answer[list(answer)[0]][answer_new0], answer_new0, answer_0))
+                self.answers_buttons[answer_new].clicked.connect(
+                    lambda answer_new, answer_new0=answer_new: self.to_answer(answer[list(answer)[0]][answer_new0],
+                                                                              answer_new0, answer_0))
                 self.answers_lay.addWidget(self.answers_buttons[answer_new])
             self.npc_tb.setText(self.npc_tb.toHtml() + '\n' + f'<b>{self.npc_name}: </b>' + list(answer)[0])
 
@@ -127,17 +128,13 @@ class DialogQt(QMainWindow, Ui_MainWindow):
             self.close()
 
         if answer.__class__.__name__ == 'str':
-            del  self.hero_answers[answer_0]
+            del self.hero_answers[answer_0]
             for answer_new in self.hero_answers:
                 self.answers_buttons[answer_new] = QPushButton(answer_new, self)
                 self.answers_buttons[answer_new].setStyleSheet("text-align: left")
-                self.answers_buttons[answer_new].clicked.connect(lambda answer_new, answer_new0=answer_new: self.to_answer(self.hero_answers[answer_new0], answer_new0, answer_new0))
+                self.answers_buttons[answer_new].clicked.connect(
+                    lambda answer_new, answer_new0=answer_new: self.to_answer(self.hero_answers[answer_new0],
+                                                                              answer_new0, answer_new0))
                 self.answers_lay.addWidget(self.answers_buttons[answer_new])
 
             self.npc_tb.setText(self.npc_tb.toHtml() + '\n' + f'<b>{self.npc_name}: </b>' + answer)
-
-
-
-
-
-

@@ -1,8 +1,10 @@
+from arcade import get_display_size
 from arcade.gui import UITextureButtonStyle
 
 SCALE = 0.999
-SCREEN_WIDTH = int(1920 * SCALE)
-SCREEN_HEIGHT = int(1080 * SCALE)
+w, h = get_display_size()
+SCREEN_WIDTH = int(w * SCALE)
+SCREEN_HEIGHT = int(h * SCALE)
 
 GRAVITY = 3 * SCALE
 JUMP_BUFFER = 0.12
@@ -18,18 +20,6 @@ CAMERA_LERP = 0.7
 
 DEAD_ZONE_W = int(SCREEN_WIDTH * 0.35)
 DEAD_ZONE_H = int(SCREEN_HEIGHT * 0.45)
-
-KEY1 = True
-KEY2 = True
-KEY3 = True
-GUGUNEK_AXE = True
-GROSBUCH = True
-
-DASH = True
-DOBL_JUMP = True
-HOOK = True
-CLIMB = True
-
 
 BUTTON_STYLE1 = {'normal': UITextureButtonStyle(font_size=int(40 * SCALE),
                                                 font_name='Comic Sans MS pixel rus eng',

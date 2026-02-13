@@ -31,23 +31,26 @@ LEVELS_DICT = {}
 for level in LEVELS:
     LEVELS_DICT[level.__name__] = level
 
+
 class SaveView:
-    def __init__(self):
+    def __init__(self, self3):
         self.hero = None
         self.level = None
+        self.self3 = self3
 
     def start(self, window):
         self.window = window
         app = QApplication(sys.argv)
-        sqt = SaveQt(self)
+        sqt = SaveQt(self, self.self3)
         sqt.show()
         app.exec()
 
 
 class SaveQt(QMainWindow, Ui_MainWindow):
-    def __init__(self, self2):
+    def __init__(self, self2, self3):
         super().__init__()
         self.self2 = self2
+        self.self3 = self3
         self.setupUi(self)
         self.setWindowTitle('Hello')
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
@@ -112,6 +115,7 @@ class SaveQt(QMainWindow, Ui_MainWindow):
             self.close()
 
     def close_w(self):
+        self.self3.manager.enable()
         self.con.close()
         self.close()
 

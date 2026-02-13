@@ -112,7 +112,8 @@ class KingWithoutKindom(arcade.Sprite):
                 self.story = 101
 
             if self.story == 100 and gold > 0:
-                self.dialog.hero_answers[text_d['hero_king_replic_4']] = {text_d['king_replic_19']: {text_d['hero_king_replic_11']: 1}}
+                self.dialog.hero_answers[text_d['hero_king_replic_4']] = {
+                    text_d['king_replic_19']: {text_d['hero_king_replic_11']: 1}}
                 self.dialog = Dialog(text_d[self.greeting],
                                      self.dialog.hero_answers,
                                      'King_without_kindom/king_dialog.png', Textures.hero['Dialog'], self.name)

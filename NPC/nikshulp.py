@@ -50,10 +50,10 @@ class Nikshulp(arcade.Sprite):
 
         if self.story != 0:
             self.dialog = Dialog(text_d[self.greeting],
-                   self.dialog.hero_answers,
-                   'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self.name)
+                                 self.dialog.hero_answers,
+                                 'Nikshulp/Nikshulp_dialog.png', Textures.hero['Dialog'], self.name)
 
-        if self.story == 2 and self.hero.book:
+        if self.story == 2 and self.hero.book == 1:
             self.dialog.hero_answers[text_d['hero_nikshulp_replic_6']] = text_d['nikshulp_replic_7']
             self.dialog = Dialog(text_d[self.greeting],
                                  self.dialog.hero_answers,

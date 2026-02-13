@@ -1,15 +1,12 @@
 import arcade
 
 from texts import text_d
-from views import load_view
 from camera_for_hero import CameraForHero
 from textures import Textures
 from consts import *
 from views.game_view_common import GameView_common
 import random
 from math import sqrt
-
-from views.load_view import LoadView
 
 
 class GameView_fut_level_3(GameView_common):
@@ -68,9 +65,7 @@ class GameView_fut_level_3(GameView_common):
         self.hero.world_camera = self.world_camera
 
         selfm = self.pause_popup.settings_popup.music_popup
-        selfm.music_st()
-        selfm.music_play = arcade.Sound(selfm.music_list[9], streaming=True)
-        selfm.music_player = selfm.music_play.play(volume=0.2, loop=True)
+        selfm.music_pla(9)
 
         self.set_darkness()
 
@@ -107,18 +102,13 @@ class GameView_fut_level_3(GameView_common):
         self.walls_list_p.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
 
-        for emmiter in (self.emitter_trace, self.emitter_clouds):
-            for h in emmiter:
-                for e in emmiter[h]:
-                    e.draw()
-
         if self.background_list:
             self.background_list.draw(pixelated=True)
 
         self.walls_list_p.draw(pixelated=True)
         self.reborn_point_list.draw(pixelated=True)
 
-        for emmiter in (self.emitter_trace, self.emitter_clouds):
+        for emmiter in (self.emitter_trace, self.emitter_clouds, self.emitter_clouds_end):
             for h in emmiter:
                 for e in emmiter[h]:
                     e.draw()
@@ -182,7 +172,7 @@ class GameView_fut_level_3(GameView_common):
 
     def on_key_press(self, key, modifiers):
         super().on_key_press(key, modifiers)
-        if key == arcade.key.O :
+        if key == arcade.key.O:
             if self.hero.collides_with_list(self.time_m_pos) and not self.hero.time_m:
                 self.hero.time_m = True
                 self.time_m_list = arcade.SpriteList()

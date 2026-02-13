@@ -11,15 +11,6 @@ from views.load_view import LoadView
 from views.save_view import SaveView
 from hero import Hero
 from views.game_levels.Middle_Ages.ma_level_1 import GameView_ma_level_1
-from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
-from views.game_levels.Middle_Ages.ma_level_3 import GameView_ma_level_3
-from views.game_levels.Middle_Ages.ma_level_4 import GameView_ma_level_4
-from views.game_levels.Middle_Ages.ma_level_5 import GameView_ma_level_5
-from views.game_levels.Middle_Ages.ma_level_6 import GameView_ma_level_6
-from views.game_levels.Middle_Ages.ma_level_7 import GameView_ma_level_7
-
-from views.game_levels.Future.Future_level_1 import GameView_fut_level_1
-from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
 
 
 class BgPart(arcade.Sprite):
@@ -112,6 +103,9 @@ class MainMenuView(arcade.View):
 
         self.settings_popup = SettingsPopup(self)
 
+        self.selfm = self.settings_popup.music_popup
+        self.selfm.music_pla(10)
+
     def on_update(self, delta_time):
         for i in self.mountain_far:
             i.update(delta_time)
@@ -176,12 +170,12 @@ class MainMenuView(arcade.View):
                                       style=BUTTON_STYLE1)
 
         new_game_button = UITextureButton(texture=texture_normal,
-                                      texture_hovered=texture_hovered,
-                                      texture_pressed=texture_pressed,
-                                      width=texture_normal.width * SCALE,
-                                      height=texture_normal.height * SCALE * 0.7,
-                                      text=text_d['new_game_button'],
-                                      style=BUTTON_STYLE1)
+                                          texture_hovered=texture_hovered,
+                                          texture_pressed=texture_pressed,
+                                          width=texture_normal.width * SCALE,
+                                          height=texture_normal.height * SCALE * 0.7,
+                                          text=text_d['new_game_button'],
+                                          style=BUTTON_STYLE1)
 
         setting_button = UITextureButton(texture=texture_normal,
                                          position=(SCREEN_WIDTH // 6, SCREEN_HEIGHT - 100),
@@ -199,14 +193,14 @@ class MainMenuView(arcade.View):
             texture_pressed=texture_pressed,
             width=texture_normal.width * SCALE,
             height=texture_normal.height * SCALE * 0.7,
-            text='Close',
+            text=text_d['close'],
             style=BUTTON_STYLE2)
 
         play_button.on_click = lambda event: self.open_level()
 
-        new_game_button.on_click = lambda event: (Textures.texture_hero_1(),
-                                              self.manager.disable(),
-                                              self.window.show_view(LoadView(Hero(), None, GameView_fut_level_3)))
+        new_game_button.on_click = lambda event: (self.selfm.music_st(), Textures.texture_hero_1(),
+                                                  self.manager.disable(),
+                                                  self.window.show_view(LoadView(Hero(), None, GameView_ma_level_1)))
 
         setting_button.on_click = lambda event: self.settings_popup.show()
 
@@ -229,16 +223,11 @@ class MainMenuView(arcade.View):
         self.manager.draw(pixelated=True)
         self.settings_popup.draw()
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        self.manager.on_mouse_press(x, y, button, modifiers)
-        self.settings_popup.on_mouse_press(x, y, button, modifiers)
-
-    def on_mouse_release(self, x, y, button, modifiers):
-        self.manager.on_mouse_release(x, y, button, modifiers)
-        self.settings_popup.on_mouse_release(x, y, button, modifiers)
+    def on_key_press(self, key, modifiers):
+        self.settings_popup.on_key_press(key, modifiers)
 
     def open_level(self):
-        sv = SaveView()
+        sv = SaveView(self)
         self.manager.disable()
+        self.selfm.music_st()
         sv.start(self.window)
-

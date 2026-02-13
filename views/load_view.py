@@ -1,6 +1,3 @@
-import copyreg
-import pickle
-
 import arcade
 
 from texts import text_d
@@ -27,7 +24,8 @@ class LoadView(arcade.View):
                     saves_numbs.append(int(save[0][4:]))
                 new_numb = max(saves_numbs) + 1
                 save_f = f'save{new_numb}'
-                cur.execute("""INSERT INTO saves(save, time, name, level) VALUES(?, 0, ?, 'MA1')""", (f'save{new_numb}', f'Сохранение {new_numb}'))
+                cur.execute("""INSERT INTO saves(save, time, name, level) VALUES(?, 0, ?, 'MA1')""",
+                            (f'save{new_numb}', f'Сохранение {new_numb}'))
             else:
                 save_f = 'save1'
                 cur.execute("""INSERT INTO saves(save, time, name, level) VALUES('save1', 0, 'Сохранение 1', 'MA1')""")
@@ -36,7 +34,10 @@ class LoadView(arcade.View):
             self.hero.save_f = save_f
             Textures.textures_ma_level_1()
             self.hero.reb_bed = True
-            self.hero.save(level_to.__name__)
+            self.hero.level_1 = level_to.__name__
+        else:
+            self.hero.reb_bed2 = True
+            self.hero.level_1 = level_to.__name__
 
         self.level_from = level_from
         self.level_to = level_to
@@ -54,6 +55,7 @@ class LoadView(arcade.View):
 
     def on_update(self, delta_time):
         self.window.show_view(self.level_to(self.hero, self.level_from))
+
 
 def pickle_custom_dialog(obj):
     return Dialog, (obj.text_npc, obj.hero_answers, obj.npc, obj.hero, obj.npc_name)

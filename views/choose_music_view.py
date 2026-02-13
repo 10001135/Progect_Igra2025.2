@@ -1,5 +1,6 @@
 import arcade
 from consts import *
+from texts import text_d
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
 
@@ -24,21 +25,23 @@ class MusicPopup:
         self.not1 = None
         self.not2 = None
 
-        self.music_list = ["assets/music/music2.mp3", "assets/music/music3.mp3", "assets/music/music4.mp3",
-                           "assets/music/music4.mp3", "assets/music/standart(cyber).ogg",
-                           "assets/music/music6.ogg", "assets/music/music7.ogg", "assets/music/for_1_level.mp3",
-                           "assets/music/for_2_level(boss).mp3", "assets/music/for_3_level.mp3"]
+        self.music_list = ["assets/music/level1.mp3", "assets/music/level2.mp3", "assets/music/level3.mp3",
+                           "assets/music/level4.mp3", "assets/music/level5.mp3",
+                           "assets/music/level6.mp3", "assets/music/level7.mp3", "assets/music/for_1_level.mp3",
+                           "assets/music/for_2_level(boss).mp3", "assets/music/for_3_level.mp3",
+                           'assets/music/menu.mp3', 'assets/music/end.mp3']
 
         self.on_back_to_settings = None
 
         self.text = arcade.Text(
-            "Music",
+            text_d['music'],
             SCREEN_WIDTH // 2,
-            800 * SCALE,
+            850 * SCALE,
             arcade.color.WHITE,
             font_size=min(30, int(SCREEN_WIDTH * 0.04)),
             anchor_x="center",
-            anchor_y="center"
+            anchor_y="center",
+            font_name='Comic Sans MS pixel rus eng'
         )
 
         self.setup_ui()
@@ -57,7 +60,7 @@ class MusicPopup:
             self.not1_icon = self.decor_textures.get('not1')
             self.not2_icon = self.decor_textures.get('not2')
 
-        for i in range(8):
+        for i in range(10):
             btn = UITextureButton(
                 texture=buttons_textures['normal'],
                 texture_hovered=buttons_textures['hovered'],
@@ -67,7 +70,16 @@ class MusicPopup:
                 text=str(i + 1),
                 style=BUTTON_STYLE1)
 
-            btn.on_click = lambda event, index=i: self.music_pla(index)
+            x = 400 * SCALE
+            q = 5
+            if i < q:
+                btn.center_x = SCREEN_WIDTH // 2 - x // 2
+                btn.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE - (90 * i) * SCALE
+            else:
+                btn.center_x = SCREEN_WIDTH // 2 + x // 2
+                btn.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE - (90 * (i - q)) * SCALE
+
+            btn.on_click = lambda i, index=i: self.music_pla(index)
 
             self.music_buttons.append(btn)
             self.manager.add(btn)
@@ -78,7 +90,7 @@ class MusicPopup:
             texture_pressed=buttons_textures['pressed'],
             width=250 * SCALE,
             height=65 * SCALE,
-            text="Stop",
+            text=text_d['stop'],
             style=BUTTON_STYLE1)
 
         self.music_s.on_click = self.music_st
@@ -89,7 +101,7 @@ class MusicPopup:
             texture_pressed=buttons_textures['pressed'],
             width=280 * SCALE,
             height=65 * SCALE,
-            text="Back",
+            text=text_d['back'],
             style=BUTTON_STYLE1)
 
         self.close_button.on_click = self.close
@@ -102,7 +114,7 @@ class MusicPopup:
             style=BUTTON_STYLE1)
 
         self.not2 = UITextureButton(
-            texture=self.not1_icon,
+            texture=self.not2_icon,
             width=200 * SCALE,
             height=200 * SCALE,
             text="",
@@ -125,72 +137,26 @@ class MusicPopup:
         if self.music_player:
             self.music_play.stop(self.music_player)
         self.music_play = arcade.Sound(self.music_list[i], streaming=True)
-        self.music_player = self.music_play.play(volume=0.2)
+        self.music_player = self.music_play.play(volume=0.2, loop=True)
 
     def music_st(self, event=None):
         self.stop = False
         if self.music_player:
             self.music_play.stop(self.music_player)
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        if self.visible:
-            return self.manager.on_mouse_press(x, y, button, modifiers)
-        return False
-
-    def on_mouse_release(self, x, y, button, modifiers):
-        if self.visible:
-            return self.manager.on_mouse_release(x, y, button, modifiers)
-        return False
-
-    def on_key_press(self, key, modifiers):
-        if self.visible:
-            if key == arcade.key.ESCAPE:
-                self.close()
-                return True
-        return False
-
     def resize_positihon(self):
-        if not self.music_buttons:
-            return
+        if self.music_buttons:
+            self.music_s.center_x = SCREEN_WIDTH // 2
+            self.music_s.center_y = SCREEN_HEIGHT // 2 - 265 * SCALE
 
-        y = 100 * SCALE
-        x = 400 * SCALE
+            self.close_button.center_x = SCREEN_WIDTH // 2
+            self.close_button.center_y = SCREEN_HEIGHT // 2 - 340 * SCALE
 
-        self.music_buttons[0].center_x = SCREEN_WIDTH // 2 - x // 2
-        self.music_buttons[0].center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
+            self.not1.center_x = SCREEN_WIDTH // 2 - 450 * SCALE
+            self.not1.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE
 
-        self.music_buttons[1].center_x = SCREEN_WIDTH // 2 - x // 2
-        self.music_buttons[1].center_y = SCREEN_HEIGHT // 2 + 50 * SCALE
-
-        self.music_buttons[2].center_x = SCREEN_WIDTH // 2 - x // 2
-        self.music_buttons[2].center_y = SCREEN_HEIGHT // 2 - 50 * SCALE
-
-        self.music_buttons[3].center_x = SCREEN_WIDTH // 2 - x // 2
-        self.music_buttons[3].center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
-
-        self.music_buttons[4].center_x = SCREEN_WIDTH // 2 + x // 2
-        self.music_buttons[4].center_y = SCREEN_HEIGHT // 2 + 150 * SCALE
-
-        self.music_buttons[5].center_x = SCREEN_WIDTH // 2 + x // 2
-        self.music_buttons[5].center_y = SCREEN_HEIGHT // 2 + 50 * SCALE
-
-        self.music_buttons[6].center_x = SCREEN_WIDTH // 2 + x // 2
-        self.music_buttons[6].center_y = SCREEN_HEIGHT // 2 - 50 * SCALE
-
-        self.music_buttons[7].center_x = SCREEN_WIDTH // 2 + x // 2
-        self.music_buttons[7].center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
-
-        self.music_s.center_x = SCREEN_WIDTH // 2
-        self.music_s.center_y = SCREEN_HEIGHT // 2 - 275 * SCALE
-
-        self.close_button.center_x = SCREEN_WIDTH // 2
-        self.close_button.center_y = SCREEN_HEIGHT // 2 - 350 * SCALE
-
-        self.not1.center_x = SCREEN_WIDTH // 2 - 400 * SCALE
-        self.not1.center_y = SCREEN_HEIGHT // 2 + 200 * SCALE
-
-        self.not2.center_x = SCREEN_WIDTH // 2 + 400 * SCALE
-        self.not2.center_y = SCREEN_HEIGHT // 2 + 125 * SCALE
+            self.not2.center_x = SCREEN_WIDTH // 2 + 450 * SCALE
+            self.not2.center_y = SCREEN_HEIGHT // 2 - 200 * SCALE
 
     def show(self):
         self.visible = True

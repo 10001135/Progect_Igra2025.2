@@ -74,6 +74,8 @@ class GameView_ma_level_1(GameView_common):
         self.hero.engine = self.engine
 
         self.set_darkness()
+        self.selfm = self.pause_popup.settings_popup.music_popup
+        self.selfm.music_pla(0)
 
     def on_draw(self):
         super().on_draw()
@@ -102,8 +104,10 @@ class GameView_ma_level_1(GameView_common):
         super().on_update(delta_time)
         for hero in self.hero_l:
             b = [1 for enter2 in self.tile_map.sprite_lists['Enter_2'] if
-                 hero.left > enter2.right and (sqrt(abs(hero.center_x - enter2.center_x) ** 2 + abs(hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE)]
+                 hero.left > enter2.right and (sqrt(abs(hero.center_x - enter2.center_x) ** 2 + abs(
+                     hero.center_y - enter2.center_y) ** 2) < 16 * 5 * SCALE)]
         if sum(b) > 0:
+            self.selfm.music_st()
             from views.game_levels.Middle_Ages.ma_level_2 import GameView_ma_level_2
             self.window.show_view(LoadView(self.hero, 1, GameView_ma_level_2))
 
@@ -112,7 +116,6 @@ class GameView_ma_level_1(GameView_common):
         if not self.hero.climb_b and self.hero.collides_with_list(self.climb_pos):
             self.text_field(self.text_obj)
             self.text_obj.draw()
-
 
     def on_key_press(self, key, modifiers):
         super().on_key_press(key, modifiers)

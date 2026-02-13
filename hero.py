@@ -14,7 +14,7 @@ from views.dialog import Dialog
 
 class Hero(arcade.Sprite):
     def __init__(self, tile_map=None, engine=None, hook_engine=None, max_health=3, health=3, gold=0, gugunek_axe=False,
-                 pearl_of_moira=True, book=2, keys=2, insert_keys=0, climb_b=False, double_jump=False, dash_b=False,
+                 pearl_of_moira=False, book=0, keys=0, insert_keys=0, climb_b=False, double_jump=False, dash_b=False,
                  story_npc={}, chests_open_coord={}, save_f=None, hook_claimed=False, time=0, reborn_bed_pos=None,
                  time_m=False):
         super().__init__()
@@ -23,11 +23,21 @@ class Hero(arcade.Sprite):
         self.engine = engine
         self.hook_engine = hook_engine
         self.reb_bed = False
+        self.reb_bed2 = False
 
         self.save_f = save_f
+        self.end = 0
         self.time = time
         self.reborn_bed_pos = reborn_bed_pos
         self.time_m = time_m
+
+        self.bell_m = arcade.Sound('assets/music/bell.mp3')
+        self.jump_m = arcade.Sound('assets/music/jump.mp3')
+        self.hook_m = arcade.Sound('assets/music/hook.mp3')
+
+        self.walk_m_pl = None
+
+        self.load_pos = False
 
         self.hook_claimed = hook_claimed
 
@@ -133,6 +143,7 @@ class Hero(arcade.Sprite):
 
         if key == arcade.key.LSHIFT and self.dash_time <= 0 and self.dash_b:
             self.dash = True
+            self.bell_m.play(volume=0.1)
             self.dash_time = DASH_TIME
             self.dash_light = (False, False)
 
@@ -166,6 +177,7 @@ class Hero(arcade.Sprite):
 
     def do_hook(self, pos):
         if self.hook_claimed:
+            arcade.play_sound(self.hook_m, volume=0.2)
             if self.is_hooked and self.joint:
                 hero_body = self.hook_engine.sprites[self].body
                 current_velocity_x = hero_body.velocity.x
@@ -219,7 +231,16 @@ class Hero(arcade.Sprite):
     def on_update(self, dt):
         if self.reb_bed:
             self.reborn_bed_pos = self.tile_map.sprite_lists['Reborn_point'][0].position
-        self.time += dt
+            self.save(self.level_1)
+            self.reb_bed = False
+            self.load_pos = True
+            self.walk_m_set(self.level_1)
+        else:
+            self.time += dt
+        if self.reb_bed2:
+            self.reborn_bed_pos = self.level.reborn_point
+            self.reb_bed2 = False
+            self.walk_m_set(self.level)
         self.speed = MOVE_SPEED * (dt ** 0.3)
         if self.moment_timer > 0:
             self.moment_timer -= dt
@@ -291,6 +312,11 @@ class Hero(arcade.Sprite):
                         self.change_x = -self.speed * 2
                     else:
                         self.change_x = self.speed
+                    arcade.play_sound(self.jump_m, volume=0.1)
+                if abs(self.jump_buffer_timer - JUMP_BUFFER) < 0.03:
+                    self.jump_m.play(volume=0.1)
+                if 0.03 < abs(self.jump_buffer_timer - JUMP_BUFFER) < 0.05:
+                    self.jump_m.play(volume=0.05)
                 self.engine.jump(self.jump_speed * (dt ** 0.3))
 
         if self.change_x and self.change_y == 0:
@@ -362,6 +388,8 @@ class Hero(arcade.Sprite):
         if self.is_walking:
             self.texture_change_time += delta_time
             if self.texture_change_time >= self.texture_change_delay:
+                if self.walk_m_pl and not self.walk_m.is_playing(self.walk_m_pl):
+                    self.walk_m.play(volume=0.5)
                 self.texture_change_time = 0
                 self.current_texture += 1
                 if self.current_texture >= len(self.walk_textures):
@@ -451,6 +479,13 @@ class Hero(arcade.Sprite):
         cur.execute("""UPDATE saves SET time = ?, level = ? WHERE save = ?""", (self.time, level, self.save_f))
         con.commit()
         con.close()
+
+    def walk_m_set(self, level):
+        if level.__class__.__name__ in ('GameView_fut_level_1', 'GameView_fut_level_2', 'GameView_fut_level_3'):
+            self.walk_m = arcade.Sound('assets/music/walkFU.mp3')
+        else:
+            self.walk_m = arcade.Sound('assets/music/walkMA.mp3')
+        self.walk_m_pl = arcade.play_sound(self.walk_m, volume=0.5)
 
 
 def pickle_custom_hero(obj):

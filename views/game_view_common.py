@@ -2,6 +2,8 @@ import arcade
 from math import sqrt
 from random import uniform
 from arcade.particles import Emitter, EmitBurst, FadeParticle
+
+from views.end_view import EndView
 from texts import text_d
 
 from consts import *
@@ -39,6 +41,21 @@ def make_cloud_for_hero(hero):
     ) for _ in range(15)]
 
 
+def make_cloud_for_end(hero):
+    return [Emitter(
+        center_xy=(hero.center_x + uniform(-hero.width // 2, hero.width // 2),
+                   hero.center_y + uniform(-hero.height // 2, hero.height // 2)),
+        emit_controller=EmitBurst(1),
+        particle_factory=lambda e: FadeParticle(
+            filename_or_texture=arcade.texture.make_soft_circle_texture(4, arcade.color.CYAN),
+            change_xy=(0, 0),
+            lifetime=0.5,
+            start_alpha=220, end_alpha=0,
+            scale=uniform(5 * SCALE, 18.5 * SCALE)
+        ),
+    ) for _ in range(20)]
+
+
 class GameView_common(arcade.View):
     def __init__(self, hero):
         super().__init__()
@@ -49,6 +66,10 @@ class GameView_common(arcade.View):
         Textures.texture_objects()
         self.emitter_trace = {}
         self.emitter_clouds = {}
+        self.emitter_clouds_end = {}
+
+        self.end = False
+
         self.reborn_point = (200, 200)
         self.npc = arcade.SpriteList()
         self.gui_camera = arcade.camera.Camera2D()
@@ -142,7 +163,7 @@ class GameView_common(arcade.View):
                                                SCREEN_HEIGHT, arcade.color.Color(0, 0, 0, 120))
         self.walls_list_p.draw(pixelated=True)
         self.reborn_bed_list.draw(pixelated=True)
-        for emmiter in (self.emitter_trace, self.emitter_clouds):
+        for emmiter in (self.emitter_trace, self.emitter_clouds, self.emitter_clouds_end):
             for h in emmiter:
                 for e in emmiter[h]:
                     e.draw()
@@ -150,8 +171,9 @@ class GameView_common(arcade.View):
         self.hero_l.draw(pixelated=True)
 
     def on_update(self, delta_time):
-        if self.hero.reborn_bed_pos:
+        if self.hero.reborn_bed_pos and self.hero.load_pos:
             self.reborn_point = self.hero.reborn_bed_pos
+            self.hero.load_pos = False
 
         if self.pause_popup.visible:
             return
@@ -172,6 +194,17 @@ class GameView_common(arcade.View):
                     for i in em:
                         self.emitter_clouds[hero].append(i)
 
+            if hero.end > 0:
+                if not self.end:
+                    self.end = True
+                hero.end -= delta_time
+                if hero not in self.emitter_clouds_end:
+                    self.emitter_clouds_end[hero] = [*make_cloud_for_end(hero)]
+                else:
+                    em = make_cloud_for_end(hero)
+                    for i in em:
+                        self.emitter_clouds_end[hero].append(i)
+
             tile_map_size = (self.tile_map.width * self.tile_map.tile_width * 3 * SCALE,
                              self.tile_map.height * self.tile_map.tile_height * 3 * SCALE)
             if ((hero.center_y < 0 - (hero.height // 2) - 16 * SCALE) or
@@ -184,6 +217,10 @@ class GameView_common(arcade.View):
 
             hero.on_update(delta_time)
             hero.update_animation(delta_time)
+
+        if self.end:
+            if self.hero.end <= 0:
+                self.window.show_view(EndView(self.pause_popup.settings_popup.music_popup))
         self.world_camera.on_update(delta_time)
 
         if 'Barrier_l' in self.tile_map.sprite_lists:
@@ -195,7 +232,7 @@ class GameView_common(arcade.View):
                     for b in barrier_l_c:
                         if abs(b.right - (hero.left + hero.change_x)) < 10 and (
                                 sqrt(abs(hero.center_x - b.center_x) ** 2 + abs(
-                                        hero.center_y - b.center_y) ** 2) < 16 * 3 * 4 * SCALE):
+                                    hero.center_y - b.center_y) ** 2) < 16 * 3 * 4 * SCALE):
                             self.walls_list_p.remove(b)
                             self.barrier_l.remove(b)
                             if b not in self.emitter_clouds:
@@ -214,7 +251,7 @@ class GameView_common(arcade.View):
                     for b in barrier_r_c:
                         if abs(b.left - (hero.right + hero.change_x)) < 10 and (
                                 sqrt(abs(hero.center_x - b.center_x) ** 2 + abs(
-                                        hero.center_y - b.center_y) ** 2) < 16 * 3 * 4 * SCALE):
+                                    hero.center_y - b.center_y) ** 2) < 16 * 3 * 4 * SCALE):
                             self.walls_list_p.remove(b)
                             self.barrier_r.remove(b)
                             if b not in self.emitter_clouds:
@@ -224,7 +261,7 @@ class GameView_common(arcade.View):
                                 for i in em:
                                     self.emitter_clouds[b].append(i)
 
-        for emitter in (self.emitter_trace, self.emitter_clouds):
+        for emitter in (self.emitter_trace, self.emitter_clouds, self.emitter_clouds_end):
             emitter_copy = emitter.copy()
             for h in emitter_copy:
                 for e in emitter_copy[h]:
@@ -254,7 +291,6 @@ class GameView_common(arcade.View):
                 self.hero.health = self.hero.max_health
                 self.hero.save(self.__class__.__name__)
 
-
         if key == arcade.key.O:
             if 'Chests' in self.tile_map.sprite_lists:
                 for chest in self.hero.collides_with_list(self.chests_list):
@@ -273,6 +309,7 @@ class GameView_common(arcade.View):
             self.window.show_view(self.pause_popup)
 
         if key == arcade.key.U:
+            self.quest_popup.setup_ui()
             self.window.show_view(self.quest_popup)
 
         if key == arcade.key.I:

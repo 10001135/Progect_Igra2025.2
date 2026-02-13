@@ -19,6 +19,7 @@ class Bullet(arcade.Sprite):
             self.angle += 3
             self.do_round = 0
 
+
 class BulletGenerator:
     def __init__(self, x, y, direction=1):
         self.start_x = x

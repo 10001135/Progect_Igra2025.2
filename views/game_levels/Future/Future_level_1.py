@@ -1,8 +1,6 @@
 import arcade
-from math import sqrt
 
 from bullet_generator import BulletGenerator
-from views import load_view
 from NPC.captain import Captain
 from camera_for_hero import CameraForHero
 from textures import Textures
@@ -113,10 +111,8 @@ class GameView_fut_level_1(GameView_common):
         self.world_camera = CameraForHero(self.hero, self.tile_map)
         self.hero.world_camera = self.world_camera
 
-        selfm = self.pause_popup.settings_popup.music_popup
-        selfm.music_st()
-        selfm.music_play = arcade.Sound(selfm.music_list[7], streaming=True)
-        selfm.music_player = selfm.music_play.play(volume=0.2, loop=True)
+        self.selfm = self.pause_popup.settings_popup.music_popup
+        self.selfm.music_pla(7)
 
         self.set_darkness()
 
@@ -203,5 +199,6 @@ class GameView_fut_level_1(GameView_common):
 
         for hero in self.hero_l:
             if self.hero.collides_with_list(self.tile_map.sprite_lists['Enter_2']):
+                self.selfm.music_st()
                 from views.game_levels.Future.Future_level_2 import GameView_fut_level_2
                 self.window.show_view(LoadView(self.hero, 1, GameView_fut_level_2))

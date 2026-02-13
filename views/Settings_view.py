@@ -1,5 +1,6 @@
 import arcade
 from consts import *
+from texts import text_d
 from textures import Textures
 from arcade.gui import UIManager, UITextureButton
 from views.choose_music_view import MusicPopup
@@ -19,13 +20,14 @@ class SettingsPopup:
         self.settings_icon = None
 
         self.text = arcade.Text(
-            "Settings",
+            text_d['setting_button'],
             SCREEN_WIDTH // 2,
             800 * SCALE,
             arcade.color.WHITE,
             font_size=min(30, int(SCREEN_WIDTH * 0.04)),
             anchor_x="center",
-            anchor_y="center"
+            anchor_y="center",
+            font_name='Comic Sans MS pixel rus eng'
         )
 
         self.setup_ui()
@@ -48,7 +50,7 @@ class SettingsPopup:
             texture_pressed=buttons_textures['pressed'],
             width=280 * SCALE,
             height=65 * SCALE,
-            text="Music",
+            text=text_d['music'],
             style=BUTTON_STYLE1)
 
         self.close_button = UITextureButton(
@@ -57,7 +59,7 @@ class SettingsPopup:
             texture_pressed=buttons_textures['pressed'],
             width=400 * SCALE,
             height=65 * SCALE,
-            text="Back to game",
+            text=text_d['play_button'],
             style=BUTTON_STYLE1)
 
         self.shesterna = UITextureButton(
@@ -76,18 +78,6 @@ class SettingsPopup:
 
         self.resize_positihon()
 
-    def on_mouse_press(self, x, y, button, modifiers):
-        if self.music_popup_visible:
-            self.music_popup.on_mouse_press(x, y, button, modifiers)
-        elif self.visible:
-            self.manager.on_mouse_press(x, y, button, modifiers)
-
-    def on_mouse_release(self, x, y, button, modifiers):
-        if self.music_popup_visible:
-            self.music_popup.on_mouse_release(x, y, button, modifiers)
-        elif self.visible:
-            self.manager.on_mouse_release(x, y, button, modifiers)
-
     def on_key_press(self, key, modifiers):
         if self.music_popup_visible:
             if key == arcade.key.ESCAPE:
@@ -103,15 +93,18 @@ class SettingsPopup:
         self.close_button.center_x = SCREEN_WIDTH // 2
         self.close_button.center_y = SCREEN_HEIGHT // 2 - 150 * SCALE
 
-        self.shesterna.center_x = SCREEN_WIDTH // 2 + 275 * SCALE
+        self.shesterna.center_x = SCREEN_WIDTH // 2 + 500 * SCALE
         self.shesterna.center_y = SCREEN_HEIGHT // 2 + 300 * SCALE
 
     def music(self, event=None):
         self.manager.disable()
         self.music_popup.show()
+        self.visible = False
         self.music_popup_visible = True
 
     def show(self):
+        if self.parent_view.__class__.__name__ == 'MainMenuView':
+            self.parent_view.manager.disable()
         self.setup_ui()
         self.visible = True
         self.music_popup_visible = False
@@ -120,48 +113,47 @@ class SettingsPopup:
 
     def on_back_from_music(self):
         self.music_popup_visible = False
+        self.visible = True
         self.manager.enable()
 
     def close(self, event=None):
+        if self.parent_view.__class__.__name__ == 'MainMenuView':
+            self.parent_view.manager.enable()
         self.visible = False
         self.music_popup_visible = False
         self.manager.disable()
 
-        self.music_popup.close()
-
     def draw(self):
-        if not self.visible:
-            return
+        if self.visible:
+            settings_width = SCREEN_WIDTH * 0.6
+            settings_hieg = SCREEN_HEIGHT * 0.7
 
-        settings_width = SCREEN_WIDTH * 0.6
-        settings_hieg = SCREEN_HEIGHT * 0.7
+            settings_width = max(300, settings_width)
+            settings_hieg = max(400, settings_hieg)
 
-        settings_width = max(300, settings_width)
-        settings_hieg = max(400, settings_hieg)
+            window_left = SCREEN_WIDTH // 2 - settings_width // 2
+            window_right = window_left + settings_width
+            window_bottom = SCREEN_HEIGHT // 2 - settings_hieg // 2
+            window_top = window_bottom + settings_hieg
 
-        window_left = SCREEN_WIDTH // 2 - settings_width // 2
-        window_right = window_left + settings_width
-        window_bottom = SCREEN_HEIGHT // 2 - settings_hieg // 2
-        window_top = window_bottom + settings_hieg
+            arcade.draw_lrbt_rectangle_filled(
+                left=window_left,
+                right=window_right,
+                top=window_top,
+                bottom=window_bottom,
+                color=(0, 0, 0, 200))
 
-        arcade.draw_lrbt_rectangle_filled(
-            left=window_left,
-            right=window_right,
-            top=window_top,
-            bottom=window_bottom,
-            color=(0, 0, 0, 200))
+            arcade.draw_lrbt_rectangle_outline(
+                left=window_left,
+                right=window_right,
+                top=window_top,
+                bottom=window_bottom,
+                color=arcade.color.PURPLE,
+                border_width=3)
 
-        arcade.draw_lrbt_rectangle_outline(
-            left=window_left,
-            right=window_right,
-            top=window_top,
-            bottom=window_bottom,
-            color=arcade.color.PURPLE,
-            border_width=3)
+            self.text.draw()
 
-        self.text.draw()
-
-        self.manager.draw()
+            self.manager.draw()
 
         if self.music_popup_visible:
             self.music_popup.draw()

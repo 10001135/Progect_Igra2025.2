@@ -22,7 +22,8 @@ class Ui_MainWindow(object):
         self.exit_btn = QtWidgets.QPushButton(parent=self.centralwidget)
         self.exit_btn.setObjectName("exit_btn")
         self.horizontalLayout_2.addWidget(self.exit_btn)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding,
+                                           QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.verticalLayout_4 = QtWidgets.QVBoxLayout()
@@ -38,7 +39,8 @@ class Ui_MainWindow(object):
         self.btn_lay = QtWidgets.QVBoxLayout()
         self.btn_lay.setObjectName("btn_lay")
         self.verticalLayout_7.addLayout(self.btn_lay)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum,
+                                            QtWidgets.QSizePolicy.Policy.Expanding)
         self.verticalLayout_7.addItem(spacerItem1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_4.addWidget(self.scrollArea)

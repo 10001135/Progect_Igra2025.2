@@ -1,11 +1,9 @@
 import sys
 import traceback
-from end_view import EndView
 
 from PyQt6.QtCore import Qt
 
 from PyQt6.QtWidgets import QApplication, QMainWindow
-
 
 from time_ui import Ui_MainWindow
 
@@ -15,18 +13,17 @@ class TimeView:
         self.hero = None
         self.level = None
 
-    def start(self, window):
-        self.window = window
+    def start(self, selfQV):
         app = QApplication(sys.argv)
-        sqt = TimeQt(self)
+        sqt = TimeQt(selfQV)
         sqt.show()
         app.exec()
 
 
 class TimeQt(QMainWindow, Ui_MainWindow):
-    def __init__(self, self2):
+    def __init__(self, selfQV):
         super().__init__()
-        self.self2 = self2
+        self.selfQV = selfQV
         self.setupUi(self)
         self.setWindowTitle('Hello')
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
@@ -73,7 +70,9 @@ class TimeQt(QMainWindow, Ui_MainWindow):
         self.setStyleSheet(stylesheet)
 
     def end(self):
-        self.self2.window.show_view(EndView())
+        self.selfQV.parent_view.hero.end = 3
+        self.selfQV.close()
+        self.close()
 
 
 def excepthook(exc_type, exc_value, exc_tb):
